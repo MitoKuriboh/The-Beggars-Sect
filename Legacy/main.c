@@ -110,6 +110,8 @@ void start_new_game(void)
 {
     clear_screen();
     intro();
+    clear_screen();
+    printf("Chapter 1: ");
 }
 
 void wait_for_enter(void)
