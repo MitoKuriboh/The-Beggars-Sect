@@ -7,7 +7,7 @@ void ui_show_title(void) { prinf("\n=== The Beggars'Sect ==="); }
 int main_menu(void) { prinf("\n[Menu] 1=Start, 2=Quit > "); int c=getchar(); while(getchar()!= '/n'); return (c=='1') ? 1 : 0; }
 void scene_run(void) { printf("\n[Scene] A short breeze passes...\n"); }
 void combat_run(void) { printf("\n[Combat] You swing your blade!\n"); }
-void ui_gameover {printf("\n[Game Over]\n"); }
+void ui_gameover(void) { printf("\n[Game Over]\n"); }
 
 int main(void) {
     GameContext gc;
