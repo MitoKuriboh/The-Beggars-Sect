@@ -20,10 +20,39 @@ int main(void) {
     gc.player.def = 3;
     gc.player.agi = 2;
 
-    printf("Game started.\n");
-    printf("State: %d | Scene: %d | HP: %d/%d | ATK: %d | DEF: %d | AGI: %d\n",
-           gc.state, gc.current_scene, gc.player.hp, gc.player.hp_max,
-           gc.player.atk, gc.player.def, gc.player.agi);
+    bool running = true;
 
+    while (running) {
+        switch(gc.state) {
+            case ST_BOOT:
+                ui_show_title();
+                gc.state = ST_MAINMENU;
+                break;
+
+            case ST_MAINMENU: {
+                int choice = menu_main();
+                if (choice == 1) gc.state = ST_SCENE;
+                else gc.state = ST_EXIT;
+                break;
+            }
+
+            case ST_SCENE : 
+                scene_run();
+                gc.state = ST_COMBAT; //pretend the story leads into combat
+                break;
+
+            case ST_COMBAT:
+                combat_run();
+                gc.state = ST_GAMEOVER; //pretend player died
+                break;
+
+            case ST_EXIT:
+                running = false;
+                break;
+        }
+        
+    }
+
+    printf("\nThanks for playing!\n");
     return 0;
 }
