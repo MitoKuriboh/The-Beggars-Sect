@@ -3,8 +3,8 @@
 #include "game_context.h"
 
 // Temporary stubs for the modules that I havent written yet, note that these will be worked on later.
-void ui_show_title(void) { prinf("\n=== The Beggars'Sect ==="); }
-int main_menu(void) { prinf("\n[Menu] 1=Start, 2=Quit > "); int c=getchar(); while(getchar()!= '/n'); return (c=='1') ? 1 : 0; }
+void ui_show_title(void) { printf("\n=== The Beggars'Sect ==="); }
+int main_menu(void) { printf("\n[Menu] 1=Start, 2=Quit \n"); int c=getchar(); while(getchar()!= '/n'); return (c=='1') ? 1 : 0; }
 void scene_run(void) { printf("\n[Scene] A short breeze passes...\n"); }
 void combat_run(void) { printf("\n[Combat] You swing your blade!\n"); }
 void ui_gameover(void) { printf("\n[Game Over]\n"); }
@@ -30,7 +30,7 @@ int main(void) {
                 break;
 
             case ST_MAINMENU: {
-                int choice = menu_main();
+                int choice = main_menu();
                 if (choice == 1) gc.state = ST_SCENE;
                 else gc.state = ST_EXIT;
                 break;
