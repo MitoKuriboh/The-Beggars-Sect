@@ -38,14 +38,19 @@ int main(void) {
 
             case ST_SCENE : 
                 scene_run();
-                gc.state = ST_COMBAT; //pretend the story leads into combat
+                gc.state = ST_COMBAT; // pretend the story leads into combat
                 break;
 
             case ST_COMBAT:
                 combat_run();
-                gc.state = ST_GAMEOVER; //pretend player died
+                gc.state = ST_GAMEOVER; // pretend player died
                 break;
 
+            case ST_GAMEOVER:
+                 ui_gameover();
+                 gc.state = ST_MAINMENU; // send player back to menu
+                 break;
+            
             case ST_EXIT:
                 running = false;
                 break;
