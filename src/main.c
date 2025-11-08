@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "game_context.h"
+#include "menu.h"
 
 // Temporary stubs for the modules that I havent written yet, note that these will be worked on later.
-void ui_show_title(void) { printf("\n=== The Beggars'Sect ==="); }
-int main_menu(void) { printf("\n[Menu] 1=Start, 2=Quit \n"); int c=getchar(); while(getchar()!= '\n'); return (c=='1') ? 1 : 0; }
 void scene_run(void) { printf("\n[Scene] A short breeze passes...\n"); }
 void combat_run(void) { printf("\n[Combat] You swing your blade!\n"); }
 void ui_gameover(void) { printf("\n[Game Over]\n"); }
@@ -25,14 +24,15 @@ int main(void) {
     while (running) {
         switch(gc.state) {
             case ST_BOOT:
-                ui_show_title();
                 gc.state = ST_MAINMENU;
                 break;
 
             case ST_MAINMENU: {
-                int choice = main_menu();
-                if (choice == 1) gc.state = ST_SCENE;
-                else gc.state = ST_EXIT;
+                MenuAction choice = main_menu();
+                if (choice == MENU_START) 
+                    gc.state = ST_SCENE;
+                else 
+                    gc.state = ST_EXIT;
                 break;
             }
 
