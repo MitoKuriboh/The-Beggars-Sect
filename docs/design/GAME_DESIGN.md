@@ -43,6 +43,7 @@ This is the **overview document**. Detailed specifications live in dedicated doc
 | HISTORY.md | `lore/` | Full timeline from Ancient Era to Year 147 |
 | MYSTERIES.md | `lore/` | Li Wei's Haven history, prophecy, secrets |
 | LOCATIONS.md | `lore/` | All areas, chi effects, sect territories |
+| CHARACTERS.md | `lore/` | Deep character profiles, fighting styles, arcs |
 
 ### Systems & Mechanics
 | Document | Location | Content |
@@ -513,17 +514,18 @@ From nothing, to legend.
 
 ## Lore Document Summary
 
-The lore documentation (11,000+ lines total) now includes:
+The lore documentation (14,000+ lines total) now includes:
 
 | Document | Lines | Content |
 |----------|-------|---------|
 | WORLDBUILDING.md | ~500 | Realm context, multiverse, themes |
 | CHI_SYSTEM.md | ~590 | Eight aspects, meridians, inverse chi |
 | SECTS.md | ~1,060 | 12 sects with martial arts inspirations |
-| FACTIONS.md | ~760 | Power groups, detailed character profiles |
+| FACTIONS.md | ~760 | Power groups, organizational structure |
 | HISTORY.md | ~450 | Full timeline Ancient Era to Year 147 |
 | MYSTERIES.md | ~530 | Li Wei's history, prophecy, revelations |
 | LOCATIONS.md | ~1,630 | All areas, chi effects, sect territories |
+| CHARACTERS.md | ~2,100 | Deep character profiles, fighting styles, arcs |
 
 **Key Lore Decisions:**
 - Li Wei's cosmic origin (why he spawned) will NEVER be revealed
