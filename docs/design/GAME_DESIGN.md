@@ -44,6 +44,9 @@ This is the **overview document**. Detailed specifications live in dedicated doc
 | MYSTERIES.md | `lore/` | Li Wei's Haven history, prophecy, secrets |
 | LOCATIONS.md | `lore/` | All areas, chi effects, sect territories |
 | CHARACTERS.md | `lore/` | Deep character profiles, fighting styles, arcs |
+| CULTURE.md | `lore/` | Daily life, customs, slang, food, social norms |
+| ARTIFACTS.md | `lore/` | Legendary weapons, formations, relics |
+| GLOSSARY.md | `lore/` | Chinese terms, names, quick reference |
 
 ### Systems & Mechanics
 | Document | Location | Content |
@@ -514,7 +517,7 @@ From nothing, to legend.
 
 ## Lore Document Summary
 
-The lore documentation (14,000+ lines total) now includes:
+The lore documentation (11 documents, 10,000+ lines) now includes:
 
 | Document | Lines | Content |
 |----------|-------|---------|
@@ -525,7 +528,10 @@ The lore documentation (14,000+ lines total) now includes:
 | HISTORY.md | ~450 | Full timeline Ancient Era to Year 147 |
 | MYSTERIES.md | ~530 | Li Wei's history, prophecy, revelations |
 | LOCATIONS.md | ~1,630 | All areas, chi effects, sect territories |
-| CHARACTERS.md | ~2,100 | Deep character profiles, fighting styles, arcs |
+| CHARACTERS.md | ~1,650 | Deep character profiles, fighting styles, arcs |
+| CULTURE.md | ~1,100 | Daily life, customs, food, slang, social norms |
+| ARTIFACTS.md | ~850 | Legendary weapons, formations, relics |
+| GLOSSARY.md | ~750 | Chinese terms, names, quick reference |
 
 **Key Lore Decisions:**
 - Li Wei's cosmic origin (why he spawned) will NEVER be revealed
