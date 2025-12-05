@@ -1,21 +1,79 @@
 # Combat System - Complete Concept
 
 **Game:** The Beggars Sect: Li Wei's Ascension
-**Version:** 1.0
-**Date:** 2024-12-04
-**Status:** Concept Design
+**Version:** 2.0
+**Date:** 2025-12-05
+**Status:** Elaborated
+
+---
+
+## Document Navigation
+
+| Related Document | Content |
+|------------------|---------|
+| CHI_SYSTEM.md | Eight chi aspects, inverse mechanics |
+| TECHNIQUES.md | All technique stats and effects |
+| ENEMIES.md | Enemy stats, AI patterns, bosses |
+| CHARACTERS.md | Character fighting styles |
+| GLOSSARY.md | Combat terminology |
 
 ---
 
 ## Overview
 
-Turn-based strategic combat system inspired by Final Fantasy X, Pokemon, and Digimon, enhanced with AI automation for unique experiences.
+Turn-based strategic combat system inspired by Final Fantasy X, enhanced with AI automation and the unique **Inverse Chi** (逆气) mechanics of the Beggars Sect.
 
 **Core Pillars:**
-- **Strategic Depth** - Stances, combos, resource management
+- **Strategic Depth** - Stances, combos, chi aspect management
+- **Inverse Chi Fantasy** - Power from emptiness, strength from desperation
 - **Accessibility** - Easy to learn, hard to master
 - **Uniqueness** - AI-powered variations and dynamic difficulty
-- **Beggar Flavor** - Deceptive tactics, street-smart combat
+- **Beggar Philosophy** - "Having nothing is having everything" (一无所有，即是一切)
+
+---
+
+## Chi Aspect Integration
+
+Combat in The Beggars Sect draws from the Eight Aspects of Chi (see CHI_SYSTEM.md for full details). Each technique, stance, and combat action connects to one or more aspects.
+
+### The Eight Aspects in Combat
+
+| Aspect | Chinese | Combat Role | Primary Effect |
+|--------|---------|-------------|----------------|
+| **Force** (力) | Lì | Raw damage | +Damage, breaks guards |
+| **Flow** (流) | Liú | Combos & defense | +Combo potential, parries |
+| **Precision** (准) | Zhǔn | Critical hits | +Crit chance, vital strikes |
+| **Burst** (爆) | Bào | Speed & alpha strikes | +Initiative, first-strike bonus |
+| **Armor** (甲) | Jiǎ | Damage reduction | +Defense, endurance |
+| **Sense** (感) | Gǎn | Reading enemies | +Evasion, counter rate |
+| **Will** (意) | Yì | Status resistance | +Mental defense, intimidation |
+| **Inverse** (逆) | Nì | Desperation power | Scales with damage taken |
+
+### Stance-to-Aspect Mapping
+
+Each stance embodies specific chi aspects:
+
+| Stance | Primary Aspect | Secondary Aspect | Playstyle |
+|--------|---------------|------------------|-----------|
+| **Flowing** | Flow (流) | Precision (准) | Balanced, combo-focused |
+| **Weathered** | Armor (甲) | Will (意) | Defensive, endurance |
+| **Hungry** | Force (力) | Burst (爆) | Aggressive, glass cannon |
+| **Deceptive** | Sense (感) | Inverse (逆) | Counter, unpredictable |
+
+### Inverse Chi in Combat
+
+The Beggars Sect's unique advantage comes from **Inverse Chi** (逆气), which flows through "garbage meridians" that standard aptitude testing cannot measure.
+
+**Inverse Mechanics:**
+- **Hungry Void** (饿空): Chi reservoir that fills from lack, not abundance
+- **Desperation Gates** (绝门): Unlock power when cornered
+- **Ghost Paths** (鬼道): Chi flow enemies cannot predict or sense
+
+**Combat Effects:**
+- Damage taken converts to chi at increased rate
+- Low HP triggers "Desperation State" bonuses
+- Techniques become unpredictable (harder for AI enemies to counter)
+- Standard chi sensing fails against inverse users
 
 ---
 
@@ -233,43 +291,66 @@ Fast characters act more frequently
 
 ---
 
-## Combat Stats
+## Combat Stats (战斗属性)
+
+Stats represent how chi manifests in the body. Each stat aligns with specific chi aspects.
 
 ### Primary Stats
 
-**STRENGTH**
-- **Affects:** Physical damage, technique power
+**STRENGTH 力量 (Lìliàng)**
+- **Chi Aspects:** Force (力), Armor (甲)
+- **Affects:** Physical damage, technique power, carrying capacity
 - **Scales:** All palm techniques
 - **Formula:** Damage = (Technique Power × Strength) - Defense
-- **Growth:** Use strength-based techniques
+- **Growth:** Use strength-based techniques, physical labor
+- **Lore:** "A beggar's strength comes from carrying burdens others abandon."
 
-**DEXTERITY**
+**DEXTERITY 敏捷 (Mǐnjié)**
+- **Chi Aspects:** Flow (流), Burst (爆), Precision (准)
 - **Affects:** Turn speed, evasion, critical chance
 - **Turn Speed:** Speed = Base Speed × (1 + Dex/100)
 - **Evasion:** 5% + (Dex × 0.5%)
 - **Critical:** 10% + (Dex × 0.3%)
-- **Growth:** Use fast techniques, dodge attacks
+- **Growth:** Use fast techniques, dodge attacks, practice footwork
+- **Lore:** "Move like a rat in familiar alleys—quick, unpredictable, gone."
 
-**ENDURANCE**
-- **Affects:** Max HP, defense, chi recovery
+**ENDURANCE 耐力 (Nàilì)**
+- **Chi Aspects:** Armor (甲), Will (意)
+- **Affects:** Max HP, defense, chi recovery, inverse chi capacity
 - **Max HP:** 100 + (Endurance × 10)
 - **Defense:** Endurance × 0.8
 - **Chi Recovery:** +1 per turn per 10 END
-- **Growth:** Take damage, defend often
+- **Inverse Bonus:** Higher endurance = more damage before Desperation Gates open
+- **Growth:** Take damage, defend often, survive hardship
+- **Lore:** "We sleep in rain, eat scraps, and survive. That is our training."
 
-**APTITUDE (Hidden)**
+**APTITUDE 资质 (Zīzhì) - Hidden Stat**
+- **Chi Aspects:** All standard aspects (but NOT Inverse)
 - **Affects:** Mastery growth, chi efficiency, combo discovery
 - **Mastery Rate:** 1.0 + (Aptitude × 0.05)
 - **Chi Efficiency:** Techniques cost slightly less
 - **Combo Hints:** Higher chance of AI suggestions
 - **Growth:** Cannot be increased (innate talent)
+- **The Catch:** Aptitude measures *standard* meridians only
+- **Lore:** "The Array says I'm worthless. The Array can't see what I am."
 
-**CHI/WISDOM**
+**CHI/WISDOM 智慧 (Zhìhuì)**
+- **Chi Aspects:** Sense (感), Will (意), Flow (流)
 - **Affects:** Max chi, chi generation, technique effectiveness
 - **Max Chi:** 50 + (Wisdom × 5)
 - **Generation:** Base rate × (1 + Wisdom/100)
 - **Technique Power:** +1% per point of Wisdom
-- **Growth:** Meditate, use techniques
+- **Inverse Bonus:** Wisdom affects inverse chi control (not capacity)
+- **Growth:** Meditate, use techniques, philosophical study
+- **Lore:** "Understanding suffering is wisdom. Using it is power."
+
+**INVERSE POTENTIAL 逆潜 (Nì Qián) - Hidden Stat**
+- **Chi Aspects:** Inverse (逆) exclusively
+- **Affects:** Inverse chi capacity, Desperation Gate thresholds, Ghost Path activation
+- **Cannot be measured:** Aptitude Array reads this as "closed meridians"
+- **Growth:** Genuine hardship, near-death experiences, philosophical breakthrough
+- **Special:** Li Wei has "Transcendent" inverse potential (all meridians reversed)
+- **Lore:** "What they call defects, we call doors."
 
 ---
 
@@ -376,21 +457,25 @@ Thug takes 67 damage!
 
 ---
 
-## Stance System
+## Stance System (架势)
 
 ### Core Mechanic
 
 **What are Stances:**
-- Combat modes that modify stats and available techniques
+- Combat modes tied to specific chi aspects
 - Change mid-battle for tactical advantage
 - Cost chi to switch (5-10 chi)
 - Each unlocks unique techniques
-- Defines playstyle
+- Defines playstyle and chi expression
+
+**Chi Aspect Connection:**
+Stances represent how a practitioner channels their chi. Each emphasizes different aspects, creating distinct combat identities.
 
 ### Available Stances
 
-#### FLOWING STANCE (Default)
-**Philosophy:** Balance and adaptability
+#### FLOWING STANCE 流架 (Liú Jià) - Default
+**Philosophy:** "Water finds its path" (水寻其道)
+**Chi Aspects:** Flow (流) + Precision (准)
 
 **Stat Modifiers:**
 - Attack: ±0%
@@ -398,26 +483,31 @@ Thug takes 67 damage!
 - Speed: ±0%
 - Chi generation: Normal
 
+**Aspect Effects:**
+- **Flow (流):** Techniques chain naturally, reduced combo costs
+- **Precision (准):** Basic attacks have +5% crit chance
+
 **Special Properties:**
 - Access to all basic techniques
 - No penalties
-- Combo-focused
+- Combo-focused, adaptable
 
 **Unique Techniques:**
-- Flowing Strike (combo starter)
-- Stream Palm (fluid attack)
-- Ripple Defense (parry variant)
+- 流打 Liú Dǎ (Flowing Strike) - combo starter
+- 河掌 Hé Zhǎng (Stream Palm) - fluid attack
+- 波防 Bō Fáng (Ripple Defense) - parry variant
 
 **When to use:**
-- Default stance
+- Default stance for learning enemy patterns
 - Balanced approach
-- Learning enemy patterns
 - Combo-heavy playstyle
+- When unsure of enemy capabilities
 
 ---
 
-#### WEATHERED STANCE (Defensive)
-**Philosophy:** Tank and endure
+#### WEATHERED STANCE 风化架 (Fēnghuà Jià) - Defensive
+**Philosophy:** "The mountain endures" (山能恒久)
+**Chi Aspects:** Armor (甲) + Will (意)
 
 **Stat Modifiers:**
 - Attack: -10%
@@ -425,26 +515,33 @@ Thug takes 67 damage!
 - Speed: -20%
 - Chi generation: +30%
 
+**Aspect Effects:**
+- **Armor (甲):** Physical damage reduction, stagger resistance
+- **Will (意):** Status effect resistance, mental fortitude
+
 **Special Properties:**
 - Counter opportunities after defending
-- Reduced critical damage taken
-- Chi builds faster
+- Reduced critical damage taken (-25%)
+- Chi builds faster from taking hits
 
 **Unique Techniques:**
-- Iron Palm (armor break)
-- Steadfast Guard (enhanced defend)
-- Retribution Strike (counter attack)
+- 铁掌 Tiě Zhǎng (Iron Palm) - armor break, ignores defense
+- 恒守 Héng Shǒu (Steadfast Guard) - enhanced defend, +heal
+- 报击 Bào Jī (Retribution Strike) - counter attack
 
 **When to use:**
-- Facing strong enemies
+- Facing strong enemies or bosses
 - Need to build chi safely
 - Counter-based strategy
-- Survive ultimates
+- Survive enemy ultimates
+
+**Lore Note:** This stance reflects the Beggars Sect's survival philosophy—those who endure hardship grow stronger from it.
 
 ---
 
-#### HUNGRY STANCE (Aggressive)
-**Philosophy:** Glass cannon
+#### HUNGRY STANCE 饿架 (È Jià) - Aggressive
+**Philosophy:** "Hunger drives the hunt" (饥驱猎心)
+**Chi Aspects:** Force (力) + Burst (爆)
 
 **Stat Modifiers:**
 - Attack: +30%
@@ -452,26 +549,33 @@ Thug takes 67 damage!
 - Speed: +10%
 - Chi generation: +50% (from attacks)
 
+**Aspect Effects:**
+- **Force (力):** Raw damage increase, guard break chance
+- **Burst (爆):** Initiative bonus, explosive first strikes
+
 **Special Properties:**
 - Critical chance +15%
 - Chi gained from attacking doubled
-- Risk/reward gameplay
+- **Inverse Synergy:** At low HP, Force aspect doubles
 
 **Unique Techniques:**
-- Ravenous Palm (high damage, low cost)
-- Desperate Strike (stronger when low HP)
-- Feral Combo (aggressive chain)
+- 饿掌 È Zhǎng (Ravenous Palm) - high damage, low cost
+- 绝击 Jué Jī (Desperate Strike) - stronger when HP <30%
+- 狂连 Kuáng Lián (Feral Combo) - aggressive 3-hit chain
 
 **When to use:**
 - Burst damage needed
 - Enemy low on HP (finish them)
 - Aggressive playstyle
-- Chi-generation strategy
+- Activating inverse chi mechanics
+
+**Lore Note:** Named for the beggars' constant hunger. The sect discovered that genuine need—not simulated—unlocks hidden power.
 
 ---
 
-#### DECEPTIVE STANCE (Advanced)
-**Philosophy:** Beggar's cunning
+#### DECEPTIVE STANCE 诡架 (Guǐ Jià) - Advanced
+**Philosophy:** "Appear weak when strong" (强示弱,弱示亡)
+**Chi Aspects:** Sense (感) + Inverse (逆)
 
 **Stat Modifiers:**
 - Attack: +20%
@@ -479,26 +583,32 @@ Thug takes 67 damage!
 - Speed: +15%
 - Chi generation: Normal
 
+**Aspect Effects:**
+- **Sense (感):** Read enemy patterns, +counter rate, evasion
+- **Inverse (逆):** Unpredictable chi flow, AI enemies misjudge
+
 **Special Properties:**
 - First hit on you triggers auto-counter
 - Critical chance +50%
-- Appear weaker than you are (enemy AI misjudges)
+- **Ghost Path Effect:** Enemy AI cannot predict your moves
 
 **Unique Techniques:**
-- Bait Strike (intentional vulnerability → counter)
-- False Weakness (feign low HP, boost next attack)
-- Hidden Fang (surprise critical)
+- 饵击 Ěr Jī (Bait Strike) - intentional vulnerability → devastating counter
+- 伪衰 Wěi Shuāi (False Weakness) - feign low HP, +100% next attack
+- 隐牙 Yǐn Yá (Hidden Fang) - surprise critical, cannot be blocked
 
 **When to use:**
-- Mind games against smart AI
+- Mind games against intelligent enemies
 - Counter-based strategy
 - High-skill plays
-- Beggar archetype fantasy
+- Embodying the beggar archetype
 
 **Unlock Requirement:**
-- Master Flowing, Weathered, and Hungry stances
-- Complete elder trial
-- Story progression (Chapter 3)
+- Master Flowing, Weathered, and Hungry stances (60% mastery each)
+- Complete Elder Hong's trial (Chapter 3)
+- Understand the "three faces of begging" philosophy
+
+**Lore Note:** This is the true Beggars Sect style—appearing worthless while being deadly. The stance channels chi through inverse meridians, making it impossible to read.
 
 ---
 
@@ -637,26 +747,52 @@ Bonus: Invincible during execution
 
 ---
 
-## Chi Management
+## Chi Management (气管理)
 
-### Chi Generation
+Chi management is the heart of combat strategy. Understanding both standard and inverse chi flow determines victory.
+
+### Standard Chi Generation
 
 **Sources:**
-| Action | Chi Gained |
-|--------|------------|
-| Basic Attack | +2 |
-| Defend (not hit) | +5 |
-| Defend (hit) | +8 |
-| Chi Focus | +15 |
-| Get Hit | +3 |
-| Combo Finisher | +10 |
-| Critical Hit | +5 |
-| Defeat Enemy | +20 |
+| Action | Chi Gained | Chi Aspect Bonus |
+|--------|------------|------------------|
+| Basic Attack | +2 | +1 if Force (力) aligned |
+| Defend (not hit) | +5 | +2 if Armor (甲) aligned |
+| Defend (hit) | +8 | +3 if Will (意) aligned |
+| Chi Focus | +15 | +5 if Flow (流) aligned |
+| Get Hit | +3 | See Inverse section below |
+| Combo Finisher | +10 | +5 if Precision (准) aligned |
+| Critical Hit | +5 | +3 if Burst (爆) aligned |
+| Defeat Enemy | +20 | +10 if Sense (感) aligned |
 
 **Stance Modifiers:**
+- Flowing Stance: Combo chi +20%
 - Hungry Stance: Attack chi doubled (+4)
 - Weathered Stance: Defend chi +30% (+6/+10)
+- Deceptive Stance: Counter chi tripled
 - Natural regen: +1 per turn (+1 per 10 Wisdom)
+
+### Inverse Chi Generation (逆气生成)
+
+The Beggars Sect's unique system turns damage into power. This is the **Hungry Void** (饿空) mechanic.
+
+**Inverse Sources:**
+| Trigger | Inverse Chi Gained | Notes |
+|---------|-------------------|-------|
+| Take damage | +50% of damage taken | Core inverse mechanic |
+| HP below 50% | +2 per turn | Desperation Gate opens |
+| HP below 25% | +5 per turn | Second Gate opens |
+| HP below 10% | +10 per turn | Third Gate (critical) |
+| Near defeat | Chi cap temporarily +50% | Survival Channel activates |
+| Status effect applied | +5 | Ghost Path redirects suffering |
+
+**Inverse Stance Synergy:**
+- Hungry Stance + Low HP = Chi generation explosion
+- Deceptive Stance = Inverse chi hidden from enemy sensing
+- Weathered Stance = Survive to accumulate more inverse chi
+
+**The Beggar's Paradox:**
+Standard fighters become weaker as they take damage. Inverse users become *more dangerous*. This is why the Spartans fear cornered beggars.
 
 ### Chi Consumption
 
@@ -845,7 +981,7 @@ AI recognizes potential combo:
 
 ### 4. Living World Combat Events
 
-**n8n Triggers Mid-Fight:**
+**Dynamic Event System:**
 
 **Weather System:**
 ```
@@ -1312,30 +1448,62 @@ What will you do?
 
 ### Unique Selling Points
 
-1. **AI-Powered Variation**
+1. **Chi Aspect Integration**
+   - Eight aspects create meaningful build diversity
+   - Stance-aspect mapping provides strategic depth
+   - Inverse chi inverts traditional power scaling
+
+2. **The Beggar's Paradox**
+   - Damage makes you *stronger*, not weaker
+   - Desperation Gates reward calculated risk
+   - Ghost Paths create unpredictability
+
+3. **AI-Powered Variation**
    - No two enemies exactly alike
-   - Dynamic boss behavior
-   - Personalized experience
+   - Dynamic boss behavior based on player style
+   - Personalized experience through adaptation
 
-2. **Strategic Depth**
-   - Stances, combos, chi management
-   - Environmental tactics
-   - Adaptable playstyles
+4. **Strategic Depth**
+   - Stances tied to chi aspects, not just stat boosts
+   - Combo discovery rewards experimentation
+   - Environmental tactics (Beggar's Advantage)
 
-3. **Living World Integration**
-   - n8n events affect combat
-   - Community discoveries
-   - Time-based changes
+5. **Living World Integration**
+   - Dynamic events affect combat conditions
+   - Community discoveries shared
+   - Time-based chi flow changes
 
-4. **Beggar Fantasy**
-   - Deceptive tactics
-   - Street smarts
-   - Underdog power fantasy
+6. **Beggar Fantasy Fulfilled**
+   - Deceptive tactics embodied in Deceptive Stance
+   - Street smarts as mechanical advantage
+   - Underdog power fantasy with inverse chi
 
-5. **Accessibility + Mastery**
-   - Easy to learn
-   - Infinite skill ceiling
-   - Rewarding progression
+7. **Accessibility + Mastery**
+   - Easy to learn (Flowing Stance as default)
+   - Infinite skill ceiling (Deceptive Stance, combo discovery)
+   - Rewarding progression tied to lore
+
+### Chi Aspect Quick Reference
+
+| Aspect | Stat Link | Stance Link | Combat Role |
+|--------|-----------|-------------|-------------|
+| Force (力) | Strength | Hungry | Raw damage |
+| Flow (流) | Dexterity, Wisdom | Flowing | Combos |
+| Precision (准) | Dexterity | Flowing | Criticals |
+| Burst (爆) | Dexterity | Hungry | Speed |
+| Armor (甲) | Strength, Endurance | Weathered | Defense |
+| Sense (感) | Wisdom | Deceptive | Evasion |
+| Will (意) | Wisdom, Endurance | Weathered | Status resist |
+| Inverse (逆) | Inverse Potential | Deceptive | Desperation |
+
+---
+
+## Changelog
+
+| Date | Version | Change |
+|------|---------|--------|
+| 2025-12-05 | 2.0 | Major update: Chi aspect integration, inverse mechanics, Chinese terminology |
+| 2025-12-04 | 1.0 | Initial combat system document |
 
 ---
 
@@ -1345,6 +1513,6 @@ Next steps: Build it and test the feel!
 
 ---
 
-**Version:** 1.0
-**Status:** Concept Complete
+**Version:** 2.0
+**Status:** Elaborated with Lore Integration
 **Ready for:** Implementation Phase

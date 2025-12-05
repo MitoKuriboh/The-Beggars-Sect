@@ -1,36 +1,59 @@
-# Enemy Database
+# Enemy Database (敌人录)
 
 **Last Updated:** 2025-12-05
 **Status:** `[ELABORATED]` - Core enemies ready for implementation
-**Version:** 1.0
+**Version:** 2.0
+
+---
+
+## Document Navigation
+
+| Related Document | Content |
+|------------------|---------|
+| COMBAT_SYSTEM.md | Combat mechanics, chi aspects |
+| TECHNIQUES.md | Technique stats and effects |
+| CHI_SYSTEM.md | Eight chi aspects, chi signatures |
+| CHARACTERS.md | Major character profiles |
+| FACTIONS.md | Faction lore and relationships |
 
 ---
 
 ## Overview
 
-All enemies in The Beggars Sect with complete stats.
+All enemies (敌人, Dírén) in The Beggars Sect with complete stats and chi signatures.
 
 **Current Count:** 8 enemies + 3 bosses = 11 total
 **Target:** 12-15 enemy types for MVP
-**Status:** Core enemies complete, more can be added during content phase
+**Status:** Core enemies complete with chi aspect integration
+
+**Chi Signature Guide:**
+Each enemy has a dominant chi aspect that affects their combat style:
+- **Force (力)** - Heavy hitters, guard breakers
+- **Flow (流)** - Combo users, adaptive fighters
+- **Precision (准)** - Critical specialists, vital strikers
+- **Burst (爆)** - Fast attackers, alpha strikers
+- **Armor (甲)** - Tanks, endurance fighters
+- **Sense (感)** - Counter specialists, readers
+- **Will (意)** - Status resisters, intimidators
+- **Inverse (逆)** - Desperate power, unpredictable
 
 ---
 
 ## Quick Reference
 
-| Enemy | Faction | Tier | HP | STR | DEX | END | Chapter |
-|-------|---------|------|----|----|-----|-----|---------|
-| Street Punk | Thugs | Common | 60 | 8 | 6 | 6 | 1 |
-| Alley Brawler | Thugs | Common | 80 | 10 | 8 | 8 | 1 |
-| Scarred Enforcer | Thugs | Uncommon | 100 | 12 | 10 | 10 | 1-2 |
-| Gang Lieutenant | Thugs | Rare | 140 | 14 | 12 | 12 | 2 |
-| Spartan Recruit | Spartans | Common | 90 | 10 | 12 | 10 | 2 |
-| Spartan Warrior | Spartans | Uncommon | 130 | 14 | 14 | 14 | 2-3 |
-| Wandering Fighter | Lone Wolf | Uncommon | 120 | 12 | 14 | 10 | 2 |
-| Silent Master | Lone Wolf | Rare | 180 | 16 | 16 | 14 | 3 |
-| **Razor (Ch1 Boss)** | Thugs | Boss | 200 | 14 | 12 | 12 | 1 |
-| **Commander Vex (Ch2 Boss)** | Spartans | Boss | 300 | 18 | 16 | 16 | 2 |
-| **The Hollow One (Ch3 Boss)** | Lone Wolf | Boss | 400 | 22 | 20 | 18 | 3 |
+| Enemy | Chinese | Faction | Chi Aspect | Tier | HP | STR | DEX | END | Chapter |
+|-------|---------|---------|------------|------|----|----|-----|-----|---------|
+| Street Punk | 街痞 | Thugs | Force (力) | Common | 60 | 8 | 6 | 6 | 1 |
+| Alley Brawler | 巷打手 | Thugs | Force+Armor | Common | 80 | 10 | 8 | 8 | 1 |
+| Scarred Enforcer | 疤执行者 | Thugs | Force+Will | Uncommon | 100 | 12 | 10 | 10 | 1-2 |
+| Gang Lieutenant | 帮副官 | Thugs | Force+Burst | Rare | 140 | 14 | 12 | 12 | 2 |
+| Spartan Recruit | 斯巴达新兵 | Spartans | Precision | Common | 90 | 10 | 12 | 10 | 2 |
+| Spartan Warrior | 斯巴达战士 | Spartans | Armor+Sense | Uncommon | 130 | 14 | 14 | 14 | 2-3 |
+| Wandering Fighter | 游侠 | Lone Wolf | Flow+Sense | Uncommon | 120 | 12 | 14 | 10 | 2 |
+| Silent Master | 默师 | Lone Wolf | All Aspects | Rare | 180 | 16 | 16 | 14 | 3 |
+| **Razor** | **剃刀** | Thugs | Force+Burst | Boss | 200 | 14 | 12 | 12 | 1 |
+| **Commander Vex** | **维克斯指挥官** | Spartans | Precision+Armor | Boss | 300 | 18 | 16 | 16 | 2 |
+| **The Hollow One** | **空一** | Lone Wolf | Inverse (逆) | Boss | 400 | 22 | 20 | 18 | 3 |
 
 ---
 
@@ -47,14 +70,21 @@ All enemies in The Beggars Sect with complete stats.
 
 ---
 
-## Urban Thugs
+## Urban Thugs (城痞)
 
-*Street-level fighters. Aggressive, direct, undisciplined. Li Wei's early enemies.*
+*Street-level fighters. Aggressive, direct, undisciplined. Most have failed the Aptitude Array and turned to crime. Li Wei's early enemies.*
 
-### Street Punk
+**Faction Philosophy:** "Take what you can, hold what you have."
+**Chi Characteristic:** Raw Force (力) without refinement—powerful but inefficient.
+**Relationship to Beggars Sect:** Hostile. Thugs see beggars as weak prey. The Sect knows better.
+
+---
+
+### 街痞 Jiē Pǐ (Street Punk)
 **Faction:** Urban Thugs
 **Tier:** Common (Tutorial/Fodder)
 **Chapters:** 1
+**Chi Aspect:** Force (力) - Unrefined
 
 | Stat | Value |
 |------|-------|
@@ -66,16 +96,20 @@ All enemies in The Beggars Sect with complete stats.
 | Speed | 108 |
 | Defense | 3 |
 
+**Chi Signature:** Weak Force chi, easily read. No formal training means their attacks telegraph.
+
 **Techniques:**
-1. **Punch** (Power 10) - Default attack
-2. **Wild Swing** (Power 14) - Used when HP < 50%, -20% accuracy
+1. **拳打 Quán Dǎ (Punch)** (Power 10) - Default attack, Force-aspected
+2. **乱挥 Luàn Huī (Wild Swing)** (Power 14, -20% accuracy) - Desperation move
 
 **AI Pattern:** `BASIC_AGGRESSIVE`
 ```
 Priority:
-1. HP < 30%: Wild Swing (desperation)
+1. HP < 30%: Wild Swing (desperation activates)
 2. Default: Punch
 ```
+
+**Chi Behavior:** When HP drops, their chi becomes chaotic—easier to hit but slightly more dangerous. This is primitive inverse activation without understanding.
 
 **Drops:**
 | Item | Chance |
@@ -84,8 +118,8 @@ Priority:
 | 5 Coins | 50% |
 
 **Spawn Locations:**
-- Lower Streets
-- Alleyways
+- Lower Streets (外环街, Wàihuán Jiē)
+- Alleyways (巷道, Xiàngdào)
 
 **Dialogue:**
 - Start: "Hey! Empty your pockets!"
@@ -93,17 +127,20 @@ Priority:
 - Player Low: "Ha! Not so tough now!"
 - Defeat: "Ugh..."
 
+**Lore Note:** Most street punks are E or F-grade rejects who never learned proper technique. They fight with desperation, not skill—which is why the Beggars Sect considers them practice targets.
+
 **Claude Variation:**
-- Names: Can generate unique names
-- Dialogue: Can vary threat lines
+- Names: Can generate unique names (Skinny Liu, Scar-Face Wang, etc.)
+- Dialogue: Can vary threat lines based on personality
 - Stats: ±10% variation
 
 ---
 
-### Alley Brawler
+### 巷打手 Xiàng Dǎshǒu (Alley Brawler)
 **Faction:** Urban Thugs
 **Tier:** Common
 **Chapters:** 1
+**Chi Aspect:** Force (力) + Armor (甲) - Street-Hardened
 
 | Stat | Value |
 |------|-------|
@@ -115,18 +152,22 @@ Priority:
 | Speed | 112 |
 | Defense | 4 |
 
+**Chi Signature:** Denser chi than street punks, with nascent Armor aspect from surviving street fights. Can take hits.
+
 **Techniques:**
-1. **Punch** (Power 10) - Default
-2. **Headbutt** (Power 16, Speed -1) - Used every 3rd turn
-3. **Block** - Used when HP < 40%, +50% DEF for 1 turn
+1. **拳打 Quán Dǎ (Punch)** (Power 10) - Default, Force-aspected
+2. **铁头 Tiě Tóu (Headbutt)** (Power 16, Speed -1) - Force+Armor, every 3rd turn
+3. **挡 Dǎng (Block)** (+50% DEF, 1 turn) - Armor-aspected, when HP < 40%
 
 **AI Pattern:** `BASIC_BALANCED`
 ```
 Priority:
-1. HP < 40%: Block (then counter)
+1. HP < 40%: Block (Armor chi activates)
 2. Turn divisible by 3: Headbutt
 3. Default: Punch
 ```
+
+**Chi Behavior:** Shows primitive Armor (甲) aspect activation when threatened. Their chi thickens around the skull during Headbutt—painful but effective.
 
 **Drops:**
 | Item | Chance |
@@ -136,14 +177,16 @@ Priority:
 | 10 Coins | 40% |
 
 **Spawn Locations:**
-- Alleyways
-- Market District (night)
+- Alleyways (巷道)
+- Market District (night) (市场区, 夜间)
 
 **Dialogue:**
 - Start: "Another beggar? Easy pickings."
 - Low HP: "Tch... you fight dirty!"
 - Player Low: "Stay down if you know what's good for ya!"
 - Defeat: "The boss... won't like this..."
+
+**Lore Note:** Alley Brawlers have survived enough fights to develop unconscious chi defense. Some were C or D-grade before falling to crime. They're dangerous because they don't know they're using chi—it's pure instinct.
 
 ---
 
@@ -247,11 +290,19 @@ Priority:
 
 ---
 
-## Spartans
+## Spartans (斯巴达)
 
-*Disciplined authority fighters. Tactical, organized, dangerous.*
+*Disciplined authority fighters. Tactical, organized, dangerous. The martial arm of the High Sects' control.*
 
-### Spartan Recruit
+**Faction Philosophy:** "Order through strength. Discipline conquers chaos."
+**Chi Characteristic:** Precision (准) and Armor (甲) trained through rigorous drilling. Every movement is calculated.
+**Relationship to Beggars Sect:** Deep hostility. Spartans were created partially to control "vagrant elements." Wei Zhong's disciples are their oldest enemy.
+
+**Training Note:** All Spartans undergo Aptitude Array testing. Only C-grade or higher are accepted. They train in formation combat, individual technique, and chi detection. They know about inverse chi—and fear it.
+
+---
+
+### 斯巴达新兵 Sībādá Xīnbīng (Spartan Recruit)
 **Faction:** Spartans
 **Tier:** Common
 **Chapters:** 2
@@ -348,11 +399,22 @@ Priority:
 
 ---
 
-## Lone Wolves
+## Lone Wolves (独狼)
 
-*Independent masters. High skill, unique styles, unpredictable.*
+*Independent masters who have abandoned sect affiliation. High skill, unique styles, unpredictable. Some seek the "perfect technique." Others seek worthy opponents.*
 
-### Wandering Fighter
+**Faction Philosophy:** "No master. No sect. Only the self."
+**Chi Characteristic:** Varies wildly—each Lone Wolf has developed their own chi expression through solitary training.
+**Relationship to Beggars Sect:** Complex. Some respect the sect's philosophy of self-reliance. Others see beggars as fallen practitioners to test.
+
+**The Hierarchy of Independence:**
+- **Wandering Fighters:** Left their sects seeking growth
+- **Silent Masters:** Transcended sect teachings entirely
+- **The Hollow One:** Achieved something beyond—and lost something in exchange
+
+---
+
+### 游侠 Yóuxiá (Wandering Fighter)
 **Faction:** Lone Wolf
 **Tier:** Uncommon
 **Chapters:** 2
@@ -602,12 +664,18 @@ Default: Disciplined Assault or Commander's Strike
 
 ---
 
-### The Hollow One (Chapter 3 Boss)
-**Faction:** Lone Wolf (Mysterious)
+### 空一 Kōng Yī (The Hollow One) - Chapter 3 Final Boss
+**Faction:** Lone Wolf (Transcendent)
 **Tier:** Boss (Final)
 **Chapters:** 3
+**Chi Aspect:** Inverse (逆) - Perfected Emptiness
 
-**Lore:** A legendary fighter who abandoned all factions. Rumored to have mastered every style, then discarded them all. Seeks only the "perfect technique."
+**Lore:**
+A legendary fighter who abandoned all factions after mastering them. The Hollow One discovered what Wei Zhong discovered: that emptiness is the ultimate form. Unlike Wei Zhong, who used this knowledge to help the rejected, the Hollow One used it to become something beyond human. He is searching for a worthy opponent—someone who can match his emptiness.
+
+*What the Hollow One knows that others don't:* Li Wei's chi signature is unlike anything he's encountered. The inverse chi flows so naturally it's almost... artificial. Designed. The Hollow One suspects Li Wei is connected to the Aptitude Array's true purpose, but he won't say this directly.
+
+**Connection to Main Plot:** The Hollow One was once a disciple of the Iron Palm Sect (one of the 12 Great Sects). He achieved S-grade inverse awakening through a near-death experience during a failed cultivation technique. He seeks the Dog Beating Staff because he believes it contains Wei Zhong's ultimate understanding of inverse chi—and possibly the key to transcendence.
 
 | Stat | Value |
 |------|-------|
@@ -619,12 +687,18 @@ Default: Disciplined Assault or Commander's Strike
 | Speed | 136 |
 | Defense | 9 |
 
-**Phase 1 (100-70% HP): Testing**
+**Chi Signature:** *Cannot be read.* The Hollow One's chi flows through Ghost Paths exclusively. To chi sensors, he appears completely empty—hence his name. This terrifies even master practitioners.
+
+---
+
+**Phase 1 (100-70% HP): 试探 Shìtàn (Testing)**
+
+*The Hollow One studies your movements, learning your patterns.*
 
 **Techniques:**
-1. **Empty Palm** (Power 25) - Default, no flashy effects
-2. **Mirror Stance** - Copies player's last technique at 80% power
-3. **Hollow Guard** - Immune to damage for 1 turn, reflects status effects
+1. **空掌 Kōng Zhǎng (Empty Palm)** (Power 25) - Pure technique, no chi enhancement
+2. **镜架 Jìng Jià (Mirror Stance)** - Copies player's last technique at 80% power
+3. **空守 Kōng Shǒu (Hollow Guard)** - Immune to damage for 1 turn, reflects status
 
 **AI Pattern:**
 ```
@@ -633,17 +707,22 @@ Player used buff/setup: Hollow Guard
 Default: Empty Palm
 ```
 
-**Phase 2 (70-40% HP): Teaching**
+**Chi Behavior:** He's testing whether Li Wei's inverse chi is genuine or learned. Mirror Stance lets him taste the chi signature of each technique.
 
+---
+
+**Phase 2 (70-40% HP): 教导 Jiàodǎo (Teaching)**
+
+*"你太依赖长老的教诲。给我看你自己的功夫。"*
 *"You rely too much on your elders' teachings. Show me YOUR technique."*
 
 **New Mechanics:**
 - If player uses the same technique twice in a row, Hollow One counters with +50% damage
-- Rewards variety in player's choices
+- This forces player variety—embodying the Beggars Sect philosophy of adaptability
 
 **New Techniques:**
-4. **Formless Strike** (Power 30, ignores stance bonuses) - Every 4 turns
-5. **Chi Disruption** - Drain 15 player chi, heal self 30 HP
+4. **无形击 Wúxíng Jī (Formless Strike)** (Power 30, ignores stance bonuses) - Every 4 turns
+5. **气乱 Qì Luàn (Chi Disruption)** - Drain 15 player chi, heal self 30 HP
 
 **AI Pattern:**
 ```
@@ -653,36 +732,47 @@ Player chi > 30: Chi Disruption
 Default: Empty Palm or Mirror Stance
 ```
 
-**Phase 3 (Below 40% HP): Revelation**
+**Chi Behavior:** The Hollow One becomes more aggressive as he recognizes Li Wei's potential. His chi begins to resonate with Li Wei's inverse flow—something he hasn't felt in decades.
 
+---
+
+**Phase 3 (Below 40% HP): 启示 Qǐshì (Revelation)**
+
+*"好...好！这就是我要找的！终于有一个值得的对手！"*
 *"Yes... YES! This is what I sought! A worthy opponent at last!"*
 
 **New Techniques:**
-6. **Perfect Form** (Power 40, Speed +2, guaranteed crit) - Every 5 turns
-7. **Hollow Resonance** (Power 60, ignores all defenses) - One-time, at HP < 15%
-8. **Enlightenment** - Full heal to 50% HP, one-time use at HP < 25%
+6. **完美形 Wánměi Xíng (Perfect Form)** (Power 40, Speed +2, guaranteed crit) - Every 5 turns
+7. **空鸣 Kōng Míng (Hollow Resonance)** (Power 60, ignores ALL defenses) - One-time finisher at HP < 15%
+8. **悟 Wù (Enlightenment)** - Full heal to 50% HP, one-time use at HP < 25%
 
 **AI Pattern:**
 ```
-HP < 25% and not enlightened: Enlightenment
-HP < 15%: Hollow Resonance (finisher attempt)
+HP < 25% and not enlightened: Enlightenment (refuses to lose yet)
+HP < 15%: Hollow Resonance (all-or-nothing finisher)
 Turn 5, 10...: Perfect Form
 Default: Formless Strike
 ```
 
+**Chi Behavior:** Full inverse chi activation. Both the Hollow One and Li Wei's Ghost Paths are open. The fight becomes a conversation between two inverse users—something unprecedented.
+
+---
+
 **Rewards:**
 - 800 Coins
-- The Hollow One's Robe (cosmetic - prestigious)
-- Technique Scroll: Elder's Teaching (guaranteed)
+- 空一之袍 Kōng Yī Zhī Páo (The Hollow One's Robe) - Cosmetic, marks you as his acknowledged opponent
+- Technique Scroll: 长老教 Elder's Teaching (guaranteed)
 - Mastery Pill × 2
-- ENDING TRIGGER: Cliffhanger cutscene
+- **ENDING TRIGGER:** Cliffhanger cutscene revealing the Dog Beating Staff's location
 
 **Dialogue:**
-- Start: "Another seeker. Tell me, beggar... what do you fight for?"
-- Phase 2: "You rely too much on your elders' teachings. Show me YOUR technique."
-- Phase 3: "Yes... YES! This is what I sought! A worthy opponent at last!"
-- Player Low: "Don't disappoint me now. FIGHT!"
-- Defeat: "At last... someone who understands. The Dog Beating Staff... it's hidden in the mountains. Find it... and find me again. I'll be waiting."
+- Start: "又一个寻道者。告诉我，乞丐...你为何而战？" / "Another seeker. Tell me, beggar... what do you fight for?"
+- Phase 2: "你太依赖长老的教诲。给我看你自己的功夫。" / "You rely too much on your elders' teachings. Show me YOUR technique."
+- Phase 3: "好...好！这就是我要找的！终于有一个值得的对手！" / "Yes... YES! This is what I sought! A worthy opponent at last!"
+- Player Low: "不要让我失望。战！" / "Don't disappoint me now. FIGHT!"
+- Defeat: "终于...有人理解了。打狗棒...藏在山里。找到它...再来找我。我会等着。" / "At last... someone who understands. The Dog Beating Staff... it's hidden in the mountains. Find it... and find me again. I'll be waiting."
+
+**Secret Note for Future:** The Hollow One recognizes Li Wei because Li Wei's chi signature matches something the Hollow One saw long ago—in the Array Chamber's deepest records. He suspects Li Wei is not just an inverse user, but a *product* of the Array. He won't say this. Not yet.
 
 ---
 
@@ -786,3 +876,4 @@ function decide(enemy, player, turn) {
 |------|---------|--------|
 | 2025-12-05 | 0.0 | Initial template |
 | 2025-12-05 | 1.0 | Added 8 enemies + 3 bosses with full stats |
+| 2025-12-05 | 2.0 | Major update: Chi signatures, Chinese names, faction lore, Hollow One deep lore |

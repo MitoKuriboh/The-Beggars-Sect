@@ -33,7 +33,6 @@ Created `MVP_PLAN.md` (3,800+ lines) covering:
 - ✅ 15-20 techniques
 - ✅ Core combat + AI enemies
 - ❌ Environmental combat → v1.5
-- ❌ n8n in-game → v2.0
 - ❌ Community features → v2.0
 
 **Documentation Split Plan:**
@@ -43,10 +42,9 @@ Created `MVP_PLAN.md` (3,800+ lines) covering:
 - TECHNIQUES.md → Complete database
 
 **Feedback System Design:**
-- n8n workflow for feedback collection
+- Simple web form for feedback collection
 - Database schema (feedback + analytics)
 - Privacy-focused (anonymous UUIDs)
-- Simple web form (NOT in-game)
 - Planned for Week 10-11
 
 **12-Week Realistic Roadmap:**
@@ -63,7 +61,7 @@ Created `MVP_PLAN.md` (3,800+ lines) covering:
 
 ### Scope Locked ✅
 - **IN:** Core combat, 3 chapters, AI enemies, 3 stances
-- **OUT:** Environmental combat, 4th stance, n8n in-game, chapters 4-5
+- **OUT:** Environmental combat, 4th stance, chapters 4-5
 
 ### Timeline Realistic ✅
 - 12 weeks for scoped MVP
@@ -79,7 +77,7 @@ Created `MVP_PLAN.md` (3,800+ lines) covering:
 
 ### Feedback Strategy ✅
 - Separate web form (not in-game)
-- n8n + database
+- Simple database solution
 - Anonymous analytics
 - Launches Week 10-11
 

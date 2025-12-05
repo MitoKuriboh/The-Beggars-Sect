@@ -1,39 +1,60 @@
-# Technique Database
+# Technique Database (技法录)
 
 **Last Updated:** 2025-12-05
 **Status:** `[ELABORATED]` - Core techniques ready for implementation
-**Version:** 1.0
+**Version:** 2.0
+
+---
+
+## Document Navigation
+
+| Related Document | Content |
+|------------------|---------|
+| COMBAT_SYSTEM.md | Combat mechanics, stance-aspect mapping |
+| CHI_SYSTEM.md | Eight chi aspects, inverse mechanics |
+| ENEMIES.md | Enemy techniques and patterns |
+| GLOSSARY.md | Chinese terminology reference |
 
 ---
 
 ## Overview
 
-All techniques in The Beggars Sect with complete stats.
+All techniques (技法, Jìfǎ) in The Beggars Sect with complete stats and lore connections.
 
 **Current Count:** 15 techniques (MVP target: 25-40)
-**Status:** Core techniques complete, more to be added during content phase
+**Status:** Core techniques complete with chi aspect integration
+
+**Chi Aspect Legend:**
+- 力 (Force) - Raw power, guard breaking
+- 流 (Flow) - Combos, adaptability
+- 准 (Precision) - Critical hits, vital strikes
+- 爆 (Burst) - Speed, explosive damage
+- 甲 (Armor) - Defense, endurance
+- 感 (Sense) - Evasion, counters
+- 意 (Will) - Status resistance
+- 逆 (Inverse) - Desperation power
 
 ---
 
 ## Quick Reference
 
-| Technique | Stance | Tier | Power | Chi | Speed | Key Effect |
-|-----------|--------|------|-------|-----|-------|------------|
-| Palm Strike | Any | Basic | 12 | 0 | 0 | Chi gain +3 |
-| Flowing Strike | Flowing | Light | 16 | 5 | +1 | Combo starter |
-| Stream Palm | Flowing | Medium | 24 | 8 | 0 | Combo follow-up |
-| Ripple Guard | Flowing | Light | 8 | 4 | +2 | Counter on defend |
-| Weathered Palm | Weathered | Medium | 22 | 6 | -1 | Armor Break 25% |
-| Iron Palm | Weathered | Heavy | 35 | 12 | -2 | Armor Break 50% |
-| Steadfast Guard | Weathered | Light | 0 | 4 | +1 | Defense +75% |
-| Ravenous Palm | Hungry | Light | 18 | 4 | +1 | Extra chi on hit |
-| Desperate Strike | Hungry | Medium | 28 | 8 | 0 | +50% if HP < 30% |
-| Feral Combo | Hungry | Heavy | 38 | 14 | -1 | 2-hit attack |
-| Beggar's Feint | Any | Light | 10 | 5 | +2 | +30% crit next |
-| Rising Dragon | Any | Heavy | 40 | 15 | -2 | Stun 1 turn |
-| Chi Surge | Any | Medium | 0 | 0 | -1 | +25 chi, buff |
-| Elder's Teaching | Any | Ultimate | 55 | 22 | -3 | Ignores defense |
-| Wanderer's Path | Any | Medium | 20 | 10 | 0 | Heals 15% HP |
+| Technique | Chinese | Stance | Tier | Power | Chi | Speed | Chi Aspect | Key Effect |
+|-----------|---------|--------|------|-------|-----|-------|------------|------------|
+| Palm Strike | 掌击 | Any | Basic | 12 | 0 | 0 | Force (力) | Chi gain +3 |
+| Flowing Strike | 流打 | Flowing | Light | 16 | 5 | +1 | Flow (流) | Combo starter |
+| Stream Palm | 河掌 | Flowing | Medium | 24 | 8 | 0 | Flow (流) | Combo follow-up |
+| Ripple Guard | 波防 | Flowing | Light | 8 | 4 | +2 | Sense (感) | Counter on defend |
+| Weathered Palm | 风化掌 | Weathered | Medium | 22 | 6 | -1 | Armor (甲) | Armor Break 25% |
+| Iron Palm | 铁掌 | Weathered | Heavy | 35 | 12 | -2 | Force (力) | Armor Break 50% |
+| Steadfast Guard | 恒守 | Weathered | Light | 0 | 4 | +1 | Will (意) | Defense +75% |
+| Ravenous Palm | 饿掌 | Hungry | Light | 18 | 4 | +1 | Burst (爆) | Extra chi on hit |
+| Desperate Strike | 绝击 | Hungry | Medium | 28 | 8 | 0 | Inverse (逆) | +50% if HP < 30% |
+| Feral Combo | 狂连 | Hungry | Heavy | 38 | 14 | -1 | Force+Burst | 2-hit attack |
+| Beggar's Feint | 丐虚 | Any | Light | 10 | 5 | +2 | Sense (感) | +30% crit next |
+| Rising Dragon | 升龙 | Any | Heavy | 40 | 15 | -2 | Force (力) | Stun 1 turn |
+| Chi Surge | 气涌 | Any | Medium | 0 | 0 | -1 | Flow (流) | +25 chi, buff |
+| Elder's Teaching | 长老教 | Any | Ultimate | 55 | 22 | -3 | All Aspects | Ignores defense |
+| Wanderer's Path | 游子路 | Any | Medium | 20 | 10 | 0 | Flow+Will | Heals 15% HP |
 
 ---
 
@@ -65,9 +86,10 @@ All techniques in The Beggars Sect with complete stats.
 
 ## Basic Attack
 
-### Palm Strike
+### 掌击 Zhǎng Jī (Palm Strike)
 **Stance:** Any
 **Tier:** Basic
+**Chi Aspect:** Force (力)
 **Unlock:** Start of game (default attack)
 
 | Stat | Value |
@@ -77,6 +99,8 @@ All techniques in The Beggars Sect with complete stats.
 | Chi Gain | +3 |
 | Speed | 0 |
 | Effect | None |
+
+**Aspect Bonus:** +1 chi gain if Force-aligned stance (Hungry)
 
 **Mastery Progression:**
 - Lv1 (0): Base attack
@@ -89,18 +113,22 @@ All techniques in The Beggars Sect with complete stats.
 - Starter for: Basic Chain
 - Follow-up to: Any technique
 
-**Notes:**
-The bread-and-butter attack. Free, generates chi, always available. Mastering this is essential for sustained combat.
+**Lore:**
+"Even the simplest palm can fell a mountain, if the chi behind it is true." - Elder Chen
+
+The bread-and-butter attack. Free, generates chi, always available. In the Beggars Sect, mastering the palm strike means learning to channel chi through empty hands—no weapon, no ornament, just survival.
 
 ---
 
-## Flowing Stance Techniques
+## Flowing Stance Techniques (流架技)
 
-*Flowing Stance focuses on balance, combos, and adaptability.*
+*Flowing Stance (流架 Liú Jià) embodies Flow (流) and Precision (准) aspects.*
+*Philosophy: "Water finds its path" (水寻其道)*
 
-### Flowing Strike
-**Stance:** Flowing
+### 流打 Liú Dǎ (Flowing Strike)
+**Stance:** Flowing (流架)
 **Tier:** Light
+**Chi Aspect:** Flow (流)
 **Unlock:** Elder Chen teaching (Chapter 1)
 
 | Stat | Value |
@@ -110,6 +138,8 @@ The bread-and-butter attack. Free, generates chi, always available. Mastering th
 | Speed | +1 |
 | Effect | Combo Starter - next technique in 2 turns gets +15% damage |
 
+**Aspect Bonus:** In Flowing Stance, combo window extends by 1 turn
+
 **Mastery Progression:**
 - Lv1 (0): Base ability
 - Lv2 (10): Power +2 (→18)
@@ -118,17 +148,20 @@ The bread-and-butter attack. Free, generates chi, always available. Mastering th
 - Lv5 (100): Combo window extends to 3 turns
 
 **Combo Links:**
-- Starter for: Flowing River, Stream Assault
-- Follow-up to: Palm Strike
+- Starter for: 流河 Flowing River, Stream Assault
+- Follow-up to: 掌击 Palm Strike
 
-**Notes:**
-The signature Flowing technique. Fast, efficient, and sets up devastating combos. Essential for combo-focused playstyle.
+**Lore:**
+"The first strike is not the end, but the beginning of a river." - Elder Chen
+
+The signature Flowing technique. Named for how chi flows from one strike into the next like water finding its path. Essential for combo-focused playstyle.
 
 ---
 
-### Stream Palm
-**Stance:** Flowing
+### 河掌 Hé Zhǎng (Stream Palm)
+**Stance:** Flowing (流架)
 **Tier:** Medium
+**Chi Aspect:** Flow (流) + Precision (准)
 **Unlock:** Elder Chen teaching (Chapter 1, after first combat)
 
 | Stat | Value |
@@ -137,6 +170,8 @@ The signature Flowing technique. Fast, efficient, and sets up devastating combos
 | Chi Cost | 8 |
 | Speed | 0 |
 | Effect | If used after Flowing Strike, gains +20% damage |
+
+**Aspect Bonus:** Precision aspect adds +5% crit chance when combo-linked
 
 **Mastery Progression:**
 - Lv1 (0): Base ability
@@ -147,17 +182,20 @@ The signature Flowing technique. Fast, efficient, and sets up devastating combos
 
 **Combo Links:**
 - Starter for: None
-- Follow-up to: Flowing Strike, Palm Strike
-- Finisher for: Flowing River
+- Follow-up to: 流打 Flowing Strike, 掌击 Palm Strike
+- Finisher for: 流河 Flowing River
 
-**Notes:**
-The natural follow-up to Flowing Strike. Solid damage that rewards combo play.
+**Lore:**
+"A river is most powerful not where it begins, but where currents converge."
+
+The natural follow-up to Flowing Strike. The technique channels chi like water—soft at the surface, devastating at the core.
 
 ---
 
-### Ripple Guard
-**Stance:** Flowing
+### 波防 Bō Fáng (Ripple Guard)
+**Stance:** Flowing (流架)
 **Tier:** Light
+**Chi Aspect:** Sense (感)
 **Unlock:** Elder Chen teaching (Chapter 1)
 
 | Stat | Value |
@@ -166,6 +204,8 @@ The natural follow-up to Flowing Strike. Solid damage that rewards combo play.
 | Chi Cost | 4 |
 | Speed | +2 |
 | Effect | Enters guard state. If hit within 1 turn, counter-attacks for 150% power |
+
+**Aspect Bonus:** Sense aspect allows reading enemy intent, +10% counter activation if enemy was aggressive last turn
 
 **Mastery Progression:**
 - Lv1 (0): Base ability
@@ -178,18 +218,22 @@ The natural follow-up to Flowing Strike. Solid damage that rewards combo play.
 - Starter for: Counter Chain
 - Follow-up to: Any technique (defensive reset)
 
-**Notes:**
-Defensive technique that punishes aggressive enemies. The faster speed means you can set it up reactively.
+**Lore:**
+"Throw a stone into still water. The ripples tell you everything about the stone."
+
+Defensive technique that embodies the Sense (感) aspect—reading the enemy's intent and turning their aggression against them. The beggar appears to retreat, but is preparing to strike.
 
 ---
 
-## Weathered Stance Techniques
+## Weathered Stance Techniques (风化架技)
 
-*Weathered Stance focuses on defense, armor breaking, and endurance.*
+*Weathered Stance (风化架 Fēnghuà Jià) embodies Armor (甲) and Will (意) aspects.*
+*Philosophy: "The mountain endures" (山能恒久)*
 
-### Weathered Palm
-**Stance:** Weathered
+### 风化掌 Fēnghuà Zhǎng (Weathered Palm)
+**Stance:** Weathered (风化架)
 **Tier:** Medium
+**Chi Aspect:** Armor (甲)
 **Unlock:** Elder Wu teaching (Chapter 1)
 
 | Stat | Value |
@@ -199,6 +243,8 @@ Defensive technique that punishes aggressive enemies. The faster speed means you
 | Speed | -1 |
 | Effect | 25% chance to apply Armor Break (3 turns, -50% DEF) |
 
+**Aspect Bonus:** In Weathered Stance, Armor Break duration +1 turn
+
 **Mastery Progression:**
 - Lv1 (0): Base ability
 - Lv2 (10): Armor Break chance +10% (→35%)
@@ -207,17 +253,20 @@ Defensive technique that punishes aggressive enemies. The faster speed means you
 - Lv5 (100): Armor Break guaranteed on crit
 
 **Combo Links:**
-- Starter for: Iron Breaker
-- Follow-up to: Palm Strike, Steadfast Guard
+- Starter for: 铁破 Iron Breaker
+- Follow-up to: 掌击 Palm Strike, 恒守 Steadfast Guard
 
-**Notes:**
-The core Weathered technique. Slower but armor breaking enables huge damage follow-ups.
+**Lore:**
+"Even stone yields to time. Your armor is merely stone."
+
+The core Weathered technique. Named for how wind and rain erode mountains over centuries—this palm does it in seconds. The Beggars Sect developed this technique by observing how even the strongest walls crumble.
 
 ---
 
-### Iron Palm
-**Stance:** Weathered
+### 铁掌 Tiě Zhǎng (Iron Palm)
+**Stance:** Weathered (风化架)
 **Tier:** Heavy
+**Chi Aspect:** Force (力) + Armor (甲)
 **Unlock:** Elder Wu teaching (Chapter 2) or rare scroll drop
 
 | Stat | Value |
@@ -226,6 +275,8 @@ The core Weathered technique. Slower but armor breaking enables huge damage foll
 | Chi Cost | 12 |
 | Speed | -2 |
 | Effect | 50% chance to apply Armor Break. If target already has Armor Break, +30% damage |
+
+**Aspect Bonus:** Force aspect adds guard-break property, preventing enemy defend actions for 1 turn
 
 **Mastery Progression:**
 - Lv1 (0): Base ability
@@ -236,17 +287,20 @@ The core Weathered technique. Slower but armor breaking enables huge damage foll
 
 **Combo Links:**
 - Starter for: None (finisher move)
-- Follow-up to: Weathered Palm
-- Finisher for: Iron Breaker
+- Follow-up to: 风化掌 Weathered Palm
+- Finisher for: 铁破 Iron Breaker
 
-**Notes:**
-The heavy hitter of Weathered stance. Devastating against armor-broken targets. Slow but worth it.
+**Lore:**
+"A beggar's hands become iron through years of hard labor. We turn that hardship into power."
+
+The heavy hitter of Weathered stance. Legend says Elder Wu developed this after years of hauling iron in the Outer Ring's forges. His hands became harder than the metal itself.
 
 ---
 
-### Steadfast Guard
-**Stance:** Weathered
+### 恒守 Héng Shǒu (Steadfast Guard)
+**Stance:** Weathered (风化架)
 **Tier:** Light
+**Chi Aspect:** Will (意)
 **Unlock:** Elder Wu teaching (Chapter 1)
 
 | Stat | Value |
@@ -255,6 +309,8 @@ The heavy hitter of Weathered stance. Devastating against armor-broken targets. 
 | Chi Cost | 4 |
 | Speed | +1 |
 | Effect | Defense +75% for 2 turns. Chi gained when hit +3 |
+
+**Aspect Bonus:** Will aspect grants immunity to intimidation and fear effects while active
 
 **Mastery Progression:**
 - Lv1 (0): Base ability
@@ -267,18 +323,22 @@ The heavy hitter of Weathered stance. Devastating against armor-broken targets. 
 - Starter for: Defensive setup
 - Follow-up to: Any (defensive reset)
 
-**Notes:**
-Pure defense. Use when expecting big hits. The chi generation when hit makes it efficient for building resources.
+**Lore:**
+"They can take everything from us. But they cannot take our will to stand."
+
+Pure defense. The technique channels chi into Will (意), the aspect of mental fortitude. A beggar in Steadfast Guard has already accepted they might be hit—and decided it doesn't matter.
 
 ---
 
-## Hungry Stance Techniques
+## Hungry Stance Techniques (饿架技)
 
-*Hungry Stance focuses on aggression, risk-reward, and burst damage.*
+*Hungry Stance (饿架 È Jià) embodies Force (力) and Burst (爆) aspects.*
+*Philosophy: "Hunger drives the hunt" (饥驱猎心)*
 
-### Ravenous Palm
-**Stance:** Hungry
+### 饿掌 È Zhǎng (Ravenous Palm)
+**Stance:** Hungry (饿架)
 **Tier:** Light
+**Chi Aspect:** Burst (爆)
 **Unlock:** Elder Mei teaching (Chapter 2) or discovery through hunger (low HP combat)
 
 | Stat | Value |
@@ -288,6 +348,8 @@ Pure defense. Use when expecting big hits. The chi generation when hit makes it 
 | Speed | +1 |
 | Effect | Chi gain +5 on hit. If this kills an enemy, restore 10% HP |
 
+**Aspect Bonus:** Burst aspect grants +1 initiative on next turn if this hits
+
 **Mastery Progression:**
 - Lv1 (0): Base ability
 - Lv2 (10): Power +2 (→20)
@@ -296,17 +358,20 @@ Pure defense. Use when expecting big hits. The chi generation when hit makes it 
 - Lv5 (100): If HP < 50%, Power +30%
 
 **Combo Links:**
-- Starter for: Hungry Chain
-- Follow-up to: Palm Strike
+- Starter for: 饿连 Hungry Chain
+- Follow-up to: 掌击 Palm Strike
 
-**Notes:**
-The core Hungry technique. Great chi generation and sustain if you can secure kills.
+**Lore:**
+"The hungry wolf doesn't hesitate. It strikes because it must." - Elder Mei
+
+The core Hungry technique. Named for the desperation of genuine hunger—the sect discovered that those who fight for survival fight differently. Great chi generation and sustain if you can secure kills.
 
 ---
 
-### Desperate Strike
-**Stance:** Hungry
+### 绝击 Jué Jī (Desperate Strike)
+**Stance:** Hungry (饿架)
 **Tier:** Medium
+**Chi Aspect:** Inverse (逆)
 **Unlock:** Discovered automatically when fighting at low HP (< 30%)
 
 | Stat | Value |
@@ -315,6 +380,8 @@ The core Hungry technique. Great chi generation and sustain if you can secure ki
 | Chi Cost | 8 |
 | Speed | 0 |
 | Effect | If user HP < 30%, Power +50% (→42). If HP < 15%, also guaranteed crit |
+
+**Aspect Bonus:** Inverse chi activates Desperation Gates, converting damage taken into chi at 75% rate while effect is active
 
 **Mastery Progression:**
 - Lv1 (0): Base ability
@@ -327,14 +394,17 @@ The core Hungry technique. Great chi generation and sustain if you can secure ki
 - Starter for: None
 - Follow-up to: Any (emergency option)
 
-**Notes:**
-The comeback technique. Rewards risky play at low HP. Can turn losing fights around.
+**Lore:**
+"绝 (Jué) means 'desperate' and 'ultimate.' When nothing remains, everything becomes possible."
+
+The comeback technique. This is the first Inverse (逆) chi technique Li Wei learns—not through teaching, but through survival. The technique cannot be taught; it emerges when the Hungry Void opens. This is why the Beggars Sect never truly dies.
 
 ---
 
-### Feral Combo
-**Stance:** Hungry
+### 狂连 Kuáng Lián (Feral Combo)
+**Stance:** Hungry (饿架)
 **Tier:** Heavy
+**Chi Aspect:** Force (力) + Burst (爆)
 **Unlock:** Elder Mei teaching (Chapter 2)
 
 | Stat | Value |
@@ -343,6 +413,8 @@ The comeback technique. Rewards risky play at low HP. Can turn losing fights aro
 | Chi Cost | 14 |
 | Speed | -1 |
 | Effect | Two-hit attack. Second hit has +25% crit chance |
+
+**Aspect Bonus:** Force aspect applies stagger between hits; Burst aspect means if first hit crits, second is guaranteed crit
 
 **Mastery Progression:**
 - Lv1 (0): Base ability (2 hits)
@@ -353,20 +425,24 @@ The comeback technique. Rewards risky play at low HP. Can turn losing fights aro
 
 **Combo Links:**
 - Starter for: None (self-contained combo)
-- Follow-up to: Ravenous Palm
+- Follow-up to: 饿掌 Ravenous Palm
 
-**Notes:**
-Multi-hit devastation. The two hits mean two chances to crit and apply effects. Very chi-hungry but very rewarding.
+**Lore:**
+"狂 (Kuáng) means 'wild' or 'feral.' A cornered animal is most dangerous."
+
+Multi-hit devastation. Elder Mei developed this by observing how wild dogs hunt—each bite leads into the next with frenzied momentum. Chi-hungry but rewarding, embodying the Hungry philosophy.
 
 ---
 
-## General Techniques (Any Stance)
+## General Techniques (通用技) - Any Stance
 
 *These techniques work in any stance and provide utility.*
+*They draw from multiple chi aspects, making them universally accessible.*
 
-### Beggar's Feint
+### 丐虚 Gài Xū (Beggar's Feint)
 **Stance:** Any
 **Tier:** Light
+**Chi Aspect:** Sense (感)
 **Unlock:** Elder Chen teaching (Chapter 1)
 
 | Stat | Value |
@@ -375,6 +451,8 @@ Multi-hit devastation. The two hits mean two chances to crit and apply effects. 
 | Chi Cost | 5 |
 | Speed | +2 |
 | Effect | Next attack within 2 turns has +30% crit chance |
+
+**Aspect Bonus:** Sense aspect reveals enemy's next intended action for 1 turn
 
 **Mastery Progression:**
 - Lv1 (0): Base ability
@@ -387,14 +465,17 @@ Multi-hit devastation. The two hits mean two chances to crit and apply effects. 
 - Starter for: Crit setup combos
 - Follow-up to: Any
 
-**Notes:**
-Setup technique. The fast speed means you can set up and still act quickly. Pairs well with heavy techniques.
+**Lore:**
+"虚 (Xū) means 'empty' or 'false.' A beggar's greatest weapon is being underestimated."
+
+Setup technique embodying the Beggars Sect's philosophy of deception. Appear harmless, then strike with precision. The technique channels Sense (感) chi to read the opponent while creating false openings.
 
 ---
 
-### Rising Dragon
+### 升龙 Shēng Lóng (Rising Dragon)
 **Stance:** Any
 **Tier:** Heavy
+**Chi Aspect:** Force (力)
 **Unlock:** Boss drop (Chapter 1 boss) or Elder Wu teaching (Chapter 2)
 
 | Stat | Value |
@@ -403,6 +484,8 @@ Setup technique. The fast speed means you can set up and still act quickly. Pair
 | Chi Cost | 15 |
 | Speed | -2 |
 | Effect | Applies Stun (1 turn). Target skips next action |
+
+**Aspect Bonus:** Force aspect applies additional knockback, breaking enemy formations in group fights
 
 **Mastery Progression:**
 - Lv1 (0): Base ability
@@ -413,16 +496,19 @@ Setup technique. The fast speed means you can set up and still act quickly. Pair
 
 **Combo Links:**
 - Starter for: Stun combos (free follow-up while stunned)
-- Follow-up to: Beggar's Feint (for crit chance)
+- Follow-up to: 丐虚 Beggar's Feint (for crit chance)
 
-**Notes:**
-The big crowd control technique. Expensive but the stun enables safe follow-up damage. Crucial for hard fights.
+**Lore:**
+"Even a beggar can touch the heavens, if their chi rises true."
+
+The big crowd control technique. Originally a high-sect technique, it was "acquired" by the Beggars Sect generations ago. The sect's version is rougher, rawer—but equally devastating. Named for the upward chi surge that lifts both user and opponent.
 
 ---
 
-### Chi Surge
+### 气涌 Qì Yǒng (Chi Surge)
 **Stance:** Any
 **Tier:** Medium (Utility)
+**Chi Aspect:** Flow (流)
 **Unlock:** Meditation discovery (Training Ground, Chapter 1)
 
 | Stat | Value |
@@ -433,6 +519,8 @@ The big crowd control technique. Expensive but the stun enables safe follow-up d
 | Speed | -1 |
 | Effect | Gain 25 chi. Apply Attack Up (+25% damage) for 2 turns |
 
+**Aspect Bonus:** Flow aspect allows chi to circulate to allies in range (future feature: party chi sharing)
+
 **Mastery Progression:**
 - Lv1 (0): Base ability
 - Lv2 (10): Chi gain +5 (→+30)
@@ -442,16 +530,19 @@ The big crowd control technique. Expensive but the stun enables safe follow-up d
 
 **Combo Links:**
 - Starter for: Burst combos
-- Follow-up to: Steadfast Guard (safe setup)
+- Follow-up to: 恒守 Steadfast Guard (safe setup)
 
-**Notes:**
-The key resource technique. Sacrifices a turn for massive chi and a damage buff. Set up before big combos.
+**Lore:**
+"涌 (Yǒng) means 'to surge' or 'to gush forth.' Chi is like water—dam it, and it builds pressure."
+
+The key resource technique. Discovered through meditation, not teaching. The technique channels Flow (流) chi to rapidly circulate energy through all meridians, building reserves for devastating follow-ups.
 
 ---
 
-### Elder's Teaching
+### 长老教 Zhǎnglǎo Jiào (Elder's Teaching)
 **Stance:** Any
 **Tier:** Ultimate
+**Chi Aspect:** All Eight Aspects
 **Unlock:** Complete all Elder training (Chapter 3)
 
 | Stat | Value |
@@ -460,6 +551,16 @@ The key resource technique. Sacrifices a turn for massive chi and a damage buff.
 | Chi Cost | 22 |
 | Speed | -3 |
 | Effect | Ignores 100% of target defense. 25% chance to apply all status effects |
+
+**Aspect Bonus:** Channels all eight aspects simultaneously—the signature of true mastery. Each aspect contributes:
+- Force: Defense ignore
+- Flow: Status application
+- Precision: Guaranteed hit
+- Burst: Cannot be interrupted
+- Armor: User takes reduced damage during execution
+- Sense: Reveals enemy weaknesses
+- Will: Cannot be countered
+- Inverse: Damage scales with missing HP
 
 **Mastery Progression:**
 - Lv1 (0): Base ability
@@ -470,17 +571,20 @@ The key resource technique. Sacrifices a turn for massive chi and a damage buff.
 
 **Combo Links:**
 - Starter for: None (finisher)
-- Follow-up to: Chi Surge (for chi), Beggar's Feint (for crit)
+- Follow-up to: 气涌 Chi Surge (for chi), 丐虚 Beggar's Feint (for crit)
 - Finisher for: Any combo
 
-**Notes:**
-The ultimate technique. The culmination of beggar training. Defense-ignoring damage makes it devastating against tanks.
+**Lore:**
+"教 (Jiào) means 'teaching' or 'doctrine.' This technique is not learned—it is understood."
+
+The ultimate technique representing the culmination of beggar training. When all three elders recognize a disciple's growth, they impart fragments of Wei Zhong's original combat philosophy. The technique synthesizes everything—balance, endurance, aggression—into a single devastating strike.
 
 ---
 
-### Wanderer's Path
+### 游子路 Yóuzǐ Lù (Wanderer's Path)
 **Stance:** Any
 **Tier:** Medium (Utility)
+**Chi Aspect:** Flow (流) + Will (意)
 **Unlock:** Discovery through exploration (hidden scroll, Chapter 2)
 
 | Stat | Value |
@@ -489,6 +593,8 @@ The ultimate technique. The culmination of beggar training. Defense-ignoring dam
 | Chi Cost | 10 |
 | Speed | 0 |
 | Effect | Restore 15% Max HP. If HP > 75%, instead gain Defense Up (2 turns) |
+
+**Aspect Bonus:** Flow aspect heals over time (5% additional HP over 3 turns); Will aspect clears one debuff
 
 **Mastery Progression:**
 - Lv1 (0): Base ability
@@ -501,49 +607,68 @@ The ultimate technique. The culmination of beggar training. Defense-ignoring dam
 - Starter for: Sustain rotation
 - Follow-up to: Any (recovery option)
 
-**Notes:**
-The sustain technique. Provides healing or defense based on current HP. Essential for long fights.
+**Lore:**
+"游子 (Yóuzǐ) means 'wanderer' or 'traveler far from home.' The path teaches endurance."
+
+The sustain technique. A hidden scroll technique found in the Undercity, attributed to Wei Zhong himself. It reflects the beggar's journey—walking through hardship, healing through movement, surviving through will. The technique channels both Flow (流) and Will (意) to restore the body and spirit.
 
 ---
 
-## Combo Database
+## Combo Database (连招录)
+
+*Combos (连招, Liánzhāo) chain techniques together for bonus damage and effects.*
 
 ### Confirmed Combo Chains
 
-#### Flowing River (3-hit)
-**Sequence:** Flowing Strike → Stream Palm → Palm Strike
+#### 流河 Liú Hé (Flowing River) - 3-hit
+**Sequence:** 流打 Flowing Strike → 河掌 Stream Palm → 掌击 Palm Strike
 **Total Chi:** 5 + 8 + 0 = 13
 **Damage Multipliers:** 1.0 → 1.1 → 1.3
-**Bonus:** Stream Palm gets +20% from Flowing Strike
-**Notes:** The core Flowing combo. Reliable damage and chi-positive finish.
+**Chi Aspects:** Flow (流) throughout
+**Bonus:** Stream Palm gets +20% from Flowing Strike; Palm Strike refunds 5 chi
+**Lore:** "A river begins as a trickle, grows into a stream, and becomes unstoppable."
 
-#### Iron Breaker (2-hit)
-**Sequence:** Weathered Palm → Iron Palm
+The core Flowing combo. Reliable damage, chi-positive finish. The combo embodies the Flow (流) aspect—each strike flowing naturally into the next.
+
+#### 铁破 Tiě Pò (Iron Breaker) - 2-hit
+**Sequence:** 风化掌 Weathered Palm → 铁掌 Iron Palm
 **Total Chi:** 6 + 12 = 18
 **Damage Multipliers:** 1.0 → 1.1
+**Chi Aspects:** Armor (甲) → Force (力)
 **Bonus:** If Weathered Palm applies Armor Break, Iron Palm gets +30%
-**Notes:** The Weathered burst combo. Devastating if armor break procs.
+**Lore:** "Erode the armor, then shatter what remains."
 
-#### Hungry Chain (3-hit)
-**Sequence:** Ravenous Palm → Desperate Strike → Feral Combo
+The Weathered burst combo. Devastating if armor break procs. The combo transitions from Armor (甲) to Force (力)—first weakening defenses, then overwhelming them.
+
+#### 饿连 È Lián (Hungry Chain) - 3-hit
+**Sequence:** 饿掌 Ravenous Palm → 绝击 Desperate Strike → 狂连 Feral Combo
 **Total Chi:** 4 + 8 + 14 = 26
 **Damage Multipliers:** 1.0 → 1.1 → 1.3
-**Bonus:** High chi recovery from Ravenous Palm, burst from Feral
-**Notes:** The Hungry all-in. Expensive but massive damage potential.
+**Chi Aspects:** Burst (爆) → Inverse (逆) → Force+Burst
+**Bonus:** High chi recovery from Ravenous Palm, inverse scaling from Desperate Strike
+**Lore:** "Hunger drives the hunt. Desperation gives it teeth. Fury finishes it."
 
-#### Setup Strike (2-hit)
-**Sequence:** Beggar's Feint → Rising Dragon
+The Hungry all-in. Expensive but massive damage potential. This combo activates inverse chi mechanics—the lower your HP, the more devastating it becomes.
+
+#### 虚龙 Xū Lóng (False Dragon) - 2-hit
+**Sequence:** 丐虚 Beggar's Feint → 升龙 Rising Dragon
 **Total Chi:** 5 + 15 = 20
 **Damage Multipliers:** 1.0 → 1.1
+**Chi Aspects:** Sense (感) → Force (力)
 **Bonus:** +30% crit on Rising Dragon from Feint
-**Notes:** Crit-fishing for a stun. If crit lands, enemy loses turn AND takes huge damage.
+**Lore:** "Appear weak, strike like thunder."
 
-#### Surge Finisher (3-hit)
-**Sequence:** Chi Surge → Beggar's Feint → Elder's Teaching
+Crit-fishing for a stun. If crit lands, enemy loses turn AND takes huge damage. The combo name reflects the Beggars Sect philosophy—the "false" appearance hiding true power.
+
+#### 涌终 Yǒng Zhōng (Surge Finisher) - 3-hit
+**Sequence:** 气涌 Chi Surge → 丐虚 Beggar's Feint → 长老教 Elder's Teaching
 **Total Chi:** 0 + 5 + 22 = 27 (but Chi Surge gives +25, net cost 2)
 **Damage Multipliers:** — → 1.1 → 1.3
-**Bonus:** Attack Up from Surge, crit chance from Feint
-**Notes:** The ultimate combo. Sets up perfectly for Elder's Teaching devastation.
+**Chi Aspects:** Flow (流) → Sense (感) → All Eight
+**Bonus:** Attack Up from Surge, crit chance from Feint, all aspects from Elder's Teaching
+**Lore:** "Build the wave, find the opening, release everything."
+
+The ultimate combo. Sets up perfectly for Elder's Teaching devastation. This combo transitions through aspects, culminating in the all-aspect strike that defines mastery.
 
 ---
 
@@ -597,3 +722,4 @@ For full 25-40 target:
 |------|---------|--------|
 | 2025-12-05 | 0.0 | Initial template |
 | 2025-12-05 | 1.0 | Added 15 core techniques with full stats |
+| 2025-12-05 | 2.0 | Major update: Chinese names, chi aspects, aspect bonuses, lore for all techniques |

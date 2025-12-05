@@ -31,9 +31,9 @@ interface Experiment {
 
 **Current Projects:**
 1. bathala.genkaw.com (completed) - Remote terminal
-2. Claude + n8n Integration (active) - Automation exploration
+2. Claude Integration (active) - AI exploration
 3. Genkaw Platform (active) - This website
-4. Monetizable Automation Tools (planned) - Future products
+4. Monetizable Tools (planned) - Future products
 
 **Layout:**
 - 2-column grid (responsive)
@@ -119,7 +119,6 @@ interface Experiment {
 
 - ❌ Environmental combat → v1.5
 - ❌ Deceptive stance (4th stance) → v1.5
-- ❌ n8n in-game integration → v2.0
 - ❌ Community features → v2.0
 - ❌ Chapters 4-5 → Sequel or DLC
 - ❌ Web version → v2.0
@@ -176,7 +175,7 @@ interface Experiment {
 **Use case:** Reference for coding combat logic
 
 #### 2. AI_INTEGRATION.md (Automation & AI)
-**Focus:** How AI/n8n enhance gameplay
+**Focus:** How AI enhances gameplay
 **Contents:**
 - Claude API integration architecture
 - Procedural enemy generation
@@ -238,7 +237,7 @@ interface Experiment {
 
 ---
 
-## 🔄 Feedback System Design (n8n + Database)
+## 🔄 Feedback System Design
 
 ### Purpose
 **NOT** in-game integration. **Separate** feedback collection system for players.
@@ -265,7 +264,7 @@ interface Experiment {
                   │
                   ↓
 ┌─────────────────────────────────────────────┐
-│  n8n Workflow                               │
+│  Backend API                                │
 │  - Receives form submission                 │
 │  - Validates data                           │
 │  - Stores in database                       │
@@ -324,9 +323,9 @@ combat_wins     INTEGER
 - Feedback text
 - Email (optional)
 
-### n8n Workflow Steps
+### Backend Workflow Steps
 
-1. **Webhook Trigger** - Receives form POST
+1. **API Endpoint** - Receives form POST
 2. **Validate Data** - Check required fields
 3. **Enrich Data** - Add timestamp, IP hash (privacy)
 4. **Store in DB** - INSERT into feedback table
@@ -363,7 +362,7 @@ combat_wins     INTEGER
 
 **Week 10-11 (During polish phase):**
 - Create feedback form page
-- Set up n8n workflow
+- Set up backend API
 - Choose database (Airtable easiest to start)
 - Test submission flow
 - Add feedback link to game
@@ -502,7 +501,7 @@ combat_wins     INTEGER
 - [ ] UI polish (menus, displays)
 - [ ] Tutorial refinement
 - [ ] Create feedback form page
-- [ ] Set up n8n workflow
+- [ ] Set up backend API
 - [ ] Set up database (Airtable)
 - [ ] Integrate feedback link in game
 

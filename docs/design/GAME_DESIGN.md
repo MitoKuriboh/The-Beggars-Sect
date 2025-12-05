@@ -480,7 +480,6 @@ No two playthroughs are identical.
 
 - 4th stance (Deceptive)
 - Environmental combat
-- n8n in-game integration
 - Chapters 4-5
 - Staff techniques
 - Web version

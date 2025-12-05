@@ -202,7 +202,6 @@ We have ~2,300 lines of design documentation establishing:
 **Deferred to v1.5+:**
 - Deceptive stance (4th stance)
 - Environmental combat
-- n8n in-game integration
 - Chapters 4-5
 - Web version
 

@@ -56,7 +56,7 @@ See TODO.md for complete roadmap
   - Website integration strategy
   - Scoped MVP definition (locked features)
   - Documentation split plan (4 focused docs)
-  - Feedback system design (n8n + database)
+  - Feedback system design (web form + database)
   - Realistic 12-week roadmap with milestones
   - Risk management and contingencies
   - Immediate next actions
@@ -72,9 +72,9 @@ See TODO.md for complete roadmap
 
 ### Changed
 - **Scope reduction**: From 5 chapters → 3 chapters for v1.0
-- **Feature cuts**: Environmental combat, 4th stance, n8n in-game → post-v1.0
+- **Feature cuts**: Environmental combat, 4th stance → post-v1.0
 - **Documentation strategy**: Split into 4 focused docs instead of 2 massive files
-- **Feedback approach**: Separate web form (not in-game) using n8n + database
+- **Feedback approach**: Separate web form (not in-game) using simple database
 
 ### Context
 **Why:** Initial design was too ambitious for 12-week timeline. Ruthless scoping needed to create achievable MVP while maintaining core vision and showcase value.

@@ -673,10 +673,10 @@ This document tracks the design status of every system and aspect of The Beggars
 
 ---
 
-#### 10.3 n8n Integration
+#### 10.3 Automation Integration
 **Status:** `[DEFERRED TO v1.5]`
 
-Per Session 7 scoping, n8n is for feedback system only, not in-game.
+Per Session 7 scoping, automation features are deferred to post-v1.0.
 
 ---
 
