@@ -1,5 +1,8 @@
 # Documentation Guidelines
 
+**Last Updated:** 2025-12-05
+**Version:** 2.0
+
 How to write and maintain documentation for The Beggars Sect.
 
 ---
@@ -105,15 +108,16 @@ Every game element needs quantified stats. If you can't give a number, use a pla
 - Defeat: "[Line]"
 ```
 
-#### For Story Beats
+#### For Story Scenes
 ```markdown
-### [Scene Name]
-**Chapter:** X
+### Scene X.Y: [Scene Name]
+**Type:** [Cutscene/Combat/Exploration/Dialogue/Puzzle]
 **Location:** [Area]
-**Trigger:** [What causes this scene]
+**Player Input:** [Description of player interaction]
 
-**Setup:**
-[Context before the scene]
+**Purpose:**
+- [Narrative purpose]
+- [Gameplay purpose]
 
 **Script:**
 [Dialogue and actions with speaker labels]
@@ -124,7 +128,37 @@ Every game element needs quantified stats. If you can't give a number, use a pla
 **Gameplay:**
 - Combat: [Yes/No - if yes, which enemies]
 - Technique Unlock: [If any]
-- Area Unlock: [If any]
+- Story Flags: [What gets set]
+```
+
+#### For Choice Points (Non-Linear)
+```markdown
+### Choice Point: [Name]
+**Location:** Scene X.Y
+**Trigger:** [What causes this choice]
+
+**Options:**
+| Choice | Path Points | Immediate Effect | Long-term Effect |
+|--------|-------------|------------------|------------------|
+| [Option A] | +2 Blade | [Effect] | [Effect] |
+| [Option B] | +2 Stream | [Effect] | [Effect] |
+| [Option C] | +2 Shadow | [Effect] | [Effect] |
+
+**All Options Lead To:** [Next scene or convergence point]
+```
+
+#### For Path Variations
+```markdown
+### Scene X.Y[A/B/C]: [Scene Name] ([Path] Variation)
+**Prerequisite:** [Path] dominant OR [previous choice]
+**Exclusive Content:** [What's unique to this path]
+
+[Scene content...]
+
+**Path Bonus:**
+- Technique: [If any]
+- Item: [If any]
+- Relationship: [If any]
 ```
 
 ### 4. Single Source of Truth
@@ -132,8 +166,10 @@ Every game element needs quantified stats. If you can't give a number, use a pla
 Each piece of information should exist in ONE place:
 - Technique stats → `systems/TECHNIQUES.md`
 - Enemy stats → `systems/ENEMIES.md`
-- Story scripts → `story/CHAPTER_X.md`
+- Story structure → `story/STORY_STRUCTURE.md`
+- Story scripts → `story/PROLOGUE.md`, `story/CHAPTER_X.md`
 - Formulas → `reference/FORMULAS.md`
+- Lore/world → `lore/` directory
 
 Cross-reference other docs, don't duplicate content.
 
@@ -174,11 +210,32 @@ Precise specifications with exact numbers. These are the blueprint for implement
 **Updates:** During design phase, then locked
 
 ### Story Documents (`story/`)
-Narrative content, dialogue, and character details.
+Narrative content, dialogue, branching paths, and character details.
+
+**Key Files:**
+- `STORY_STRUCTURE.md` - Master document for non-linear design, paths, endings
+- `PROLOGUE.md` - Tutorial and awakening sequence
+- `CHAPTER_X.md` - Individual chapters with branching scenes
+- `NPC_CAST.md` - Character details and dialogue patterns
 
 **Audience:** Writers, developers
 **Tone:** In-universe where appropriate
 **Updates:** During content phase
+
+### Lore Documents (`lore/`)
+World-building, history, and reference material.
+
+**Key Files:**
+- `WORLDBUILDING.md` - Universe bible, aptitude system
+- `CHI_SYSTEM.md` - Eight aspects, inverse chi mechanics
+- `SECTS.md` - 12 martial arts sects
+- `HISTORY.md` - Full timeline
+- `CHARACTERS.md` - Deep character profiles
+- `GLOSSARY.md` - Chinese terminology
+
+**Audience:** Writers, designers, developers
+**Tone:** Encyclopedic, in-universe
+**Updates:** During design phase, then stable
 
 ### Planning Documents (`planning/`)
 Project management, status tracking, and session notes.
@@ -196,9 +253,9 @@ Quick lookup tables and consolidated formulas.
 
 ---
 
-## Writing Checklist
+## Writing Checklists
 
-Before marking a system as ELABORATED:
+### Before marking a system as ELABORATED:
 
 - [ ] All stats have numeric values
 - [ ] All effects have durations/percentages
@@ -207,6 +264,53 @@ Before marking a system as ELABORATED:
 - [ ] Examples provided
 - [ ] Cross-references added
 - [ ] Status updated in DESIGN_STATUS.md
+
+### Before marking a story chapter as ELABORATED:
+
+- [ ] All scenes have Type, Location, Player Input
+- [ ] Choice points documented with path point values
+- [ ] Path variations (A/B/C) written for major divergences
+- [ ] Combat encounters have enemy references
+- [ ] Technique unlocks specified per path
+- [ ] Story flags documented
+- [ ] Convergence points identified
+- [ ] Cross-references to STORY_STRUCTURE.md
+
+---
+
+## Non-Linear Story System
+
+### The Three Paths
+
+| Path | Chinese | Philosophy | Gameplay Style |
+|------|---------|------------|----------------|
+| **Blade** | 刃 | "Power changes the world" | Direct confrontation, combat focus |
+| **Stream** | 流 | "Adaptation overcomes all" | Diplomacy, flexibility, dialogue |
+| **Shadow** | 影 | "Truth hides in darkness" | Stealth, investigation, secrets |
+
+### Path Point Rules
+
+- Choices award +2 path points to one path
+- 7+ points in a path = "committed" (affects ending eligibility)
+- Path points are tracked across the entire game
+- Final choice can override accumulated path (player agency)
+
+### Writing Path Variations
+
+When writing branching content:
+
+1. **Major divergences** get separate scenes (1.5A, 1.5B, 1.5C)
+2. **Minor divergences** use conditional dialogue within the same scene
+3. **All paths must converge** before major story beats
+4. **No path is "wrong"** - each provides unique content and rewards
+
+### Endings
+
+| Ending | Requirement | Book 2 Hook |
+|--------|-------------|-------------|
+| Destroyer | 7+ Blade OR final Blade choice | "The Falling Spire" |
+| Reformer | 7+ Stream OR final Stream choice | "The Opening Path" |
+| Wanderer | 7+ Shadow OR final Shadow choice | "The Endless Road" |
 
 ---
 
