@@ -24,7 +24,43 @@ See TODO.md for complete roadmap
 
 ---
 
-## [2024-12-04] - Project Foundation
+## [2025-12-05] - MVP Scoping & Integration Planning
+
+### Added
+- **MVP_PLAN.md** (3,800+ lines) - Comprehensive scoped plan
+  - Website integration strategy
+  - Scoped MVP definition (locked features)
+  - Documentation split plan (4 focused docs)
+  - Feedback system design (n8n + database)
+  - Realistic 12-week roadmap with milestones
+  - Risk management and contingencies
+  - Immediate next actions
+- **SUMMARY.md** - Session summary and status tracking
+  - Completed work overview
+  - Key decisions made
+  - Immediate next actions
+  - Success criteria
+- **Integration with genkaw.com**:
+  - Added to Lab section (active project)
+  - Dedicated dev log page created
+  - Building in public infrastructure
+
+### Changed
+- **Scope reduction**: From 5 chapters → 3 chapters for v1.0
+- **Feature cuts**: Environmental combat, 4th stance, n8n in-game → post-v1.0
+- **Documentation strategy**: Split into 4 focused docs instead of 2 massive files
+- **Feedback approach**: Separate web form (not in-game) using n8n + database
+
+### Context
+**Why:** Initial design was too ambitious for 12-week timeline. Ruthless scoping needed to create achievable MVP while maintaining core vision and showcase value.
+
+**Strategic Decision:** Focus on core combat + AI enemy variations + 3-chapter story. Save advanced features for v1.5 and v2.0. This ensures we ship a complete, polished experience rather than incomplete ambitious project.
+
+**Impact:** Clear, achievable roadmap with weekly milestones and decision points. Foundation for building in public with dev log tracking progress.
+
+---
+
+## [2025-12-04] - Project Foundation
 
 ### Added
 - **Project structure** created with full directory scaffolding
