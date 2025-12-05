@@ -4,4 +4,9 @@ import { render } from 'ink';
 import { App } from './ui/App.js';
 
 // Main entry point
-render(<App />);
+const { waitUntilExit } = render(<App />);
+
+// Keep the process alive until the user quits
+waitUntilExit().then(() => {
+  process.exit(0);
+});

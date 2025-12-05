@@ -3,12 +3,19 @@
   "version": "0.1.0",
   "description": "A CLI RPG set in the Martial Arts Haven universe",
   "main": "dist/index.js",
+  "bin": "dist/index.js",
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.tsx",
     "build": "tsc",
     "start": "node dist/index.js",
-    "lint": "eslint src --ext .ts,.tsx"
+    "lint": "eslint src --ext .ts,.tsx",
+    "package": "npm run build && pkg . --targets node18-win-x64,node18-linux-x64,node18-macos-x64 --output dist/beggars-sect --compress GZip"
+  },
+  "pkg": {
+    "scripts": "dist/**/*.js",
+    "assets": [],
+    "outputPath": "dist/bin"
   },
   "keywords": [
     "cli",
@@ -21,24 +28,25 @@
   "author": "Mito (Mitchell Grebe)",
   "license": "UNLICENSED",
   "dependencies": {
-    "ink": "^4.4.1",
-    "ink-text-input": "^5.0.1",
-    "ink-select-input": "^5.0.0",
-    "react": "^18.2.0",
-    "chalk": "^5.3.0",
     "boxen": "^7.1.1",
+    "chalk": "^5.3.0",
     "cli-spinners": "^2.9.2",
-    "figlet": "^1.7.0"
+    "figlet": "^1.7.0",
+    "ink": "^4.4.1",
+    "ink-select-input": "^5.0.0",
+    "ink-text-input": "^5.0.1",
+    "react": "^18.2.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.45",
-    "@types/node": "^20.10.5",
     "@types/figlet": "^1.5.8",
-    "typescript": "^5.3.3",
-    "tsx": "^4.7.0",
-    "eslint": "^8.56.0",
+    "@types/node": "^20.10.5",
+    "@types/react": "^18.2.45",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
-    "@typescript-eslint/parser": "^6.15.0"
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0",
+    "pkg": "^5.8.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
   },
   "engines": {
     "node": ">=18.0.0"
