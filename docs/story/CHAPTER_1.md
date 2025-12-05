@@ -1,1451 +1,2414 @@
-# Chapter 1: The Awakening
+# Chapter 1: Streets of the Forgotten
 
 **Last Updated:** 2025-12-05
 **Status:** `[ELABORATED]`
-**Version:** 1.0
+**Version:** 2.0
 
 ---
 
 ## Overview
 
-**Chapter Title:** The Awakening
-**Estimated Scenes:** 12 scenes
-**Location:** Lower Streets, Beggar's Corner, Training Ground
-**Boss:** Razor (Urban Thug Leader)
+**Chapter Title:** Streets of the Forgotten
+**Estimated Length:** 90-120 minutes
+**Primary Locations:** Beggar's Corner, Lower Streets, Gang Territory
+**Boss:** Razor (multiple approach options)
 
-**Narrative Arc:** Lost → Desperate → Found → Trained → Proven
-**Theme:** Finding family among the forgotten
-
----
-
-## Chapter Summary
-
-Li Wei awakens with no memory in the Lower Streets. After days of struggling to survive, he's found by Old Dao, who recognizes something in him and leads him to the Beggars Sect. The three elders—Chen, Wu, and Mei (observing)—accept him as a disciple. Through training with Elder Chen (Flowing techniques) and Elder Wu (Weathered techniques), Li Wei develops his abilities. When Razor's gang threatens the sect, Li Wei must prove his growth by confronting the thug leader.
+**Narrative Arc:** Acceptance → Training → Testing → Challenge → Confrontation
+**Theme:** Finding family among the forgotten; proving worth in a world that declared you worthless
 
 ---
 
-## Scene Structure
-
-| # | Scene Name | Type | Location | Approx. Length |
-|---|------------|------|----------|----------------|
-| 1.1 | The Void | Cutscene | ??? | 2 min |
-| 1.2 | Awakening | Exploration | Unknown Alley | 3 min |
-| 1.3 | First Steps | Exploration | Lower Streets | 5 min |
-| 1.4 | Survival Instinct | Tutorial Combat | Back Alley | 5 min |
-| 1.5 | Days of Nothing | Narrative Montage | Lower Streets | 3 min |
-| 1.6 | The Old Blind Man | Cutscene | Beggar's Corner | 4 min |
-| 1.7 | The Hidden Family | Dialogue | Training Ground | 6 min |
-| 1.8 | The First Lesson | Training Combat | Training Ground | 8 min |
-| 1.9 | The Second Teacher | Training Combat | Training Ground | 6 min |
-| 1.10 | Brother | Dialogue | Training Ground | 3 min |
-| 1.11 | Razor's Challenge | Cutscene | Gang Territory | 4 min |
-| 1.12 | The First Test | Boss Fight | Gang Territory | 10 min |
-
----
-
-## Scene 1.1: The Void
-
-**Type:** Cutscene (pre-rendered/text only)
-**Location:** Abstract void / memory fragments
-**Player Input:** None
-
-### Purpose
-- Create mystery and intrigue
-- Plant seeds of Li Wei's hidden past
-- Establish the game's tone
-
-### Script
+## Chapter Structure
 
 ```
-[BLACK SCREEN]
-
-[Distant voices, overlapping, incomprehensible]
-
-VOICE 1: (clinical) "Subject 17 is responding..."
-
-VOICE 2: (urgent) "The readings are off the scale!"
-
-VOICE 3: (panicked) "Shut it down! SHUT IT DOWN!"
-
-[FLASH OF WHITE]
-[Fragmentary images: sterile walls, masked figures, a jade pendant glowing]
-
-[SILENCE]
-
-[FADE TO BLACK]
-
-[Beat]
-
-NARRATOR TEXT:
-You dream of white rooms and whispered numbers.
-Of hands that measured but never touched.
-Of something inside you, waiting.
-
-You dream of running.
-Of an explosion of... something.
-Of falling.
-
-You dream of forgetting.
-
-[LONGER BEAT]
-
-Then you wake.
-
-[FADE TO SCENE 1.2]
+                    ┌────────────────────────┐
+                    │  1.1: The Hidden Home  │
+                    │  (Sect introduction)   │
+                    └───────────┬────────────┘
+                                │
+                    ┌───────────┴────────────┐
+                    │   1.2: First Lessons   │
+                    │  (Flowing techniques)  │
+                    └───────────┬────────────┘
+                                │
+              ╔═════════════════╧═════════════════╗
+              ║       MAJOR CHOICE POINT 1        ║
+              ║    "Brother Feng's Challenge"     ║
+              ╚═════════════════╤═════════════════╝
+                                │
+          ┌─────────────────────┼─────────────────────┐
+          │                     │                     │
+          ▼                     ▼                     ▼
+    [1.3A: Duel]         [1.3B: Service]       [1.3C: Secrets]
+    (+1 Blade)            (+1 Stream)           (+1 Shadow)
+          │                     │                     │
+          └─────────────────────┼─────────────────────┘
+                                │
+                    ┌───────────┴────────────┐
+                    │  1.4: Second Teacher   │
+                    │ (Weathered techniques) │
+                    └───────────┬────────────┘
+                                │
+                    ┌───────────┴────────────┐
+                    │  1.5: The Gang Problem │
+                    │(Razor threatens Corner)│
+                    └───────────┬────────────┘
+                                │
+              ╔═════════════════╧═════════════════╗
+              ║       MAJOR CHOICE POINT 2        ║
+              ║     "How to Deal with Razor"      ║
+              ╚═════════════════╤═════════════════╝
+                                │
+          ┌─────────────────────┼─────────────────────┐
+          │                     │                     │
+          ▼                     ▼                     ▼
+    [1.6A: Challenge]    [1.6B: Alliance]     [1.6C: Blackmail]
+    (+2 Blade)            (+2 Stream)          (+2 Shadow)
+          │                     │                     │
+          ▼                     ▼                     ▼
+    BOSS: Razor          Razor becomes        Razor exiled
+    (Full Combat)        temporary ally       (No boss fight)
+          │                     │                     │
+          └─────────────────────┼─────────────────────┘
+                                │
+                    ┌───────────┴────────────┐
+                    │   1.7: Aftermath       │
+                    │ (Consequences & Setup) │
+                    └───────────┬────────────┘
+                                │
+                    [CHAPTER 2 BEGINS]
 ```
-
-### Design Notes
-- These fragments will make sense only in Chapter 2-3
-- Voice 1 is a Calibration Initiative researcher
-- The jade pendant appears here before player knows its significance
-- Creates hook: "What happened to me?"
 
 ---
 
-## Scene 1.2: Awakening
+## Scene 1.1: The Hidden Home
 
-**Type:** Interactive Cutscene → Exploration
-**Location:** Unknown Alley (dead end off Lower Streets)
-**Player Input:** Movement tutorial begins
+**Type:** Exploration & Dialogue
+**Location:** Beggar's Corner - Full Access
+**Duration:** 15-20 minutes
+**Player Input:** Movement, NPC interaction, exploration
 
-### Environment Description
-
-The alley is narrow and dark despite it being midday. Garbage piles against the walls. A rusted drainage pipe drips steadily. The air smells of rot and old rain. Li Wei lies among discarded refuse, barely distinguishable from it.
-
-Beyond the alley's mouth: the sounds of a city. Voices. Footsteps. Life continuing without caring about another body in the gutters.
-
-### Script
+### Environment: Beggar's Corner (Full)
 
 ```
-[FADE IN to Li Wei's perspective - blurry, slowly focusing]
+╔═══════════════════════════════════════════════════════════════════╗
+║                        BEGGAR'S CORNER                            ║
+╠═══════════════════════════════════════════════════════════════════╣
+║                                                                   ║
+║    [Elder's Quarters]                      [Training Ground]      ║
+║         ┌───┐                                   ┌─────────┐       ║
+║         │ E │                                   │ ○   ○   │       ║
+║         └───┘                                   │   ○     │       ║
+║              \                                  └─────────┘       ║
+║               \                                      |            ║
+║                \          [Beggar's Pine]           |            ║
+║                 \              🌳                   |            ║
+║                  \            /|\                  |            ║
+║    [Bone Yard]    \          / | \                |            ║
+║      ┌───┐         \________/  |  \_______________/            ║
+║      │ B │                     |                               ║
+║      └───┘                     |                               ║
+║         \                 [Central Well]                        ║
+║          \                     ○                                ║
+║           \                    |                                ║
+║    [Sleeping     ─────────────────────────    [Communal         ║
+║     Quarters]                                  Kitchen]         ║
+║      ┌─────┐                                    ┌─────┐         ║
+║      │zzz  │                                    │ 🍲  │         ║
+║      └─────┘                                    └─────┘         ║
+║                                                                   ║
+║                        [Hidden Exit]                              ║
+║                            ═══                                    ║
+║                        (to Lower Streets)                         ║
+╚═══════════════════════════════════════════════════════════════════╝
+```
 
-[The player sees: grey sky above, stone walls on either side, garbage nearby]
+### Opening Script
+
+```
+[FADE IN - Morning light filters through gaps in the walls]
+
+[Li Wei wakes in the Sleeping Quarters - a mat on the floor,
+a thin blanket, but warm. Safe.]
 
 INTERNAL MONOLOGUE:
-...
+I slept. Actually slept.
+No dreams of white rooms. No waking to danger.
+Just... rest.
 
-Where...
+[He sits up, looks around]
 
-[The view sharpens]
+Other mats, other sleepers. Fellow beggars.
+Fellow... family?
 
-Where am I?
+Is that what they are now?
 
-[Li Wei sits up slowly. The player sees his hands—dirty, scraped, unfamiliar to him]
+[SYSTEM: Welcome to Beggar's Corner. Explore and speak
+with residents to learn about your new home.]
 
-These hands. Are they mine?
-
-[He looks around the alley]
-
-I don't... I don't remember how I got here.
-
-I don't remember anything.
-
-[Beat]
-
-Wait. There's something.
-
-[Li Wei touches his chest, finds the jade pendant]
-
-This pendant. It feels... important.
-
-[He examines it: a jade disc with a twisted spiral symbol]
-
-But I don't know why.
-
-[He tries to remember—pain flashes behind his eyes]
-
-Gah!
-
-[The pain passes]
-
-Nothing. Just pain when I try to remember.
-
-[He stands, unsteady]
-
-I need to... to figure out where I am.
-
-[GAMEPLAY BEGINS]
-[Tutorial Prompt: "Use [ARROW KEYS/WASD] to move"]
+[Player gains free movement]
 ```
 
-### Interactions Available
+### Interactive NPCs & Locations
 
-**The Pendant:**
-> A jade disc on a simple cord. The surface shows a spiral pattern that seems to twist inward forever. It's warm to the touch—warmer than it should be. Looking at it makes your head hurt.
-
-**The Alley Walls:**
-> Grimy stone slick with moisture. Graffiti in faded paint—gang signs? Warnings? The symbols mean nothing to you.
-
-**The Garbage Pile:**
-> Rotting vegetables, torn cloth, broken things. Someone's discarded life. You feel an odd kinship with it.
-
-**The Alley Exit:**
-> Beyond the narrow passage: movement, voices, the suggestion of a street. Whatever waits out there, it has to be better than this dead end.
-
-### Trigger to Scene 1.3
-Player moves to alley exit
-
----
-
-## Scene 1.3: First Steps
-
-**Type:** Exploration (open area)
-**Location:** Lower Streets - Initial Area
-**Player Input:** Free movement, NPC interaction
-
-### Environment Description
-
-The Lower Streets assault the senses. Narrow pathways wind between crumbling buildings. Vendors sell questionable food from blankets spread on the ground. People move with purpose—most avoiding eye contact, some eyeing Li Wei with calculation.
-
-The buildings lean overhead, blocking most of the sky. It feels like being at the bottom of a canyon made of poverty.
-
-### Interactive NPCs
-
-**Street Vendor (won't engage):**
-```
-LI WEI: Excuse me, can you tell me—
-
-VENDOR: [Doesn't look up]
-No coin, no talk. Move along, beggar.
-
-LI WEI: But I just need to know—
-
-VENDOR: I said MOVE. You're scaring off customers.
-
-[The vendor makes a shooing gesture]
-```
-
-**Hurrying Worker (dismissive):**
-```
-LI WEI: Please, I need help. I don't know where—
-
-WORKER: [Brushing past]
-Don't we all.
-
-[They're gone before Li Wei can respond]
-```
-
-**Huddled Beggar (paranoid):**
-```
-[Li Wei approaches a figure in rags huddled against a wall]
-
-LI WEI: Hello? Are you—
-
-BEGGAR: [Flinches away]
-Stay back! Mine! It's MINE!
-
-[The beggar clutches something unseen to their chest]
-
-I don't have anything you want! Leave me alone!
-
-LI WEI: I wasn't trying to—
-
-BEGGAR: LEAVE!
-
-[The beggar scrambles away, muttering]
-```
-
-**Child (curious then scared):**
-```
-[A small child stares at Li Wei from a doorway]
-
-LI WEI: Hey there. Do you know—
-
-[An adult hand yanks the child inside]
-
-PARENT: [From within]
-Stay away from the vagrant!
-
-[Door slams]
-```
-
-### Narrative Text (appears as player explores)
-
-> No one will help you. Why would they? In the Lower Streets, helping a stranger is an invitation to be exploited.
-
-> You don't recognize anything. Not the buildings, not the streets, not the dialect. Were you ever here before?
-
-> Your stomach growls. When did you last eat? You can't remember that either.
-
-> People look through you like you're made of glass. Or garbage.
-
-### Trigger to Scene 1.4
-Player enters specific back alley (marked by different lighting/atmosphere)
-
----
-
-## Scene 1.4: Survival Instinct
-
-**Type:** Tutorial Combat
-**Location:** Back Alley
-**Player Input:** Combat tutorial (guided)
-
-### Purpose
-- Introduce combat system basics
-- Show that Li Wei has hidden instincts
-- Create first real threat
-
-### Pre-Combat Script
+#### The Beggar's Pine (Central)
 
 ```
-[Li Wei enters a narrow alley, hoping for a shortcut or privacy]
+[The ancient tree at the Corner's heart]
+[Hundreds of cloth strips hang from its branches]
+[Each strip has writing - names, prayers, memories]
 
-[Three figures block the far exit. Two more appear behind him]
+INTERNAL MONOLOGUE:
+So many strips. So many names.
 
-THUG 1: Well, well. Fresh meat.
+[Examining closer:]
 
-[The leader steps forward—SCARRED JIN, his burned face twisted in a grin]
+"Wang Ji - remembered"
+"The forty-seven who fell in Year 15"
+"For Elder Shu, who taught us hunger is not weakness"
 
-SCARRED JIN: You're new around here, aren't you? Didn't anyone tell you about the toll?
+This tree holds their history.
+The people they've lost.
+The things they refuse to forget.
 
-LI WEI: Toll? I don't have anything—
+[A beggar nearby notices Li Wei looking]
 
-SCARRED JIN: Everyone has SOMETHING.
+BEGGAR: (quietly)
+Every member writes their name when they join.
+Every member who dies, we add "remembered."
 
-[Jin gestures. The thugs close in]
+[She touches one strip gently]
 
-SCARRED JIN: That pendant looks nice. Hand it over, and maybe we just rough you up a little.
+BEGGAR: My mother's. Thirty years ago.
 
-[Li Wei's hand goes to the pendant instinctively]
+[She walks away without another word]
 
-LI WEI: No. I... I can't.
-
-[He doesn't know why, but he can't give it up]
-
-SCARRED JIN: [Laughs]
-Wrong answer.
-
-[Jin cracks his knuckles]
-
-SCARRED JIN: Boys, teach our friend about the Lower Streets.
-
-[COMBAT TUTORIAL BEGINS]
+INTERNAL MONOLOGUE:
+They remember their dead.
+In a world that forgot them, they remember.
 ```
 
-### Combat Tutorial Flow
-
-**Phase 1: Basic Attack**
-```
-[Tutorial overlay]
-SYSTEM: "You've never fought before. But something inside you knows what to do."
-SYSTEM: "Press [ATTACK] to strike."
-
-[Player attacks. Li Wei throws an instinctive palm strike—not trained, but surprisingly effective]
-
-THUG: Gah! He hit me!
-
-SCARRED JIN: Lucky shot. Get him!
-```
-
-**Phase 2: Defense**
-```
-[A thug winds up an obvious attack]
-SYSTEM: "Press [DEFEND] before an attack lands to reduce damage and build Chi."
-
-[Player defends successfully]
-
-LI WEI: (thinking) How did I know to do that?
-```
-
-**Phase 3: Chi Building**
-```
-SYSTEM: "Chi is your fighting spirit. Build it through combat to use powerful techniques."
-SYSTEM: "Right now you only know basic Palm Strike."
-
-[Player uses Palm Strike when Chi allows]
-
-[The attack feels... right. Like remembering something he'd forgotten]
-```
-
-**Phase 4: Taking Damage**
-```
-[A thug lands a hit on Li Wei]
-
-SYSTEM: "When your HP reaches 0, you fall. Watch your health."
-
-LI WEI: (thinking) It hurts, but... not as much as it should?
-```
-
-### Combat Resolution
-
-**If player "wins" (unlikely first playthrough):**
-```
-[The thugs back off, surprised]
-
-SCARRED JIN: Tch. You got moves, beggar. But this isn't over.
-
-[Jin spits at Li Wei's feet]
-
-SCARRED JIN: You're on Razor's turf now. And Razor doesn't forget.
-
-[The thugs retreat]
-
-LI WEI: (thinking) Razor? Who—
-
-[Li Wei collapses, exhausted]
-```
-
-**More likely outcome (player loses or fight is scripted to end):**
-```
-[Li Wei is overwhelmed—too many, too fast, too inexperienced]
-
-[He goes down]
-
-SCARRED JIN: [Reaching for the pendant]
-Now let's see what you were protecting—
-
-VOICE: [From darkness]
-ENOUGH.
-
-[The thugs freeze. A figure emerges from the shadows—OLD DAO, blind, ancient, holding a wooden bowl]
-
-OLD DAO: This one is not your prey, Jin.
-
-SCARRED JIN: [Sneering]
-Stay out of this, old man. Unless you want what he's getting.
-
-OLD DAO: [Quietly]
-You misunderstand. I'm not asking.
-
-[Something shifts. The air grows heavy. Jin's sneer falters]
-
-SCARRED JIN: (muttering) ...Tch. He's not worth the trouble anyway.
-
-[The thugs withdraw, Jin glaring back]
-
-SCARRED JIN: [To Li Wei]
-This isn't over.
-
-[They're gone]
-
-[Old Dao approaches the fallen Li Wei]
-
-OLD DAO: Can you stand, young one?
-
-LI WEI: [Struggling]
-I... I think so.
-
-OLD DAO: Good. Come with me. There are people you need to meet.
-
-[Old Dao helps Li Wei up]
-
-LI WEI: Who... who are you?
-
-OLD DAO: [Smiling faintly]
-Someone who's been waiting for you.
-
-[FADE TO SCENE 1.5]
-```
-
-### Design Notes
-- Player SHOULD feel outmatched—this sets up the training arc
-- Old Dao's intervention shows the sect has been watching
-- Scarred Jin's appearance foreshadows him as recurring rival
-- "This isn't over" directly sets up Chapter 1 boss confrontation
-
----
-
-## Scene 1.5: Days of Nothing
-
-**Type:** Narrative Montage (minimal player input)
-**Location:** Various Lower Streets locations
-**Player Input:** Occasional prompts
-
-### Purpose
-- Show passage of time
-- Build empathy through hardship
-- Contrast the "before" of isolation with "after" of sect
-
-### Montage Script
+#### Grandmother Bone (Bone Yard) - OPTIONAL
 
 ```
-[FADE IN - Day 1]
+[A small area filled with animal bones, cleaned and arranged]
+[An impossibly old woman sits among them, sorting]
 
-[Old Dao has vanished as mysteriously as he appeared. Li Wei is alone again.]
+GRANDMOTHER BONE: (not looking up)
+Another new one. They always come to stare
+at the bones.
 
-NARRATOR TEXT:
-You wait where he left you. He said someone would come.
+LI WEI: What... what is this place?
 
-No one comes.
+GRANDMOTHER BONE: The Bone Yard. I read futures
+in what others throw away.
 
-[FADE]
+[She finally looks at Li Wei - her eyes are sharp,
+penetrating, despite her age]
 
-[Day 2 - Li Wei shelters in a doorway during rain]
+GRANDMOTHER BONE: Sit. Let me see your fortune.
 
-NARRATOR TEXT:
-The rain comes and doesn't stop.
-You learn that the Lower Streets have no dry places for those with nowhere to go.
+[CHOICE:]
+> [Sit and let her read] → Triggers reading
+> [Politely decline] → Miss optional content
 
-[PROMPT: "Press any key to endure"]
+[If player sits:]
 
-[Day 3 - Li Wei's stomach growls painfully]
+[Grandmother Bone takes Li Wei's hand, traces the lines]
+[Then she freezes]
 
-NARRATOR TEXT:
-Hunger becomes a constant companion.
-You learn what it means to truly want.
+GRANDMOTHER BONE: (voice changed - harder)
+Your lines... they're wrong.
 
-[Li Wei finds a discarded crust. A moment of decision.]
+LI WEI: Wrong?
 
-[PROMPT: "Take it?"]
+GRANDMOTHER BONE: Life, fate, fortune—they all
+flow one direction. Yours flow...
 
-[If yes:]
-The bread is stale and tastes of garbage.
-It's the best thing you've ever eaten.
-At least, the best thing you can remember.
+[She drops his hand abruptly]
 
-[Day 4 - Night in a cold alley]
+GRANDMOTHER BONE: Backward. Everything backward.
 
-NARRATOR TEXT:
-Sleep brings the dreams again.
-White rooms. Numbers. Running.
-You wake grasping at memories that dissolve like smoke.
+[Long pause]
 
-[Day 5 - Li Wei's reflection in a dirty puddle]
+GRANDMOTHER BONE: You're not natural, boy. Whatever
+made you, whatever broke you—it changed the very
+flow of your being.
 
-NARRATOR TEXT:
-You catch your reflection.
-You don't recognize the face.
-Sunken eyes. Hollow cheeks. The look of someone forgotten.
+[She reaches into her bone pile, pulls out a small
+charm made of interlocking bones]
 
-Is this who you are? Or who you're becoming?
+GRANDMOTHER BONE: Take this. Won't protect you
+from what's coming. But might buy you time.
 
-[Day 6 - Other beggars watch Li Wei from a distance]
+[OBTAINED: Grandmother's Charm]
+[Effect: +10 Max HP permanently]
 
-NARRATOR TEXT:
-Sometimes you see others watching.
-Ragged figures who look like you look now.
-They keep their distance. But they're watching.
+GRANDMOTHER BONE: Now go. Your presence disturbs
+my readings.
 
-[Day 7 - Old Dao appears again]
-
-[Li Wei, exhausted, sits against a wall. Old Dao approaches]
-
-OLD DAO: Seven days. Not bad.
-
-LI WEI: [Weakly]
-You... you left me.
-
-OLD DAO: I tested you. You endured.
-
-[Old Dao offers his hand]
-
-OLD DAO: The path chose well. Come. It's time.
-
-[FADE TO SCENE 1.6]
+[She won't speak again]
 ```
 
-### Design Notes
-- The seven days mirror traditional "trial" narratives
-- Player engagement through prompts keeps them active without demanding combat
-- Establishes that Li Wei now LOOKS like a beggar
-- Old Dao's test ensures only those with survival instinct find the sect
-
----
-
-## Scene 1.6: The Old Blind Man
-
-**Type:** Cutscene with Light Interaction
-**Location:** Beggar's Corner → Path to Training Ground
-**Player Input:** Dialogue choices (minor)
-
-### Walking Dialogue with Old Dao
+#### Brother Feng (Training Ground)
 
 ```
-[Li Wei follows Old Dao through winding streets]
+[A young man practices strikes against a wooden post]
+[He's fast but sloppy - enthusiasm over technique]
 
-OLD DAO: You have questions. Ask them.
+[He notices Li Wei and grins]
 
-[DIALOGUE CHOICE]
-> "Who are you?"
-> "Where are we going?"
-> "Why did you help me?"
+BROTHER FENG: Hey! The new guy! Li Wei, right?
+I'm Feng. Brother Feng.
 
----
+[He bounds over, energy infectious]
 
-[IF: "Who are you?"]
-OLD DAO: I am Dao. Some call me Old Dao. I am a beggar.
+BROTHER FENG: Man, you've got the whole Corner
+buzzing. Old Dao brought you? That's rare. He
+mostly just sits in corners being cryptic.
 
-LI WEI: But that thing you did with the thugs—
+LI WEI: You know Old Dao?
 
-OLD DAO: A beggar can be many things, young one. Society has forgotten this. We help them remember.
+BROTHER FENG: Everyone knows OF him. No one
+knows him. He's been around longer than the
+Elders remember.
 
----
+[He lowers his voice conspiratorially]
 
-[IF: "Where are we going?"]
-OLD DAO: Somewhere that doesn't exist. A place that official maps have never shown. The sanctuary of those the world has discarded.
+BROTHER FENG: Some say he was around before
+the Array. Like, PRE-Redistribution.
 
-LI WEI: A sanctuary?
+LI WEI: That would make him—
 
-OLD DAO: A sect. A family. A second chance.
-
----
-
-[IF: "Why did you help me?"]
-OLD DAO: Because you needed help. And because...
-
-[Old Dao pauses, his blind eyes somehow meeting Li Wei's]
-
-OLD DAO: ...you have a familiar hunger in you. The kind that can change worlds.
-
----
-
-[Continuing conversation]
-
-LI WEI: I don't remember anything. Where I'm from, who I was—
-
-OLD DAO: Perhaps that's for the best.
-
-[Old Dao leads Li Wei through a hidden passage]
-
-OLD DAO: The past can be a prison. But the future... the future is an empty bowl, waiting to be filled.
-
-[They emerge into the Training Ground]
-
-OLD DAO: Welcome, Li Wei, to the Beggars Sect.
-
-[The Training Ground spreads before them—a hidden courtyard with ancient architecture, other beggars moving about, a sense of community]
-
-OLD DAO: The elders will decide if you stay. But know this...
-
-[Old Dao turns, and despite his blindness, Li Wei feels SEEN]
-
-OLD DAO: The path chose you. Not the other way around.
-
-[Old Dao bows slightly and walks away, vanishing into the shadows]
-
-LI WEI: Wait! What do you—
-
-[He's gone]
-
-VOICE: So. You're the one Dao found.
-
-[Li Wei turns. ELDER CHEN approaches, warm smile on his weathered face]
-
-ELDER CHEN: He has a talent for finding strays. Let me look at you.
-
-[SCENE TRANSITIONS TO 1.7]
-```
-
----
-
-## Scene 1.7: The Hidden Family
-
-**Type:** Dialogue Heavy (Character Introductions)
-**Location:** Training Ground - Elder's Circle
-**Player Input:** Dialogue responses
-
-### The Elder Meeting
-
-```
-[Elder Chen studies Li Wei. Behind him, two more figures emerge:]
-[ELDER WU - stern, muscular woman with short grey hair]
-[ELDER MEI - wiry woman with wild hair, chewing dried meat]
-
-ELDER CHEN: I am Chen. First Elder. These are my fellow keepers of the old ways.
-
-ELDER WU: [Arms crossed]
-Wu. I train those worth training.
-
-ELDER MEI: [Bouncing slightly]
-Mei! I'm Mei! Ooh, you look HUNGRY. Good. Hungry is good. Do you feel hungry? Of course you do, look at you!
-
-ELDER CHEN: [Gently]
-Mei. Let him breathe.
-
-[Elder Chen circles Li Wei slowly]
-
-ELDER CHEN: You found your way to the Lower Streets without memory. Survived a week without training. And Dao saw something in you worth saving.
-
-[He pauses]
-
-ELDER CHEN: What do you remember?
-
-[DIALOGUE CHOICE]
-> "Nothing. Just my name."
-> "Fragments. Dreams of white rooms."
-> "Pain. Running. A flash of light."
-
----
-
-[IF: "Nothing. Just my name."]
-ELDER CHEN: Li Wei. A good name. "Strength through Righteousness." Though perhaps you chose it yourself, when you had nothing else.
-
-LI WEI: I didn't choose it. It was just... there. In the emptiness.
-
-ELDER CHEN: [Nodding slowly]
-Sometimes we know truths we cannot explain.
-
----
-
-[IF: "Fragments. Dreams of white rooms."]
-[The elders exchange a glance]
-
-ELDER CHEN: White rooms?
-
-ELDER WU: [Sharply]
-The Spire keeps white rooms.
-
-ELDER MEI: Research! Experiments! Nasty things to nasty people!
-
-ELDER CHEN: [Raising a hand]
-We won't press. Your past is your own. But know—if you come from where we suspect... you have more enemies than you realize.
-
----
-
-[IF: "Pain. Running. A flash of light."]
-ELDER CHEN: An escape, then. From what, you don't know. To where, you don't know.
-
-[He nods thoughtfully]
-
-ELDER CHEN: The path of the beggar often begins in flight. You ran from something. Perhaps here, you can stop running.
-
----
-
-[CONTINUING]
-
-ELDER WU: [Stepping forward]
-Enough philosophy. Can he fight?
-
-ELDER CHEN: He survived Jin's welcome. That suggests instinct.
-
-ELDER MEI: Instinct without training is a blade without a handle! Dangerous! Might cut the wrong person! Probably yourself!
-
-ELDER WU: Then we test him.
-
-[Wu takes a fighting stance]
-
-ELDER WU: Hit me.
-
-LI WEI: What?
-
-ELDER WU: I said HIT me. No technique. No training. Just hit me as hard as you can.
-
-[Li Wei looks uncertain]
-
-ELDER CHEN: [Gently]
-Do as she asks. Show us what you are.
-
-[Li Wei throws a punch. Wu deflects it effortlessly, guiding his momentum to send him tumbling]
-
-ELDER WU: [Unimpressed]
-No power. No focus. Sloppy. Desperate.
-
-[She extends a hand to help him up]
-
-ELDER WU: But you didn't hesitate. And your chi...
-
-[She frowns]
-
-ELDER WU: Your chi is strange. Backwards almost.
-
-ELDER MEI: [Excited]
-INVERSE! I knew it! Look at his flow, Chen! It's all— [gestures wildly] —wibbly-wobbly!
-
-ELDER CHEN: [To Li Wei]
-Li Wei. Would you like to learn what you might become?
-
-[DIALOGUE CHOICE]
-> "Yes. Teach me everything."
-> "I don't understand what you're offering."
-> "Will it help me remember who I am?"
-
----
-
-[All paths lead to:]
-
-ELDER CHEN: [Smiling warmly]
-Welcome to the Beggars Sect, Li Wei. Welcome to your new family.
-
-[BROTHER FENG approaches, grinning]
-
-BROTHER FENG: Does this mean I get a training partner? Finally! I'm Feng, by the way. Don't let Elder Wu scare you. Her bark is worse than—actually, no. Her bite is pretty bad too.
-
-ELDER WU: Feng.
-
-BROTHER FENG: [Snapping to attention]
-Yes, Elder!
-
-ELDER CHEN: [Chuckling]
-Come. Your training begins now.
-
-[SCENE TRANSITIONS TO 1.8]
-```
-
----
-
-## Scene 1.8: The First Lesson
-
-**Type:** Training Combat (Full Tutorial)
-**Location:** Training Ground
-**Player Input:** Full combat mechanics
-
-### Setup
-
-```
-[The Training Ground's combat circle—a ring of worn stones]
-
-ELDER CHEN: The palm is not a weapon, Li Wei. It is a conversation.
-
-[He demonstrates a flowing motion]
-
-ELDER CHEN: In the Flowing Stance, we speak softly. We adapt. We redirect.
-
-[He gestures for Li Wei to enter the circle]
-
-ELDER CHEN: Brother Feng will be your partner. He will attack. You will learn to flow.
-
-BROTHER FENG: [Taking position]
-Don't worry, I'll go easy—
-
-ELDER WU: [From sidelines]
-No, you won't.
-
-BROTHER FENG: [Sighing]
-...I won't go easy.
-
-[TRAINING COMBAT BEGINS]
-```
-
-### Training Phases
-
-**Phase 1: Stance Understanding**
-```
-SYSTEM: "The Flowing Stance prioritizes adaptability. Your Speed increases but Defense decreases."
-SYSTEM: "Flowing techniques build Chi quickly but deal moderate damage."
-
-[Li Wei is placed in Flowing Stance automatically]
-
-ELDER CHEN: Feel how your weight shifts. You are water, finding the path of least resistance.
-```
-
-**Phase 2: Flowing Strike**
-```
-[After exchanging basic attacks]
-
-ELDER CHEN: Good. Now, channel your chi into the strike. Let it flow from your core through your palm.
-
-[TECHNIQUE UNLOCK: Flowing Strike]
-
-SYSTEM: "Flowing Strike: 20 Power, 15 Chi Cost. Moderate damage with +10% Chi gain."
-
-[Li Wei uses Flowing Strike successfully]
-
-BROTHER FENG: Ow! Hey, that actually stung!
-
-ELDER CHEN: [Pleased]
-The river begins to flow.
-```
-
-**Phase 3: Stream Palm**
-```
-ELDER CHEN: But water is not only gentle. A stream becomes a flood. Multiple strikes, continuous flow.
-
-[TECHNIQUE UNLOCK: Stream Palm]
-
-SYSTEM: "Stream Palm: 15 Power ×3 hits, 25 Chi Cost. Multi-hit attack for building momentum."
-
-[Li Wei uses Stream Palm]
-
-BROTHER FENG: Three hits! How is he already—
-
-ELDER CHEN: [Quietly]
-Because he remembers, even when he doesn't know he remembers.
-```
-
-**Phase 4: Ripple Guard**
-```
-ELDER CHEN: Now, defense. But not rigid. A ripple absorbs impact and returns it.
-
-[TECHNIQUE UNLOCK: Ripple Guard]
-
-SYSTEM: "Ripple Guard: 30 Chi Cost. High defense, reflects 25% damage if hit."
-
-[Feng attacks. Li Wei uses Ripple Guard. Damage reflected]
-
-BROTHER FENG: OW! It hit me back!
-
-ELDER CHEN: [Laughing]
-The student learns to return what he's given.
-```
-
-### Combat Resolution
-
-```
-[The spar ends. Li Wei stands, breathing hard but standing]
-
-ELDER CHEN: Enough for today.
-
-[He approaches Li Wei, placing a hand on his shoulder]
-
-ELDER CHEN: You have potential, Li Wei. More than potential. But potential alone means nothing. It must be shaped by discipline.
-
-[He gestures to Elder Wu]
-
-ELDER CHEN: Tomorrow, Wu will teach you the Weathered path. And then... we'll see what kind of beggar you become.
-
-BROTHER FENG: [Rubbing his shoulder]
-Good spar, new guy. Though I was definitely holding back.
-
-ELDER WU: You weren't.
-
-BROTHER FENG: [Deflating]
-...I wasn't.
-
-[SCENE ENDS]
-```
-
-### Techniques Unlocked This Scene
-- Flowing Strike
-- Stream Palm
-- Ripple Guard
-
----
-
-## Scene 1.9: The Second Teacher
-
-**Type:** Training Combat (Advanced)
-**Location:** Training Ground - Stone Circle
-**Player Input:** Combat with new stance
-
-### Setup
-
-```
-[The next morning. Elder Wu stands in a different training area—a circle of stone pillars]
-
-ELDER WU: Chen taught you to flow. I will teach you to STAND.
-
-[She takes a rooted stance]
-
-ELDER WU: The Weathered Stance is not about dodging. It's about enduring. Taking the blow and still standing.
-
-[She gestures]
-
-ELDER WU: Hit me.
-
-LI WEI: Again?
-
-ELDER WU: You couldn't before. Let's see if you can now.
-
-[Li Wei attacks. Wu doesn't dodge—she shifts slightly, absorbing the blow]
-
-ELDER WU: [Unmoved]
-Better. But not good enough.
-
-[TRAINING COMBAT BEGINS]
-```
-
-### Training Phases
-
-**Phase 1: Stance Switching**
-```
-SYSTEM: "Press [STANCE] to switch between Flowing and Weathered Stance."
-SYSTEM: "Weathered Stance: +20% Defense, -10% Speed. Built to endure."
-
-ELDER WU: Switch between them. A true beggar knows when to flow and when to weather.
-
-[Player practices stance switching]
-```
-
-**Phase 2: Weathered Palm**
-```
-ELDER WU: In Weathered Stance, your palm becomes a mountain. Slow, but immovable.
-
-[TECHNIQUE UNLOCK: Weathered Palm]
-
-SYSTEM: "Weathered Palm: 30 Power, 25 Chi Cost. Slower but hits harder. +15% Defense after use."
-
-[Li Wei uses Weathered Palm]
-
-ELDER WU: [Slight nod]
-Adequate. You hit like a small mountain. We'll make it larger.
-```
-
-**Phase 3: Steadfast Guard**
-```
-ELDER WU: When you cannot avoid a blow, accept it. Turn their strength into your resolve.
-
-[TECHNIQUE UNLOCK: Steadfast Guard]
-
-SYSTEM: "Steadfast Guard: 35 Chi Cost. Major damage reduction. Converts 50% damage taken to Chi."
-
-ELDER WU: The more they hurt you, the stronger you become. That is the beggar's way. We have endured generations of pain. We turn it into power.
-```
-
-**Phase 4: Chi Management**
-```
-ELDER WU: Watch your chi. A beggar with empty chi is just a beggar. A beggar with full chi is a weapon.
-
-[The training focuses on building and spending Chi efficiently]
-
-ELDER WU: Never fight at empty. Never waste at full. Balance, even in the storm.
-```
-
-### Combat Resolution
-
-```
-[The training intensifies until Li Wei lands a solid Weathered Palm on the practice dummy]
-
-ELDER WU: [A rare almost-smile]
-You learn quickly. Too quickly. It makes me suspicious.
-
-[She steps close]
-
-ELDER WU: But suspicion isn't condemnation. Whatever you were before, whoever trained that body of yours... you're ours now.
-
-[She places a hand on his shoulder—brief, firm]
-
-ELDER WU: Don't disappoint us.
-
-[She walks away]
-
-[Elder Mei waves from nearby]
-
-ELDER MEI: My turn next! But not today! Today you REST! Can't learn hungry if you're already EXHAUSTED! That's a different kind of hungry! A bad kind!
-
-[SCENE ENDS]
-```
-
-### Techniques Unlocked This Scene
-- Weathered Palm
-- Steadfast Guard
-
----
-
-## Scene 1.10: Brother
-
-**Type:** Character Dialogue
-**Location:** Training Ground - Rest Area
-**Player Input:** Dialogue choices (relationship building)
-
-### Purpose
-- Build connection with Feng
-- Establish friendship
-- Add humor and humanity
-
-### Script
-
-```
-[Night. Li Wei sits alone, looking at the jade pendant]
-
-[Feng approaches, carrying two bowls of thin soup]
-
-BROTHER FENG: You look like someone who needs food and conversation. I've got both.
-
-[He sits, hands Li Wei a bowl]
-
-BROTHER FENG: It's not much, but it's hot. Elder Wu says hunger builds character. I say hunger just makes me grumpy.
-
-[They eat in silence for a moment]
-
-BROTHER FENG: So. The mysterious amnesiac joins the secret sect of beggars. That's a story.
-
-[DIALOGUE CHOICE]
-> "What's your story?"
-> "I still don't understand what this place is."
-> "Why is everyone here?"
-
----
-
-[IF: "What's your story?"]
-BROTHER FENG: Mine? Nothing special. Tested F-grade at birth, parents couldn't keep me, grew up in the streets.
+BROTHER FENG: Ancient. Yeah. But here's the
+thing—I've never seen him eat. Never seen
+him sleep. Never seen him anywhere except
+exactly where something important is about
+to happen.
 
 [He shrugs]
 
-BROTHER FENG: Found the sect at sixteen. Been here six years. They're the only family I've ever really had.
+BROTHER FENG: Creepy? Little bit. But he
+brought YOU, so he can't be all bad.
 
-[He looks at Li Wei]
+[He slaps Li Wei on the shoulder]
 
-BROTHER FENG: Whatever you were before, man... this is a good place to figure out what you want to be.
+BROTHER FENG: Come on, let's spar! I want
+to see what you've got!
 
----
+[CHOICE:]
+> [Accept the friendly spar] → Sparring tutorial
+> [Decline - need to explore first] → Later
 
-[IF: "I still don't understand what this place is."]
-BROTHER FENG: The Beggars Sect? We're... complicated.
+[If spar:]
 
-[He gestures around]
+[Basic sparring match - tutorial for chi mechanics]
+[Feng is enthusiastic but beatable]
 
-BROTHER FENG: Officially, we don't exist. The world says F-grades can't learn martial arts. We say the world is wrong.
+BROTHER FENG: (after loss)
+Okay, okay, you're good. Really good.
+Where'd you learn to fight like that?
+
+LI WEI: I don't know. I don't remember.
+
+BROTHER FENG: (whistling)
+Mysterious. I like it.
 
 [He grins]
 
-BROTHER FENG: We're proof that potential isn't everything. That someone society throws away can become something amazing.
+BROTHER FENG: We're going to be friends,
+Li Wei. I can tell.
 
-BROTHER FENG: Also we're really good at surviving on nothing. Comes with the territory.
+[RELATIONSHIP: Brother Feng +1]
+```
 
----
+#### The Communal Kitchen
 
-[IF: "Why is everyone here?"]
-BROTHER FENG: Different reasons. Same story, mostly. Nobody wanted us. So we wanted each other.
+```
+[An open area with cook fires and shared pots]
+[The smell of rice porridge - simple but warm]
 
-[He finishes his soup]
+[Several beggars sit eating, talking quietly]
 
-BROTHER FENG: The elders took me in when I was starving. Taught me that being F-grade doesn't make me worthless. That the system is the problem, not us.
+BEGGAR 1: Another patrol last night. Third
+this week.
 
-[He looks at Li Wei seriously]
+BEGGAR 2: The Spartans are looking for someone.
+Something's got them nervous.
 
-BROTHER FENG: I don't know what you're running from, new guy. But you can stop running here.
+BEGGAR 1: As long as they don't find the Corner,
+let them search.
 
----
+[Li Wei can take a bowl of porridge]
 
-[CONTINUING]
+INTERNAL MONOLOGUE:
+Real food. Hot food.
+When did I last eat something that wasn't
+scraps from garbage?
 
-[A commotion at the entrance]
+[Eating restores HP to full]
+```
 
-[A young beggar runs in, panicked]
+### Elder Chen Summons
 
-YOUNG BEGGAR: Elders! ELDERS! It's Razor! He's demanding we hand over the new one!
+After exploring (or immediately if player seeks him):
 
-[Feng's expression darkens]
+```
+[A young beggar approaches Li Wei]
 
-BROTHER FENG: Razor? Jin must have told him about you.
+MESSENGER: Elder Chen wants to see you.
+Elder's Quarters.
 
-LI WEI: The thug leader?
+[Points to the building]
 
-BROTHER FENG: Boss of every gang in the Lower Streets. Bad news, even for beggars.
+MESSENGER: Don't keep him waiting. I mean,
+he'll wait—he's patient like that—but it's
+rude, you know?
 
-[Elder Chen appears]
+[Elder's Quarters becomes marked as objective]
+```
 
-ELDER CHEN: [Calmly]
-How many did he bring?
+### Elder Chen's Introduction
 
-YOUNG BEGGAR: All of them, Elder. The whole gang.
+```
+[The Elder's Quarters are simple - a meditation space
+with cushions, scrolls on walls, a low table with tea]
 
-[Elder Chen looks at Li Wei]
+[Elder Chen sits, waiting, smiling]
 
-ELDER CHEN: It seems your past has caught up with your present.
+ELDER CHEN: Ah, Li Wei. Please, sit. Tea?
+
+[Li Wei sits]
+
+ELDER CHEN: You've had time to see our home.
+What do you think?
+
+[DIALOGUE CHOICE:]
+> [A: "It's more than I expected."]
+> [B: "Why do you live like this?"]
+> [C: "How has this place stayed hidden?"]
+
+[A - More than expected:]
+
+LI WEI: It's more than I expected. The
+streets outside are... harsh. This place
+is almost peaceful.
+
+ELDER CHEN: (nodding)
+Peace requires effort. We work to maintain
+this sanctuary because without it, we
+would have nothing.
+
+[B - Why live like this:]
+
+LI WEI: Why do you live like this? Hidden
+underground, scraping by?
+
+ELDER CHEN: (sad smile)
+Because the alternative is death. Or worse—
+losing ourselves entirely. The world above
+declared us worthless. Here, we define our
+own worth.
+
+[C - How stay hidden:]
+
+LI WEI: How has this place stayed hidden?
+The Spartans patrol everywhere.
+
+ELDER CHEN: They patrol where they expect
+to find things. We exist where they don't
+expect. Also...
+
+[He gestures to the walls]
+
+ELDER CHEN: These stones are old. Older
+than the city above. They have their own
+ways of hiding what they shelter.
+
+[All paths converge:]
+
+ELDER CHEN: But you didn't come here for
+philosophy. You came because you're lost.
 
 [He studies Li Wei]
 
-ELDER CHEN: What do you want to do?
+ELDER CHEN: Old Dao believes you're special.
+The pendant you carry suggests he may be
+right. But belief and potential are nothing
+without cultivation.
 
-[DIALOGUE CHOICE]
-> "I won't let you fight my battles."
-> "What would you have me do?"
-> "This is about the pendant, isn't it?"
+LI WEI: Cultivation?
+
+ELDER CHEN: Training. Development. Becoming
+what you could be.
+
+[He stands]
+
+ELDER CHEN: I would like to teach you,
+Li Wei. The path of the Beggars Sect.
+Our techniques. Our philosophy.
+
+[Beat]
+
+ELDER CHEN: It will be difficult. You will
+suffer. You may fail. But if you succeed...
+
+[He meets Li Wei's eyes]
+
+ELDER CHEN: You will become something this
+world has forgotten how to measure.
+
+[CHOICE - Significant:]
+> [Accept training]
+> [Ask what's in it for you]
+> [Ask what's in it for them]
+
+[All lead to acceptance, but responses vary]
+
+ELDER CHEN: Then we begin tomorrow. Rest today.
+Eat. Meet your new family.
+
+[He returns to sitting]
+
+ELDER CHEN: And Li Wei? Welcome.
+
+[SCENE 1.1 COMPLETE]
+```
 
 ---
 
-[All paths lead to:]
+## Scene 1.2: First Lessons
 
-ELDER CHEN: The sect protects its own. But you are not wrong—this is your fight as much as ours.
+**Type:** Training Combat & Dialogue
+**Location:** Training Ground
+**Duration:** 20-25 minutes
+**Player Input:** Combat tutorial (advanced), technique learning
 
-[He nods slowly]
+### Opening
 
-ELDER CHEN: Face Razor. Show him what a beggar can become. Show yourself what you can become.
+```
+[DAWN - Training Ground]
+
+[Elder Chen waits, standing still as stone]
+[Brother Feng and several other beggars watch from the edges]
+
+ELDER CHEN: Good. You're punctual.
+
+[Li Wei approaches]
+
+ELDER CHEN: Today, you learn the first stance
+of the Beggars Sect. The Flowing Stance.
+
+[He demonstrates - his body shifts, becoming fluid,
+loose, water-like]
+
+ELDER CHEN: We do not meet force with force.
+We redirect. We flow. We let aggression pass
+through us and become nothing.
+
+[He returns to normal standing]
+
+ELDER CHEN: Attack me.
+
+LI WEI: What?
+
+ELDER CHEN: Attack. However you like.
+
+[COMBAT TUTORIAL: Attack Elder Chen]
+[Every attack misses or is gently redirected]
+[Chen doesn't counterattack - just flows]
+
+[After several attempts:]
+
+ELDER CHEN: You see? Your strikes have
+power. But power without direction is
+merely noise.
+
+[He takes Li Wei's arm gently]
+
+ELDER CHEN: Now. I will show you how to
+BE the water, not fight it.
+
+[TRAINING MONTAGE - Interactive]
+```
+
+### Technique Learning: Flowing Stance
+
+```
+╔═══════════════════════════════════════════════════════════════╗
+║  TECHNIQUE LEARNED: FLOWING STANCE (流勢)                     ║
+╠═══════════════════════════════════════════════════════════════╣
+║                                                               ║
+║  "Water does not fight the rock; it flows around and         ║
+║   eventually wears it down."                                 ║
+║                                                               ║
+║  EFFECTS:                                                     ║
+║  • +15% Evasion while active                                 ║
+║  • Chi regenerates faster                                    ║
+║  • Counterattacks gain bonus damage                          ║
+║                                                               ║
+║  WEAKNESS:                                                    ║
+║  • -10% Direct attack damage                                 ║
+║                                                               ║
+║  Press [S] to switch to Flowing Stance in combat             ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+```
+
+### Learning: Flowing Strike
+
+```
+ELDER CHEN: The stance alone is foundation.
+Now, learn to strike from it.
+
+[He demonstrates - a fluid palm strike that
+seems slow but arrives instantly]
+
+ELDER CHEN: Flowing Strike. Not powerful,
+but it opens possibilities.
+
+[Training begins - player practices against
+training dummy]
+
+╔═══════════════════════════════════════════════════════════════╗
+║  TECHNIQUE LEARNED: FLOWING STRIKE (流擊)                     ║
+╠═══════════════════════════════════════════════════════════════╣
+║                                                               ║
+║  Light attack from Flowing Stance                            ║
+║                                                               ║
+║  Power: 12        Chi Cost: 0                                ║
+║  Speed: Fast      Category: Light                            ║
+║                                                               ║
+║  SPECIAL: Combo Starter                                       ║
+║  Can chain into: Stream Palm, Beggar's Feint                 ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+```
+
+### Learning: Stream Palm
+
+```
+ELDER CHEN: One more technique for today.
+Stream Palm.
+
+[He demonstrates - a two-handed push that
+redirects as much as damages]
+
+ELDER CHEN: This strike pushes. Against
+aggressive enemies, it creates space.
+Against defensive enemies, it breaks
+their stance.
+
+╔═══════════════════════════════════════════════════════════════╗
+║  TECHNIQUE LEARNED: STREAM PALM (流掌)                        ║
+╠═══════════════════════════════════════════════════════════════╣
+║                                                               ║
+║  Medium attack from Flowing Stance                           ║
+║                                                               ║
+║  Power: 18        Chi Cost: 5                                ║
+║  Speed: Medium    Category: Medium                           ║
+║                                                               ║
+║  SPECIAL: Knockback effect                                   ║
+║  Can chain from: Flowing Strike                              ║
+║  Can chain into: Ripple Guard, Rising Dragon                 ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+```
+
+### Testing Combat
+
+```
+ELDER CHEN: Now. Let's see you use them.
+
+[Feng steps forward, grinning]
+
+BROTHER FENG: My turn! Come on, Li Wei,
+show me what Chen taught you!
+
+[TRAINING COMBAT: Brother Feng]
+[Feng fights aggressively - perfect for
+practicing Flowing Stance's evasion]
+
+[After victory:]
+
+BROTHER FENG: (laughing, on the ground)
+Okay, okay, I yield! Man, you pick things
+up FAST.
+
+ELDER CHEN: (nodding approval)
+Good. Better than good. You have instinct
+for this.
+
+[He pauses, studying Li Wei]
+
+ELDER CHEN: Almost as if you've done it
+before.
+
+[Li Wei touches his pendant unconsciously]
+
+LI WEI: Maybe I have. I don't remember.
+
+ELDER CHEN: Memory is a river. Sometimes
+it flows underground for a while. But it
+always resurfaces.
+
+[He bows slightly]
+
+ELDER CHEN: Rest. Tomorrow, you meet
+Elder Wu. Her lessons are... different.
+
+[He walks away]
+
+[SCENE 1.2 COMPLETE]
+```
+
+---
+
+## CHOICE POINT 1: Brother Feng's Challenge
+
+**Type:** Major Choice
+**Trigger:** After Scene 1.2, during free exploration
+
+### Setup
+
+```
+[Li Wei is exploring/resting when Feng approaches]
+[Feng's expression is different - less joking, more tense]
+
+BROTHER FENG: Hey. Li Wei. Got a minute?
+
+LI WEI: What's wrong?
+
+BROTHER FENG: (sighing)
+Look, I... I need to ask you something.
+And I need you to be honest.
+
+[He looks around, makes sure they're alone]
+
+BROTHER FENG: How are you so GOOD?
+
+LI WEI: What?
+
+BROTHER FENG: At fighting! At techniques!
+I've been here two years. TWO YEARS. And
+you show up and in one day you're already
+better than me.
+
+[His frustration is real, but not angry]
+
+BROTHER FENG: I'm not jealous. Okay, I'm
+a little jealous. But mostly I just...
+I want to understand.
+
+LI WEI: Feng, I don't know how to explain
+it. My body just... knows.
+
+BROTHER FENG: (nodding slowly)
+Yeah. Yeah, that's what Chen says. Natural
+talent or some buried past or whatever.
+
+[He squares his shoulders]
+
+BROTHER FENG: So here's the thing. The other
+disciples are talking. Some of them think
+you're special. Some think you're a spy.
+Some think Chen's playing favorites.
+
+[Beat]
+
+BROTHER FENG: If you want to fit in here—
+REALLY fit in—you need to prove yourself.
+Not to Chen. To them.
+```
+
+### The Choice
+
+```
+[MAJOR CHOICE POINT - Path Alignment]
+
+BROTHER FENG: So... what do you want to do
+about it?
+
+> [A: "Challenge whoever doubts me to a duel."]
+> [B: "Let me help with something. Prove myself through service."]
+> [C: "Who's talking? I want to know who my enemies are."]
+
+[CHOICE A = +1 Blade]
+[CHOICE B = +1 Stream]
+[CHOICE C = +1 Shadow]
+```
+
+---
+
+## Scene 1.3A: The Proving Ground (Blade Path)
+
+**Type:** Combat Challenge
+**Trigger:** Choice A
+
+```
+BROTHER FENG: (grinning)
+NOW we're talking! All right, I know just
+the guy. Brother Kang. He's been the loudest
+about you being "suspicious."
+
+[Cut to Training Ground - evening]
+
+[A muscular beggar stands waiting - KANG]
+[Other disciples have gathered to watch]
+
+KANG: So the newcomer wants to fight?
+Fine. Let's see if you're as good as
+Chen thinks.
+
+ELDER WU: (appearing from shadows)
+If there's to be a proving, I'll oversee it.
+
+[She steps forward - stern, arms crossed]
+
+ELDER WU: Standard rules. First to yield
+or fall. No permanent damage.
+
+[She looks between them]
+
+ELDER WU: Begin.
+
+[COMBAT: Brother Kang]
+[Kang is stronger but slower - uses power over technique]
+[Good test for Flowing Stance's evasion]
+
+[Victory:]
+
+KANG: (on the ground, shocked)
+How... you moved like water...
+
+LI WEI: (offering hand)
+No hard feelings?
+
+KANG: (taking it, slowly)
+...No. No hard feelings. You're the real
+thing.
+
+[He bows, stiffly]
+
+KANG: Welcome to the sect. Brother.
+
+[CROWD MURMURS - respect]
+
+ELDER WU: (to Li Wei)
+You fight well. But fighting well isn't
+enough. Tomorrow, I teach you to fight
+HARD.
+
+[She walks away]
+
+[FENG claps Li Wei on the shoulder]
+
+BROTHER FENG: THAT was awesome! Did you
+see his face when you dodged that punch?
+
+[SCENE 1.3A COMPLETE]
+[Path: Blade +1]
+[Reputation: Known as fighter]
+```
+
+---
+
+## Scene 1.3B: Service in Shadows (Stream Path)
+
+**Type:** Exploration & Social
+**Trigger:** Choice B
+
+```
+BROTHER FENG: (thoughtful)
+Okay, that could work. Actually... the
+kitchen needs help. Sister Lin's been
+complaining about being short-handed.
+
+[He leans in]
+
+BROTHER FENG: I know it sounds small, but
+trust me—EVERYONE notices who helps in the
+kitchen. Food is life down here.
+
+[Cut to Communal Kitchen]
+
+SISTER LIN: (a middle-aged woman, tired but kind)
+Feng said you wanted to help? Good. Grab
+a knife. We have vegetables that need
+cutting.
+
+[MINI-GAME: Cooking assistance]
+[Simple rhythm-based chopping]
+[During the work, conversations happen]
+
+SISTER LIN: You're the new one. The mystery
+boy Chen's so excited about.
+
+LI WEI: I'm not sure "excited" is the word.
+
+SISTER LIN: (laughing)
+Chen doesn't get excited. But for him,
+slight interest IS excitement.
+
+[More chopping]
+
+SISTER LIN: You know what I've learned in
+twenty years in this kitchen?
+
+LI WEI: What?
+
+SISTER LIN: The fighters get the glory. The
+cooks keep everyone alive. Both matter.
+Neither works alone.
+
+[She puts a hand on Li Wei's shoulder]
+
+SISTER LIN: You're helping. That means
+you understand.
+
+[OTHER BEGGARS passing through see Li Wei working]
+[Nods of approval]
+
+[Later - the meal is served]
+
+[Li Wei sits with the disciples, eating what
+he helped make]
+
+BEGGAR: (to Li Wei)
+Hey, this is good. You help make it?
+
+LI WEI: Just chopped vegetables.
+
+BEGGAR: (nodding)
+That's something. That's real.
+
+[BROTHER KANG approaches - the doubter]
+
+KANG: (gruffly)
+Heard you helped in the kitchen.
+
+[Pause]
+
+KANG: ...That's all right then.
+
+[He walks away - not warm, but not hostile]
+
+FENG: (whispering)
+See? Service speaks louder than words.
+
+[SCENE 1.3B COMPLETE]
+[Path: Stream +1]
+[Reputation: Known as helpful]
+```
+
+---
+
+## Scene 1.3C: Secrets in Stone (Shadow Path)
+
+**Type:** Investigation & Stealth
+**Trigger:** Choice C
+
+```
+BROTHER FENG: (uncomfortable)
+You want to know who's talking?
+
+LI WEI: I want to know everything. Who
+doubts me, why, and what they're hiding.
+
+FENG: (slowly)
+That's... kind of paranoid.
+
+LI WEI: In my position, wouldn't you be?
+
+[Feng considers]
+
+FENG: Yeah. Fair point.
+
+[He lowers his voice]
+
+FENG: Okay. Brother Kang's the loudest.
+Sister Mei—not Elder Mei, different person—
+she's been asking questions too. And there's
+a guy, Whisper, who doesn't talk much but
+watches EVERYTHING.
+
+[Beat]
+
+FENG: If you want to know what they really
+think... you'll have to listen without them
+knowing.
+
+[STEALTH SEQUENCE begins]
+
+[Li Wei can move through the Corner, listening
+to conversations without being noticed]
+
+CONVERSATION 1 - Kang and Another:
+"I'm telling you, no one learns that fast.
+Either he's a plant or he's hiding something."
+"What if he's telling the truth? What if he
+really doesn't remember?"
+"Then he's dangerous anyway. Unknowns are
+always dangerous."
+
+CONVERSATION 2 - Sister Mei and Others:
+"The pendant. Did you see it? Jade, old jade.
+That's not beggar jewelry."
+"Could be stolen."
+"He didn't steal it. Did you see how he
+touched it? That's personal."
+
+CONVERSATION 3 - Whisper (alone, muttering):
+"The pendant. The Initiative's mark. I've
+seen it before. Subject 11 had one.
+Before they... before..."
+[He stops, shuddering]
+"If he's from THERE... he's either
+victim or weapon. Either way, trouble."
+
+[Li Wei processes this]
+
+INTERNAL MONOLOGUE:
+The Initiative. That word again.
+Whisper knows something. About me.
+About this pendant.
+
+[CHOICE:]
+> [Confront Whisper now] → Different outcome
+> [Store this information for later] → Main path
+
+[If confront:]
+
+LI WEI: (stepping out)
+What do you know about the Initiative?
+
+WHISPER: (startled)
+You— how long were you—
+
+[He backs away]
+
+WHISPER: I know nothing. Forget I said anything.
+
+LI WEI: Subject 11. You mentioned Subject 11.
+I'M Subject 17.
+
+[Whisper goes pale]
+
+WHISPER: Then you should be dead. They
+don't let subjects go.
+
+[He grabs Li Wei's arm]
+
+WHISPER: They'll come for you. They ALWAYS
+come for escaped subjects.
+
+[He releases, backs away]
+
+WHISPER: Stay away from me. I survived by
+being invisible. You'll get us all killed.
+
+[He flees]
+
+[Store information - return to main path]
+
+[Li Wei returns to Feng]
+
+FENG: Well? Learn anything useful?
+
+LI WEI: (carefully)
+I learned that I need to be careful. And
+that some secrets are better kept.
+
+FENG: (nodding)
+Welcome to the sect, Li Wei. Everyone here
+has secrets.
+
+[SCENE 1.3C COMPLETE]
+[Path: Shadow +1]
+[Reputation: Known as observant]
+[FLAG: Whisper_Confronted = true]
+```
+
+---
+
+## Scene 1.4: Second Teacher
+
+**Type:** Training Combat & Dialogue
+**Location:** Training Ground
+**Duration:** 20 minutes
+
+### Introduction to Elder Wu
+
+```
+[DAWN - Training Ground]
+
+[Elder Wu stands like a statue - unmoved, unmoving]
+[Her stance is different from Chen's - rooted, solid]
+
+ELDER WU: You're the one Chen praises.
+
+[Li Wei bows]
+
+ELDER WU: Stop. Don't bow until you've
+earned it.
+
+[She circles him like a predator]
+
+ELDER WU: Chen teaches flow. I teach
+endurance. His path avoids damage.
+Mine survives it.
+
+[She stops in front of him]
+
+ELDER WU: The world will hit you. It
+will hit you when you're ready and
+when you're not. My question is:
+will you break?
+
+[She throws a punch without warning]
+
+[If player has good reflexes - dodge possible]
+[If player doesn't dodge - hit lands, but Li Wei
+stays standing]
+
+ELDER WU: (either way)
+Mmm. Let's begin.
+```
+
+### Learning: Weathered Stance
+
+```
+ELDER WU: The Weathered Stance. Not water.
+Stone that has survived a thousand storms.
+
+[She demonstrates - low, rooted, immovable]
+
+ELDER WU: In this stance, you do not dodge.
+You do not retreat. You ENDURE. And then
+you strike back.
+
+╔═══════════════════════════════════════════════════════════════╗
+║  TECHNIQUE LEARNED: WEATHERED STANCE (風霜勢)                  ║
+╠═══════════════════════════════════════════════════════════════╣
+║                                                               ║
+║  "The stone that bends to the storm does not break."         ║
+║                                                               ║
+║  EFFECTS:                                                     ║
+║  • +20% Damage Resistance while active                       ║
+║  • Counterattacks deal bonus damage                          ║
+║  • Cannot be knocked back                                    ║
+║                                                               ║
+║  WEAKNESS:                                                    ║
+║  • -20% Evasion                                              ║
+║  • Slower attack speed                                       ║
+║                                                               ║
+║  Press [S] to switch to Weathered Stance in combat           ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+```
+
+### Learning: Weathered Palm
+
+```
+ELDER WU: Now. The strike that answers pain.
+
+[She demonstrates - a heavy palm strike that
+uses the body's full weight]
+
+ELDER WU: When they think they've hurt you,
+hurt them back. Worse.
+
+╔═══════════════════════════════════════════════════════════════╗
+║  TECHNIQUE LEARNED: WEATHERED PALM (風霜掌)                    ║
+╠═══════════════════════════════════════════════════════════════╣
+║                                                               ║
+║  Heavy attack from Weathered Stance                          ║
+║                                                               ║
+║  Power: 22        Chi Cost: 5                                ║
+║  Speed: Slow      Category: Medium                           ║
+║                                                               ║
+║  SPECIAL: +50% damage if used after taking damage            ║
+║  Can chain from: Basic Block                                 ║
+║  Can chain into: Steadfast Guard, Iron Palm                  ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+```
+
+### Learning: Steadfast Guard
+
+```
+ELDER WU: And this. For when you cannot
+attack, but WILL NOT fall.
+
+[She demonstrates - a defensive posture that
+seems to absorb impacts]
+
+╔═══════════════════════════════════════════════════════════════╗
+║  TECHNIQUE LEARNED: STEADFAST GUARD (堅守)                    ║
+╠═══════════════════════════════════════════════════════════════╣
+║                                                               ║
+║  Defensive technique from Weathered Stance                   ║
+║                                                               ║
+║  Power: 0         Chi Cost: 10                               ║
+║  Duration: 1 turn                                            ║
+║                                                               ║
+║  SPECIAL: Reduces ALL damage by 50% for one turn             ║
+║           Generates bonus chi if damage reduced              ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+```
+
+### Training Combat
+
+```
+ELDER WU: Now. Survive.
+
+[She attacks - full force]
+
+[TRAINING COMBAT: Elder Wu]
+[Wu hits HARD - player must use Weathered Stance
+to survive and find openings]
+
+[This fight is meant to be difficult but winnable]
+
+[After taking sufficient damage:]
+
+ELDER WU: (stopping)
+Enough.
+
+[Li Wei is bruised but standing]
+
+ELDER WU: You didn't fall.
+
+LI WEI: (catching breath)
+Was I supposed to?
+
+ELDER WU: (almost smiling)
+Most do.
+
+[She studies him]
+
+ELDER WU: Chen wasn't wrong about you.
+There's iron in your bones.
+
+[She turns to leave, then pauses]
+
+ELDER WU: The streets outside are getting
+dangerous. Gang called Razor's boys have
+been expanding. They may come for the
+Corner eventually.
+
+[She looks back]
+
+ELDER WU: When they do, you'll need both
+stances. Flow AND endurance. Remember that.
+
+[She leaves]
+
+[SCENE 1.4 COMPLETE]
+```
+
+---
+
+## Scene 1.5: The Gang Problem
+
+**Type:** Exploration, Dialogue, World Event
+**Trigger:** After 1.4, during exploration
+
+### The Threat Arrives
+
+```
+[Li Wei is in the Corner when SHOUTING begins]
+
+VOICES: Someone's coming! The hidden entrance!
+
+[Li Wei rushes to the entrance with others]
+
+[A young beggar stumbles through, bloodied]
+
+BLOODIED BEGGAR: They found... they found
+the outer marker...
+
+ELDER CHEN: (arriving)
+Who? Who found it?
+
+BLOODIED BEGGAR: Razor's gang. They're
+demanding... tribute. Said if we don't
+pay, they'll...
+
+[He collapses - others catch him]
+
+ELDER CHEN: (to others)
+Get him to the healers.
+
+[He turns to the gathered disciples]
+
+ELDER CHEN: It seems we have a problem.
+
+[ELDER WU arrives]
+
+ELDER WU: Razor. That little thug's been
+growing bold since he took over the Iron
+Dogs.
+
+ELDER MEI: (appearing, excited)
+Are we fighting? Please tell me we're
+fighting!
+
+ELDER CHEN: We're... discussing.
+
+[He looks at Li Wei]
+
+ELDER CHEN: Come. All of you. We need
+to decide how to handle this.
+```
+
+### The Council
+
+```
+[Elder's Quarters - all three Elders present]
+[Li Wei, Feng, and several senior disciples attend]
+
+ELDER CHEN: The situation: Razor's gang
+has discovered our outer perimeter. Not
+the Corner itself, but they know we're
+somewhere in the area.
+
+ELDER WU: They're demanding "protection
+money." A thousand credits a month or
+they start tearing up the neighborhood
+looking for us.
+
+ELDER MEI: (snorting)
+We don't HAVE a thousand credits a month.
+We barely have food.
+
+ELDER CHEN: Precisely. Which means we need
+another solution.
+
+[He looks around the room]
+
+ELDER CHEN: Options?
+
+DISCIPLE 1: We could relocate. Find another
+hidden spot.
+
+ELDER WU: And abandon everything we've built
+here? The training grounds, the Pine, our
+ancestors' memory?
+
+DISCIPLE 2: We could fight. We have numbers—
+
+ELDER MEI: (interrupting)
+Against Razor? He's got forty thugs. We
+have twelve who can fight. The math doesn't
+work.
+
+[Silence]
+
+ELDER CHEN: (to Li Wei)
+You're new. You see with fresh eyes.
+What would you suggest?
+
+[All eyes turn to Li Wei]
+```
+
+### Intelligence Gathering
+
+Before the choice, player can ask questions:
+
+```
+LI WEI: Who is Razor, exactly?
+
+ELDER WU: A street thug who got ambitious.
+Real name unknown. Takes the name because
+he cut a man's face off for looking at him
+wrong.
+
+ELDER MEI: But here's the thing—he fights
+like he's trained. Not just brawling. Real
+technique. Someone taught him.
+
+LI WEI: What does he actually want?
+
+ELDER CHEN: Power. Territory. He's not
+political—he doesn't care about the
+Aptitude System. He just wants to be king
+of the gutter.
+
+LI WEI: Does he have weaknesses?
+
+ELDER WU: Pride. He never backs down from
+a direct challenge. It's how he got where
+he is.
+
+ELDER MEI: (grinning)
+Also, his second-in-command, Scarred Jin,
+is an idiot. Loyal but stupid.
+
+LI WEI: What about the other gangs?
+
+ELDER CHEN: (interested)
+Other gangs? There's the Bone Collectors,
+what's left of the Iron Dogs before Razor
+absorbed them, the Ratlings...
+
+ELDER WU: All smaller than Razor. But combined...
+
+[This provides context for Stream path]
+
+LI WEI: Is there anything Razor's hiding?
+Anything that could be used against him?
+
+ELDER MEI: (eyes narrowing)
+Rumors. He used to work for someone in
+the upper rings. Someone he doesn't talk
+about anymore.
+
+ELDER CHEN: (thoughtful)
+If that connection could be proven...
+the Spartans would be very interested.
+
+[This provides context for Shadow path]
+```
+
+---
+
+## CHOICE POINT 2: How to Deal with Razor
+
+**Type:** Major Choice
+**This choice shapes the rest of Chapter 1 significantly**
+
+```
+ELDER CHEN: So, Li Wei. What do you think
+we should do?
+
+[MAJOR CHOICE POINT - Determines Chapter 1 resolution]
+
+> [A: "I'll challenge Razor directly. His pride won't let him refuse."]
+> [B: "Let me talk to the other gangs. Together, we can pressure him."]
+> [C: "I'll find proof of his upper ring connection. Use it against him."]
+
+[CHOICE A = +2 Blade, leads to 1.6A Boss Fight]
+[CHOICE B = +2 Stream, leads to 1.6B Alliance Path]
+[CHOICE C = +2 Shadow, leads to 1.6C Blackmail Path]
+```
+
+---
+
+## Scene 1.6A: Direct Challenge (Blade Path)
+
+**Duration:** 30 minutes (includes boss fight)
+
+### Preparation
+
+```
+ELDER CHEN: A direct challenge. Bold.
+Perhaps foolish. But bold.
+
+ELDER WU: (nodding slowly)
+Razor's pride is his weakness. He CAN'T
+refuse a public challenge. It would
+destroy his reputation.
+
+ELDER MEI: (excited)
+Finally! Violence! I was getting bored
+with all the talking.
+
+ELDER CHEN: (to Li Wei)
+Are you certain? Razor is dangerous.
+He's killed people.
+
+LI WEI: I'm certain.
+
+ELDER CHEN: Then prepare. Wu, Mei—give
+him what you can.
+
+[TRAINING MONTAGE - Optional additional technique]
+
+ELDER WU: The duel will be to submission
+or death. Razor won't hold back.
+
+[She teaches one more technique]
+
+╔═══════════════════════════════════════════════════════════════╗
+║  TECHNIQUE LEARNED: RIPPLE GUARD (漣漪護)                      ║
+╠═══════════════════════════════════════════════════════════════╣
+║                                                               ║
+║  Hybrid defensive technique                                  ║
+║                                                               ║
+║  Chi Cost: 8                                                 ║
+║                                                               ║
+║  SPECIAL: Deflects one attack, returns 30% damage            ║
+║           Works in either stance                             ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+ELDER MEI: And from me—a bit of hunger.
+
+╔═══════════════════════════════════════════════════════════════╗
+║  TECHNIQUE LEARNED: BEGGAR'S FEINT (丐幫虛招)                  ║
+╠═══════════════════════════════════════════════════════════════╣
+║                                                               ║
+║  Deceptive attack                                            ║
+║                                                               ║
+║  Power: 8         Chi Cost: 3                                ║
+║  Speed: Very Fast                                            ║
+║                                                               ║
+║  SPECIAL: If enemy tries to block, this attack bypasses      ║
+║           Follows with guaranteed critical hit opportunity    ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+ELDER CHEN: And from me...
 
 [He places a hand on Li Wei's shoulder]
 
-ELDER CHEN: Whatever happens, you are not alone anymore.
+ELDER CHEN: Remember: you fight not for
+pride, but for family. Let that give you
+strength.
 
-[SCENE TRANSITIONS TO 1.11]
+[Li Wei's chi flares—briefly, the pendant glows]
+
+[BUFF: "Elder's Blessing" - +10% all stats for boss fight]
 ```
 
----
-
-## Scene 1.11: Razor's Challenge
-
-**Type:** Pre-Boss Cutscene
-**Location:** Gang Territory - Border
-**Player Input:** Minimal
-
-### Environment Description
-
-The boundary between Beggar's Corner and Gang Territory. A wide street lit by guttering torches. Razor stands in the center, surrounded by thugs. Scarred Jin smirks at his side.
-
-The beggars line up behind Li Wei—not to fight, but to watch.
-
-### Script
+### The Challenge
 
 ```
-[Li Wei walks forward. The crowd parts]
+[GANG TERRITORY - Night]
 
-[RAZOR steps forward—slicked-back hair, leather jacket, gold teeth glinting]
+[Li Wei walks into the territory alone]
+[Thugs emerge from shadows, surrounding him]
 
-RAZOR: So this is the beggar who hurt my boy Jin.
+THUG 1: Look what wandered in. Fresh meat.
 
-[Razor circles Li Wei slowly]
+THUG 2: Boss is gonna love this.
 
-RAZOR: You know who I am?
+LI WEI: (loudly)
+I'm here to challenge Razor. One on one.
+Public combat. For territory rights.
 
-LI WEI: A bully with more thugs than skill.
+[Laughter from the thugs]
 
-[The thugs bristle. Razor laughs]
+THUG 1: You're challenging the BOSS? You
+must be crazy.
 
-RAZOR: [Delighted]
-I like this one! Got a mouth on him!
+[A voice cuts through]
 
-[The laughter dies]
+RAZOR: (emerging from shadows)
+What's all the noise?
 
-RAZOR: [Cold]
-But mouths get people killed around here.
+[RAZOR steps forward - lean, sharp-featured,
+dangerous. A scar runs across his cheek.]
 
-[He stops circling]
+RAZOR: A beggar? Challenging ME?
 
-RAZOR: Here's what's going to happen, beggar. You're going to give me that pretty pendant, apologize for embarrassing my lieutenant, and crawl back to whatever hole you came from.
+[He laughs]
 
-RAZOR: Or...
+RAZOR: This is the best entertainment
+I've had all week.
+
+LI WEI: I'm serious. One fight. If I win,
+your gang leaves the Lower Streets. If
+you win, you get whatever tribute you want.
+
+RAZOR: (amused)
+And why would I accept? I could just have
+my boys kill you right now.
+
+LI WEI: Because everyone's watching. And
+if you refuse a direct challenge, what
+does that say about you?
+
+[Razor's smile freezes]
+
+[The thugs mutter - Li Wei struck a nerve]
+
+RAZOR: (coldly)
+Fine. You want to die so badly?
 
 [He cracks his knuckles]
 
-RAZOR: Razor teaches you what happens to people who disrespect me.
+RAZOR: Let's dance, beggar.
 
-[DIALOGUE CHOICE]
-> "The pendant isn't yours to take."
-> "I'm not afraid of you."
-> [Say nothing. Adopt fighting stance.]
+[The thugs form a circle - improvised arena]
 
----
+[BOSS FIGHT: RAZOR - Begins]
+```
 
-[IF: "The pendant isn't yours to take."]
-RAZOR: [Amused]
-Isn't mine? Everything in the Lower Streets is mine. The food, the protection, the garbage—and the beggars.
+### Boss Fight: Razor
 
-RAZOR: That includes you.
+```
+╔═══════════════════════════════════════════════════════════════╗
+║  BOSS ENCOUNTER: RAZOR                                        ║
+╠═══════════════════════════════════════════════════════════════╣
+║                                                               ║
+║  "The streets have a king. And kings don't bow to beggars."  ║
+║                                                               ║
+║  RAZOR                                                        ║
+║  HP: ████████████████████████████████ 200/200                ║
+║  Faction: Urban Thugs (Leader)                               ║
+║  Style: Aggressive, relentless pressure                      ║
+║                                                               ║
+║  PHASES:                                                      ║
+║  Phase 1 (100%): Probing attacks, testing Li Wei             ║
+║  Phase 2 (60%): Gets serious, faster combos                  ║
+║  Phase 3 (30%): Desperate, unpredictable, powerful           ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+```
 
----
+### Phase 1: Probing
 
-[IF: "I'm not afraid of you."]
-RAZOR: [Grinning]
-Not yet. But you will be.
+```
+RAZOR: Not bad, beggar. Where'd you learn
+to fight?
 
----
+LI WEI: I don't remember.
 
-[IF: Say nothing]
-RAZOR: [Narrowing eyes]
-Silent type, huh? Fine. Razor can do the talking for both of us.
+RAZOR: (laughing)
+Mysterious. I like it.
 
----
+[He attacks - fast, precise]
 
-[CONTINUING]
+RAZOR: But I've beaten better than you.
 
-RAZOR: Boys, clear out. I'm going to enjoy this personally.
+[Combat continues - Razor tests Li Wei's defenses]
+[Good time to use Flowing Stance]
 
-[The thugs fall back, forming a ring]
+[At 60% HP:]
 
-[Razor takes a fighting stance—brutal, street-taught, effective]
+RAZOR: (wiping blood from lip)
+Okay. You're real.
 
-RAZOR: Come on, beggar. Show me what your cult taught you.
+[His stance shifts - more serious]
 
-ELDER CHEN: [From the crowd]
-Remember, Li Wei. You are the river. You are the mountain.
+RAZOR: Let me show you what REAL looks like.
+```
 
-ELDER WU: [Firmly]
-Don't die.
+### Phase 2: Serious
 
-ELDER MEI: [Excited]
-SHOW HIM WHAT HUNGRY MEANS!
+```
+[Razor's attacks become faster, combo-heavy]
+[He chains strikes together - hard to evade]
 
-[BOSS FIGHT BEGINS]
+RAZOR: The streets taught me everything!
+I EARNED my place!
+
+[His fighting style is actually sophisticated -
+suggesting hidden training]
+
+RAZOR: You think you can just WALK IN and
+take what's mine?!
+
+[Combat continues - player needs to mix Flowing
+and Weathered stances]
+
+[At 30% HP:]
+
+RAZOR: (staggering)
+No... NO!
+
+[His eyes go wild]
+
+RAZOR: I didn't survive this long to lose
+to a BEGGAR!
+
+[He pulls a hidden knife]
+
+RAZOR: Rules are for losers!
+```
+
+### Phase 3: Desperate
+
+```
+[Razor fights dirty - knife attacks, throws
+debris, uses environment]
+
+RAZOR: I'll cut you apart! I'll—
+
+[Li Wei's pendant flares]
+
+[INTERNAL MONOLOGUE:]
+Something's happening. The pendant.
+My chi. It's...
+
+[Li Wei feels his chi flowing BACKWARD -
+through inverse meridians]
+
+[For a moment, everything is clear]
+
+[SPECIAL: "Awakening" - One free critical hit]
+
+[Player has opportunity for finishing blow]
+
+[Victory:]
+
+[Razor falls, knife clattering away]
+
+RAZOR: (on the ground)
+How... what ARE you?
+
+LI WEI: I don't know yet.
+
+[He looks at the watching thugs]
+
+LI WEI: The deal stands. Leave the Lower
+Streets. Don't come back.
+
+[Long silence]
+
+SCARRED JIN: (stepping forward)
+Boss... boss, what do we do?
+
+RAZOR: (bitterly)
+You heard him. We're done here.
+
+[He looks at Li Wei with hatred]
+
+RAZOR: This isn't over, beggar. I'll
+remember you.
+
+[The gang disperses]
+
+[Li Wei stands alone in the territory - victorious]
+
+[SCENE 1.6A COMPLETE]
+[Razor: DEFEATED]
+[Street Status: Li Wei feared as fighter]
 ```
 
 ---
 
-## Scene 1.12: The First Test - RAZOR BOSS FIGHT
+## Scene 1.6B: The Alliance Path (Stream Path)
 
-**Type:** Boss Combat
-**Location:** Gang Territory - Street Ring
-**Player Input:** Full combat
+**Duration:** 25 minutes (no boss fight, but complex social encounters)
 
-### Boss: Razor
-
-**Stats:** See ENEMIES.md for full stats
-- HP: 400
-- Two phases
-- Street Fighter AI patterns
-
-### Phase 1: Arrogant
+### Gathering Allies
 
 ```
-[HP: 100%-50%]
+ELDER CHEN: Unite the gangs against Razor?
+Ambitious.
 
-RAZOR: [Taunting]
-That all you got? Jin hit harder than that!
+ELDER WU: And difficult. They all hate
+each other.
 
-RAZOR: [After taking damage]
-Lucky shot! LUCKY SHOT!
+ELDER MEI: But they hate Razor MORE. He's
+been absorbing everyone.
 
-RAZOR: [Powering up]
-You want to see real power? This is what RUNS these streets!
+ELDER CHEN: (to Li Wei)
+You'll need to convince them one by one.
+The Bone Collectors. The Ratlings. What
+remains of the old Iron Dogs.
 
-[Razor uses Gang Leader's Presence - buffs himself]
+[He pauses]
+
+ELDER CHEN: Be careful. These are not
+good people. They're just people with a
+common enemy.
 ```
 
-### Phase 1 → 2 Transition
+### The Bone Collectors
 
 ```
-[Razor staggers at 50% HP]
+[BONE YARD TERRITORY - A different Bone Yard,
+filled with human remains]
 
-RAZOR: [Shocked]
-You... you actually hit me. You HIT Razor.
+[The Bone Collectors deal in burial, cremation,
+and occasionally, less legal body disposal]
 
-[His expression twists from shock to fury]
+MAMA BONE: (ancient woman, not related to
+Grandmother Bone but similar aesthetic)
+A beggar wants to talk? Talk.
 
-RAZOR: Nobody hits Razor. NOBODY!
+LI WEI: I want to propose an alliance
+against Razor.
 
-[RAZOR ENTERS PHASE 2 - More aggressive, faster, dangerous]
+MAMA BONE: (laughing)
+Alliance? Against that psychopath?
 
-RAZOR: [Screaming]
-I'M GOING TO END YOU!
+[She stops laughing]
+
+MAMA BONE: He killed three of my collectors
+last month. Just for being in "his" territory.
+
+LI WEI: Then help me stop him.
+
+MAMA BONE: And what do WE get?
+
+[DIALOGUE CHOICE:]
+> [Offer: Their territory back] → Success
+> [Offer: Protection from Beggars Sect] → Partial success
+> [Threaten: Join or be next] → Failure, must fight
+
+[If successful:]
+
+MAMA BONE: Hmm. Territory. That's something.
+
+[She studies Li Wei]
+
+MAMA BONE: Fine. When you move against
+Razor, the Collectors will block the
+southern alleys. He won't be able to run.
+
+[BONE COLLECTORS: Allied]
 ```
 
-### Phase 2: Desperate
+### The Ratlings
 
 ```
-[HP: 50%-0%]
+[SEWER ENTRANCE - A child-gang that lives in
+the drainage system]
 
-RAZOR: [Enraged]
-How?! HOW?! You're a BEGGAR!
+[RAT KING - A teenager covered in grime, eyes
+sharp with survival]
 
-RAZOR: [Wild swings]
-STAY STILL! FIGHT LIKE A MAN!
+RAT KING: You want our help? Us?
 
-RAZOR: [As HP drops]
-This isn't happening... this ISN'T HAPPENING!
+[He's suspicious - adults rarely offer deals
+to children]
+
+LI WEI: I want everyone who hates Razor
+to stand together.
+
+RAT KING: We don't fight. We're small.
+We survive.
+
+LI WEI: I'm not asking you to fight. I'm
+asking you to watch. To report. To be my
+eyes where I can't go.
+
+[The Rat King considers]
+
+RAT KING: And what do we get?
+
+[DIALOGUE CHOICE:]
+> [Offer: Food from the sect kitchen] → Success
+> [Offer: Safe passage through sect territory] → Success
+> [Offer: Training] → Great success, long-term ally
+
+[If training offered:]
+
+RAT KING: (eyes widening)
+Training? Like, real fighting training?
+
+LI WEI: If you want it.
+
+RAT KING: (slowly)
+Nobody ever offered to teach us anything.
+
+[He extends a grimy hand]
+
+RAT KING: Deal. The Ratlings are your eyes.
+
+[RATLINGS: Allied + Future Contact]
 ```
 
-### Victory Sequence
+### The Iron Dogs Remnant
 
 ```
-[Razor falls to his knees, bloodied, defeated]
+[WAREHOUSE - A handful of scarred fighters,
+remnants of the gang Razor conquered]
 
-RAZOR: [Gasping]
-How... how did a beggar...
+OLD IRON: (grizzled veteran)
+Razor killed our leader. Took everything.
+We've been waiting to hit back.
 
-[Li Wei stands over him]
+LI WEI: Then stand with me.
 
-[DIALOGUE CHOICE]
-> "Leave the beggars alone. All of them."
-> "You never stood a chance."
-> [Offer a hand to help him up]
+OLD IRON: (suspicious)
+With a beggar? Against Razor? What makes
+you think you can win?
+
+[CHOICE:]
+> [Demonstrate strength - brief combat] → Blade approach
+> [Explain the alliance] → Stream approach
+> [Reveal Razor's weakness] → Shadow approach
+
+[If alliance explained:]
+
+LI WEI: I have the Bone Collectors blocking
+the south. The Ratlings watching every move.
+And I have the Beggars Sect.
+
+OLD IRON: (impressed despite himself)
+You put all that together? In a few days?
+
+LI WEI: We all want the same thing.
+
+OLD IRON: (nodding slowly)
+Fine. The Dogs will bite again. Just point
+us at the target.
+
+[IRON DOGS REMNANT: Allied]
+```
+
+### The Confrontation
+
+```
+[GANG TERRITORY - Night]
+
+[Li Wei approaches, but this time he's not alone]
+[Bone Collectors block the southern exit]
+[Ratlings watch from the shadows]
+[Iron Dogs stand behind Li Wei]
+
+RAZOR: (emerging, seeing the situation)
+What the hell is this?
+
+LI WEI: Your options narrowing, Razor.
+
+[Razor's thugs look around - they're surrounded]
+
+RAZOR: (to his men)
+Kill them all! We outnumber—
+
+SCARRED JIN: Boss... we don't. Look.
+
+[More figures emerge - the alliance is larger
+than Razor realized]
+
+RAZOR: (furious)
+You think a bunch of rats and bones can
+stop me?!
+
+LI WEI: I think you have a choice. Leave
+the Lower Streets peacefully. Or leave
+in pieces.
+
+[Razor's hand twitches toward his knife]
+
+[MAMA BONE steps forward]
+
+MAMA BONE: We handle bodies, Razor. One
+more won't be a problem.
+
+[OLD IRON cracks his knuckles]
+
+OLD IRON: I've been waiting for this.
+
+[Razor looks at his men - they're not ready
+to die for him]
+
+RAZOR: (through gritted teeth)
+Fine. You win this round, beggar.
+
+[He points at Li Wei]
+
+RAZOR: But this isn't over. The streets
+have long memories.
+
+[He turns to leave]
+
+RAZOR: Come on. We're relocating.
+
+[His gang follows]
+
+[Li Wei turns to his allies]
+
+LI WEI: Thank you. All of you.
+
+MAMA BONE: Don't thank us yet. You promised
+things. Make sure you deliver.
+
+[She walks away]
+
+RAT KING: (to Li Wei, quietly)
+That was cool. Really cool.
+
+[The alliance disperses]
+
+[Li Wei stands in the territory - victorious
+through unity]
+
+[SCENE 1.6B COMPLETE]
+[Razor: ALLIED (forced truce)]
+[Street Status: Li Wei known as diplomat]
+```
 
 ---
 
-[IF: "Leave the beggars alone."]
-RAZOR: [Spitting blood]
-Fine. FINE. The beggars are off limits.
+## Scene 1.6C: The Shadow Path
 
-[He glares]
+**Duration:** 25 minutes (investigation and manipulation)
 
-RAZOR: But you and me? We're not done. Razor doesn't forget.
+### The Investigation
 
----
+```
+ELDER CHEN: Find Razor's secrets? Dangerous.
+But effective, if you can do it.
 
-[IF: "You never stood a chance."]
-RAZOR: [Laughing bitterly]
-Big talk from someone who was gutter trash a week ago.
+ELDER MEI: (leaning in)
+I mentioned his upper ring connection.
+Rumor is he worked for someone in the
+Commerce Ring before he "became" Razor.
 
-[He stands shakily]
+ELDER WU: If that's true, the Spartans
+would love to know. Unauthorized gang
+activity traced to a upper citizen?
+That's scandal.
 
-RAZOR: Enjoy this, beggar. It won't last.
+ELDER CHEN: (to Li Wei)
+Be careful. If Razor catches you digging,
+he won't challenge you to a duel.
+He'll just kill you.
 
----
+LI WEI: I'll be careful.
+```
 
-[IF: Offer hand]
-[Razor stares at the offered hand]
+### Investigation Phase
 
-RAZOR: [Slapping it away]
-Don't mock me.
+```
+[LOWER STREETS - Night]
 
-[He stands alone]
+[Li Wei moves through shadows, gathering
+information]
 
-RAZOR: This changes nothing. You hear me? NOTHING!
+[INVESTIGATION POINT 1: Scarred Jin]
 
----
+[Scarred Jin drinks alone at a broken fountain]
 
-[CONTINUING]
+[Stealth check - Li Wei listens]
 
-[Razor retreats with his thugs. Scarred Jin throws one last hateful look at Li Wei]
+SCARRED JIN: (muttering drunkenly)
+...stupid beggar... shouldn't have come
+to our territory... boss is gonna be mad...
 
-SCARRED JIN: [Muttering]
-Next time...
+[He drinks]
 
-[The beggars cheer]
+SCARRED JIN: ...boss is always mad these
+days. Ever since that messenger came
+from up-ring...
 
-BROTHER FENG: [Running up]
-That was INCREDIBLE! Did you see his face when—
+[He looks around nervously]
 
-[Elder Chen approaches, smiling]
+SCARRED JIN: ...shouldn't talk about that.
+Boss said never talk about the Jade people.
 
-ELDER CHEN: Well done, Li Wei. You've proven yourself today.
+[He passes out]
 
-[He looks at the retreating gangs]
+INTERNAL MONOLOGUE:
+"Jade people." Jade Cloud Sect is based
+in the Commerce Ring. Are they connected
+to Razor?
 
-ELDER CHEN: But this is only the beginning. You've made enemies. And attracted attention.
+[CLUE: "Jade Connection" obtained]
 
-[Elder Wu nods]
+[INVESTIGATION POINT 2: Razor's Quarters]
 
-ELDER WU: The Spartans will hear of this. A beggar defeating a gang boss? They'll come investigating.
+[Li Wei infiltrates Razor's hideout while
+the gang is out patrolling]
 
-ELDER MEI: [Serious for once]
-Bigger things are stirring, young one. Darker things.
+[Stealth sequences - avoiding guards]
 
-[Elder Chen places both hands on Li Wei's shoulders]
+[Inside Razor's room:]
 
-ELDER CHEN: Rest tonight. Celebrate your victory. But tomorrow... we begin your real training.
+[A hidden compartment in the floor]
 
-[He looks toward the city's center—toward the distant Spire]
+[Inside: Letters]
 
-ELDER CHEN: Something tells me you'll need everything we can teach you.
+LETTER 1:
+"Your payment for this month has been
+received. Continue territorial expansion
+as discussed. The merchandise will flow
+through your area. Do not fail us.
+- J.C."
 
-[CHAPTER 1 ENDS]
+LETTER 2:
+"The Beggars Sect may be in your area.
+Flush them out. There may be someone
+among them we're looking for. Bring any
+jade pendants you find.
+- J.C."
+
+INTERNAL MONOLOGUE:
+They're looking for me. The pendant.
+Whoever "J.C." is, they know about me.
+
+And Razor works for them.
+
+[CLUE: "Jade Cloud Connection" obtained]
+[CLUE: "Initiative Interest" obtained]
+
+[INVESTIGATION POINT 3: The Messenger]
+
+[A Commerce Ring messenger arrives at gang
+territory]
+
+[Li Wei follows at a distance]
+
+[The messenger meets with Razor in secret]
+
+MESSENGER: The Jade Cloud Trade Master
+grows impatient. Where is the subject
+you were told to find?
+
+RAZOR: (defensive)
+I'm looking! The Lower Streets are a
+maze. The beggars hide well.
+
+MESSENGER: Then look harder. The Initiative
+is offering substantial payment for
+Subject 17's return.
+
+RAZOR: What's so special about one beggar?
+
+MESSENGER: (coldly)
+That's not your concern. Find them.
+
+[The messenger leaves]
+
+RAZOR: (to himself, bitter)
+"Find them." Like I'm some errand boy.
+
+[He kicks a wall]
+
+RAZOR: I'm RAZOR! I run these streets!
+I'm not anyone's servant!
+
+[Li Wei has heard enough]
+
+INTERNAL MONOLOGUE:
+The Initiative. They're using Jade Cloud
+Trade Master to fund Razor. To find me.
+
+But Razor doesn't LIKE being used.
+And the Spartans would LOVE to know that
+a High Sect is funding gang activity.
+
+I have everything I need.
+```
+
+### The Blackmail
+
+```
+[GANG TERRITORY - Night]
+
+[Li Wei walks in openly - Razor's thugs
+immediately surround him]
+
+RAZOR: (emerging)
+You've got nerve, beggar.
+
+LI WEI: I have more than nerve. I have
+information.
+
+[He pulls out the letters]
+
+RAZOR: (face going pale)
+Where did you—
+
+LI WEI: Your connection to Jade Cloud.
+Your funding from the Initiative. Your
+orders to find "Subject 17."
+
+[He lets that sink in]
+
+LI WEI: The Spartans would find this
+very interesting, don't you think?
+
+RAZOR: (fury building)
+You're dead. You're SO dead—
+
+LI WEI: If I die, these letters go public.
+To the Spartans. To the other gangs.
+To everyone.
+
+[Razor stops]
+
+LI WEI: How long would you last if everyone
+knew you were a puppet? If the Iron Dogs
+remnant knew you sold out to upper-ringers?
+
+[Razor's thugs shift uncomfortably]
+
+RAZOR: (through gritted teeth)
+What do you want?
+
+LI WEI: Leave. The Lower Streets, the
+Beggars Sect, all of it. Go somewhere
+else. And when your Jade Cloud masters
+ask about Subject 17, tell them you
+found nothing.
+
+RAZOR: (hatred burning)
+And the letters?
+
+LI WEI: Disappear, and so do they.
+
+[Long silence]
+
+RAZOR: (finally)
+Fine. You win.
+
+[He turns to his men]
+
+RAZOR: We're leaving. Tonight.
+
+SCARRED JIN: But boss—
+
+RAZOR: (cutting him off)
+TONIGHT!
+
+[He looks back at Li Wei]
+
+RAZOR: This isn't over.
+
+LI WEI: Yes it is. You just don't know
+it yet.
+
+[Razor leaves]
+
+[The gang follows]
+
+[Li Wei stands alone - victorious through
+information and manipulation]
+
+[SCENE 1.6C COMPLETE]
+[Razor: EXILED]
+[Street Status: Li Wei's role hidden]
+[FLAG: Know about Jade Cloud connection]
+[FLAG: Know Initiative is hunting Subject 17]
 ```
 
 ---
 
-## Chapter 1 Rewards
+## Scene 1.7: Aftermath
 
-### Techniques Unlocked
-| Technique | Source |
-|-----------|--------|
-| Palm Strike | Default |
-| Flowing Strike | Elder Chen training |
-| Stream Palm | Elder Chen training |
-| Ripple Guard | Elder Chen training |
-| Weathered Palm | Elder Wu training |
-| Steadfast Guard | Elder Wu training |
+**Type:** Consequences & Setup
+**Varies based on path taken**
 
-### Areas Unlocked
-- Lower Streets (full access)
-- Beggar's Corner
-- Training Ground
-- Gang Territory (Chapter 2)
+### Blade Path Aftermath
 
-### Items Obtained
-- Tattered Robes (starting equipment)
-- Jade Pendant (key item - cannot be lost)
-- Beggar's Bowl (sect identifier)
+```
+[BEGGAR'S CORNER - The next day]
 
-### Story Flags Set
-- Razor defeated (affects NPC attitudes)
-- Spartan attention drawn (triggers Chapter 2)
-- Sect membership confirmed
+[Li Wei returns to celebration]
+
+BROTHER FENG: You DID it! You actually beat
+Razor!
+
+[The disciples crowd around]
+
+ELDER WU: (pushing through)
+Enough. Give him air.
+
+[She looks at Li Wei appraisingly]
+
+ELDER WU: You fought well. But you've made
+yourself visible. Word will spread.
+
+ELDER CHEN: (arriving)
+A beggar who defeated a gang leader?
+The Spartans will hear. They always hear.
+
+LI WEI: Let them.
+
+ELDER CHEN: (sighing)
+The confidence of youth.
+
+[He places a hand on Li Wei's shoulder]
+
+ELDER CHEN: Enjoy your victory. But
+prepare yourself. This was the beginning,
+not the end.
+
+[Elsewhere - Garrison Ring]
+
+SPARTAN OFFICER: Commander Vex? Reports
+from the Lower Streets. A vagrant defeated
+the gang leader Razor in single combat.
+
+COMMANDER VEX: A vagrant? Interesting.
+
+[He looks at a file on his desk - Subject 17]
+
+COMMANDER VEX: Begin surveillance.
+
+[CHAPTER 1 COMPLETE - Blade Path]
+```
+
+### Stream Path Aftermath
+
+```
+[BEGGAR'S CORNER - The next day]
+
+[The alliance members visit - a tense but
+hopeful gathering]
+
+MAMA BONE: You kept your word about
+territory. The Collectors are satisfied.
+
+RAT KING: (eating, happily)
+This food is AMAZING. When can we come
+back?
+
+OLD IRON: (to Li Wei)
+You did something nobody else could.
+United people who hate each other.
+
+ELDER CHEN: (to Li Wei privately)
+What you built today may not last. Alliances
+are fragile.
+
+LI WEI: But they're something. Better than
+fighting alone.
+
+ELDER CHEN: (nodding)
+Perhaps. We shall see.
+
+[Elsewhere - Garrison Ring]
+
+SPARTAN OFFICER: Commander Vex? Reports
+of unusual activity in the Lower Streets.
+Gang territories shifting. Possible
+organization among vagrants.
+
+COMMANDER VEX: Organization? Among beggars?
+
+[He frowns]
+
+COMMANDER VEX: Watch them. Something's
+changing down there.
+
+[CHAPTER 1 COMPLETE - Stream Path]
+```
+
+### Shadow Path Aftermath
+
+```
+[BEGGAR'S CORNER - The next day]
+
+[Li Wei returns quietly - few know what happened]
+
+ELDER CHEN: (finding Li Wei alone)
+You succeeded. Without a single blow.
+
+LI WEI: Information is a weapon.
+
+ELDER CHEN: (studying him)
+Indeed. And you've learned to wield it.
+
+[He pauses]
+
+ELDER CHEN: You also learned things.
+About the Initiative. About who hunts you.
+
+LI WEI: "Subject 17." That's what they
+call me. They're paying Jade Cloud to
+find me.
+
+ELDER CHEN: (gravely)
+The Calibration Initiative does not
+abandon its subjects. You've escaped
+something no one escapes.
+
+LI WEI: Why? What am I to them?
+
+ELDER CHEN: That... is what you must
+discover. When you're ready.
+
+[Elsewhere - Garrison Ring]
+
+SPARTAN OFFICER: Commander Vex? The
+Razor gang has left the Lower Streets.
+No apparent cause.
+
+COMMANDER VEX: Just... left?
+
+SPARTAN OFFICER: Witnesses say nothing
+happened. They simply relocated overnight.
+
+COMMANDER VEX: (suspicious)
+Nothing happens for no reason. Find out
+why.
+
+[CHAPTER 1 COMPLETE - Shadow Path]
+```
 
 ---
 
-## Chapter 1 Summary
+## Chapter 1: Consequences Summary
 
-Li Wei's journey from amnesiac vagrant to Beggars Sect disciple establishes:
+### Path Alignment Results
 
-**Character:**
-- His mysterious past (white rooms, running, the pendant)
-- His hidden potential (inverse chi)
-- His new family (the elders, Feng)
-- His first enemy (Razor, Jin)
+| Path | Chapter 1 End State | Blade | Stream | Shadow |
+|------|-------------------|-------|--------|--------|
+| Blade Heavy | 0 minimum | 3+ | 0-2 | 0-2 |
+| Stream Heavy | 0 minimum | 0-2 | 3+ | 0-2 |
+| Shadow Heavy | 0 minimum | 0-2 | 0-2 | 3+ |
+| Mixed | Balanced | 1-2 | 1-2 | 1-2 |
 
-**World:**
-- The Lower Streets' brutality
-- The sect's philosophy and warmth
-- The Aptitude System's oppression (through implication)
-- The threat of the Spartans
+### Razor's Fate (Chapter 2+ Impact)
 
-**Gameplay:**
-- Full combat tutorial
-- Two stances (Flowing, Weathered)
-- Six techniques mastered
-- One boss defeated
+| Outcome | Immediate | Ch2 Impact | Ch3 Impact |
+|---------|-----------|------------|------------|
+| Defeated | Gang dispersed | Scarred Jin seeks revenge | Razor mentioned as cautionary tale |
+| Allied | Uneasy truce | Can call for gang assistance | Razor messenger appears |
+| Exiled | Gang relocated | Scarred Jin leads remnants | Razor becomes lone wolf |
 
-**Cliffhanger:**
-The Spartans will investigate. Chapter 2 brings law enforcement into conflict with the beggars.
+### Relationships
+
+| NPC | Path Impact | Ending State |
+|-----|-------------|--------------|
+| Elder Chen | All paths positive | +2 |
+| Elder Wu | Blade favored | +1 (Blade), 0 (others) |
+| Elder Mei | Awaiting Ch2 | 0 |
+| Brother Feng | All positive | +1 to +2 depending on choices |
+| Razor | Negative regardless | Enemy/Forced ally/Exiled |
+
+### Techniques Learned
+
+**All Paths:**
+- Flowing Stance
+- Flowing Strike
+- Stream Palm
+- Weathered Stance
+- Weathered Palm
+- Steadfast Guard
+
+**Blade Path Bonus:**
+- Ripple Guard
+- Beggar's Feint
+
+**Stream Path Bonus:**
+- Social technique: "Read Intentions"
+
+**Shadow Path Bonus:**
+- Stealth technique: "Shadow Step"
+
+### Flags Set
+
+| Flag | Blade | Stream | Shadow |
+|------|-------|--------|--------|
+| RAZOR_DEFEATED | Yes | No | No |
+| RAZOR_ALLIED | No | Yes | No |
+| RAZOR_EXILED | No | No | Yes |
+| KNOWN_AS_FIGHTER | Yes | No | No |
+| KNOWN_AS_DIPLOMAT | No | Yes | No |
+| ROLE_HIDDEN | No | No | Yes |
+| JADE_CONNECTION_KNOWN | No | No | Yes |
+| INITIATIVE_HUNTING | Suspected | Suspected | Confirmed |
+
+---
+
+## Chapter 1 Complete
+
+**Total Playtime:** 90-120 minutes
+**Scenes:** 7 main + 3 variant paths
+**Techniques:** 6-8 depending on path
+**Major Choices:** 2
+**Path Points Available:** 3
+
+**Achievements Possible:**
+- "First Blood" - Win first combat
+- "The Hidden Home" - Join Beggars Sect
+- "Way of Water" - Master Flowing Stance
+- "Way of Stone" - Master Weathered Stance
+- "Street King" - Defeat Razor (Blade)
+- "Peacemaker" - Unite the gangs (Stream)
+- "Shadowmaster" - Expose Razor (Shadow)
 
 ---
 
@@ -1453,5 +2416,5 @@ The Spartans will investigate. Chapter 2 brings law enforcement into conflict wi
 
 | Date | Version | Change |
 |------|---------|--------|
-| 2025-12-05 | 0.0 | Initial skeleton |
-| 2025-12-05 | 1.0 | Full chapter elaboration with 12 scenes |
+| 2025-12-05 | 2.0 | Complete overhaul with three paths, branching choices |
+| 2025-12-05 | 1.0 | Initial linear chapter design |

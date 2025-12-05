@@ -17,6 +17,60 @@ See TODO.md for complete roadmap
 
 ---
 
+## [2025-12-05] - Complete Story Overhaul: Non-Linear Narrative
+
+### Added
+- **STORY_STRUCTURE.md** (700+ lines) - Non-linear narrative design
+  - Three-path alignment system: Blade (刃), Stream (流), Shadow (影)
+  - Path point accumulation and thresholds
+  - Three distinct endings: Destroyer, Reformer, Wanderer
+  - Complete flowcharts for all chapters
+  - Technical implementation notes with TypeScript interfaces
+
+- **PROLOGUE.md** (400+ lines) - Tutorial and awakening sequence
+  - 7 scenes: The Void → The Hidden Corner
+  - ~20-25 minutes gameplay
+  - Introduces movement, combat basics, dialogue system
+  - Establishes Li Wei's amnesia and mystery
+
+- **CHAPTER_1.md** (complete overhaul) - "Streets of the Forgotten"
+  - 2 major choice points with 3 paths each
+  - Route variations: The Proving, The Bridge, The Observer
+  - Razor boss with 3 different outcomes (defeated/allied/exiled)
+  - Path-specific bonus techniques and content
+  - ~90-120 minutes gameplay
+
+- **CHAPTER_2.md** (complete overhaul) - "The Law's Long Reach"
+  - 2 major choice points with 3 paths each
+  - Full memory flashback sequence revealing Li Wei's escape
+  - Commander Vex boss with 3 approaches (combat/dialogue/stealth)
+  - Path variations: Raid, Alliance, Infiltration
+  - ~120-150 minutes gameplay
+
+- **CHAPTER_3.md** (complete overhaul) - "The Hollow at the Summit"
+  - 3 mountain journey variations based on dominant path
+  - Phase 1 boss variation (combat/dialogue/puzzle approach)
+  - The Hollow One 3-phase boss fight
+  - Three complete endings with sequel hooks
+  - ~90-120 minutes gameplay
+
+### Changed
+- Story now fully non-linear with meaningful player agency
+- Total playtime: ~5-6 hours first playthrough, ~12-15 hours for all content
+- All chapters integrated with lore (Calibration Initiative, inverse chi, prophecy)
+- Each path provides unique techniques, items, and story content
+
+### Story Design Decisions
+- **Not open-world** (scope-appropriate) but meaningful branching
+- **No wrong paths** - all routes lead to satisfying content
+- **Earned endings** - final choice + accumulated path points determine outcome
+- **Replayability** - different playthroughs reveal different aspects of the world
+
+### Impact
+Complete story design phase. Ready for implementation with 25+ elaborated documents.
+
+---
+
 ## [2025-12-05] - Chapter 3 Complete: The Hollow Truth
 
 ### Added
@@ -164,6 +218,6 @@ See TODO.md for complete roadmap
 
 ---
 
-**Changelog started:** 2024-12-04
-**Last updated:** 2024-12-04
-**Status:** Foundation complete, ready for implementation
+**Changelog started:** 2025-12-04
+**Last updated:** 2025-12-05
+**Status:** Design complete, story overhauled with non-linear branching, ready for implementation

@@ -7,6 +7,20 @@
 
 ---
 
+## v1.0 Scope Note
+
+**Included in v1.0 MVP:**
+- 3 Stances: Flowing, Weathered, Hungry
+- 15 Techniques (see TECHNIQUES.md)
+- Core combat mechanics (ATB, chi, combos)
+
+**Deferred to v1.5:**
+- Deceptive Stance (4th stance) - designed below but not implemented in v1.0
+- Environmental combat
+- Advanced combo chains requiring Deceptive Stance
+
+---
+
 ## Document Navigation
 
 | Related Document | Content |

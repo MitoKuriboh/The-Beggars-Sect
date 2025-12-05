@@ -8,11 +8,13 @@
 
 ## Overview
 
-All named NPCs in The Beggars Sect.
+All named NPCs in The Beggars Sect - **implementation-focused reference**.
 
 **Current Count:** 9 named NPCs
 **Target:** 8-12 for MVP
 **Status:** Core cast complete, additional NPCs can be added during content phase
+
+**Note:** For deep character lore, backstories, and personality analysis, see `lore/CHARACTERS.md`. This document focuses on gameplay implementation: dialogue lines, techniques taught, scene appearances.
 
 ---
 

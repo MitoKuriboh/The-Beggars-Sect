@@ -56,12 +56,17 @@ This is the **overview document**. Detailed specifications live in dedicated doc
 | ENEMIES.md | `systems/` | 8 enemies + 3 bosses |
 | FORMULAS.md | `reference/` | All combat math |
 
+### Technical
+| Document | Location | Content |
+|----------|----------|---------|
+| TECH_DESIGN.md | `design/` | Implementation architecture |
+
 ### Planning
 | Document | Location | Content |
 |----------|----------|---------|
 | MVP_PLAN.md | `planning/` | 12-week roadmap |
-| DESIGN_STATUS.md | `planning/` | System-by-system status |
-| TODO.md | `planning/` | Task tracking |
+| TODO.md | `planning/` | Implementation tasks |
+| DESIGN_STATUS.md | `planning/` | Document status tracker |
 | CHANGELOG.md | `planning/` | Development history |
 
 ---

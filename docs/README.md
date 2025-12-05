@@ -1,7 +1,7 @@
 # The Beggars Sect - Documentation Index
 
 **Project:** The Beggars Sect: Li Wei's Ascension
-**Current Phase:** DESIGN (Phase 1 of 6)
+**Current Phase:** IMPLEMENTATION (Phase 2 of 6)
 **Last Updated:** 2025-12-05
 
 ---
@@ -10,13 +10,14 @@
 
 | Need to... | Go to... |
 |------------|----------|
-| See what's designed vs not | `planning/DESIGN_STATUS.md` |
-| See current tasks | `planning/TODO.md` |
+| See implementation tasks | `planning/TODO.md` |
 | Understand the game vision | `design/GAME_DESIGN.md` |
 | Understand combat mechanics | `systems/COMBAT_SYSTEM.md` |
-| Find technique stats | `systems/TECHNIQUES.md` (TODO) |
-| Find enemy stats | `systems/ENEMIES.md` (TODO) |
-| Read Chapter 1 script | `story/CHAPTER_1.md` (TODO) |
+| Find technique stats | `systems/TECHNIQUES.md` |
+| Find enemy stats | `systems/ENEMIES.md` |
+| Get exact formulas | `reference/FORMULAS.md` |
+| Read Chapter 1 script | `story/CHAPTER_1.md` |
+| Get implementation architecture | `design/TECH_DESIGN.md` |
 
 ---
 
@@ -29,115 +30,99 @@ docs/
 │
 ├── design/                   # High-level game design
 │   ├── GAME_DESIGN.md        # Vision, story, world, pillars
-│   ├── WORLDBUILDING.md      # Universe lore (TODO)
-│   └── UI_MOCKUPS.md         # Screen designs (TODO)
+│   └── TECH_DESIGN.md        # Implementation architecture
 │
 ├── systems/                  # Game mechanics specifications
-│   ├── COMBAT_SYSTEM.md      # Combat mechanics
-│   ├── TECHNIQUES.md         # Technique database (TODO)
-│   ├── ENEMIES.md            # Enemy roster (TODO)
-│   ├── ITEMS.md              # Item database (TODO)
-│   ├── PROGRESSION.md        # Stat/mastery systems (TODO)
-│   └── BALANCE.md            # Tuning parameters (TODO)
+│   ├── COMBAT_SYSTEM.md      # Combat mechanics (ATB, stances, combos)
+│   ├── TECHNIQUES.md         # 15 techniques with full stats
+│   └── ENEMIES.md            # 8 enemies + 3 bosses
 │
 ├── story/                    # Narrative content
-│   ├── CHAPTER_1.md          # Chapter 1 full script (TODO)
-│   ├── CHAPTER_2.md          # Chapter 2 full script (TODO)
-│   ├── CHAPTER_3.md          # Chapter 3 full script (TODO)
-│   ├── NPC_CAST.md           # Character profiles (TODO)
-│   └── DIALOGUE.md           # Dialogue guidelines (TODO)
+│   ├── CHAPTER_1.md          # 12 scenes, Razor boss
+│   ├── CHAPTER_2.md          # 11 scenes, Commander Vex
+│   ├── CHAPTER_3.md          # 10 scenes, The Hollow One
+│   └── NPC_CAST.md           # 9 NPCs with characterization
+│
+├── lore/                     # Worldbuilding
+│   ├── WORLDBUILDING.md      # Universe bible, aptitude system
+│   ├── CHI_SYSTEM.md         # Eight aspects, inverse chi
+│   ├── SECTS.md              # 12 sects with martial arts
+│   ├── FACTIONS.md           # Faction histories
+│   ├── HISTORY.md            # Full timeline
+│   ├── LOCATIONS.md          # All areas with secrets
+│   ├── MYSTERIES.md          # Li Wei's origin, prophecy
+│   ├── CHARACTERS.md         # Character profiles
+│   ├── CULTURE.md            # Daily life, customs
+│   ├── ARTIFACTS.md          # Legendary weapons
+│   └── GLOSSARY.md           # Chinese terminology
 │
 ├── planning/                 # Project management
-│   ├── TODO.md               # Current tasks and roadmap
-│   ├── DESIGN_STATUS.md      # System-by-system status tracker
-│   ├── MVP_PLAN.md           # MVP scoping decisions
-│   ├── SUMMARY.md            # Session summaries
+│   ├── TODO.md               # Implementation roadmap
+│   ├── DESIGN_STATUS.md      # Document status tracker
+│   ├── MVP_PLAN.md           # 12-week roadmap
+│   ├── SESSION_PROGRESS.md   # Session summaries
+│   ├── SUMMARY.md            # Quick status
 │   └── CHANGELOG.md          # Version history
 │
-└── reference/                # Quick reference sheets
-    ├── FORMULAS.md           # All game formulas (TODO)
-    ├── STAT_TABLES.md        # Stat reference tables (TODO)
-    └── GLOSSARY.md           # Term definitions (TODO)
+└── reference/                # Quick reference
+    └── FORMULAS.md           # All game formulas
 ```
 
 ---
 
 ## Document Status
 
-### Existing Documents
+### All Core Documents: ✅ ELABORATED
 
-| Document | Status | Lines | Description |
-|----------|--------|-------|-------------|
-| `design/GAME_DESIGN.md` | SCAFFOLDED | ~950 | Vision, story, world concepts |
-| `systems/COMBAT_SYSTEM.md` | SCAFFOLDED | ~1350 | Combat mechanics concepts |
-| `planning/TODO.md` | CURRENT | ~270 | Tasks and roadmap |
-| `planning/DESIGN_STATUS.md` | CURRENT | ~400 | System status tracker |
-| `planning/MVP_PLAN.md` | COMPLETE | ~500 | Scoping decisions |
-| `planning/SUMMARY.md` | COMPLETE | ~200 | Session summaries |
-| `planning/CHANGELOG.md` | CURRENT | ~100 | Version history |
+| Category | Documents | Status |
+|----------|-----------|--------|
+| **Design** | GAME_DESIGN.md, TECH_DESIGN.md | ✅ Complete |
+| **Systems** | COMBAT_SYSTEM.md, TECHNIQUES.md, ENEMIES.md | ✅ Complete |
+| **Story** | CHAPTER_1-3.md, NPC_CAST.md | ✅ Complete |
+| **Lore** | 11 documents | ✅ Complete |
+| **Reference** | FORMULAS.md | ✅ Complete |
 
-### Documents Needed
-
-| Document | Priority | Blocks |
-|----------|----------|--------|
-| `systems/TECHNIQUES.md` | **P1** | Implementation |
-| `systems/ENEMIES.md` | **P1** | Implementation |
-| `story/CHAPTER_1.md` | **P1** | Content phase |
-| `story/NPC_CAST.md` | P2 | Content phase |
-| `design/WORLDBUILDING.md` | P2 | Consistency |
-| `story/CHAPTER_2.md` | P2 | Content phase |
-| `story/CHAPTER_3.md` | P2 | Content phase |
-| `systems/ITEMS.md` | P3 | Polish |
-| `systems/BALANCE.md` | P3 | Tuning |
-| `design/UI_MOCKUPS.md` | P3 | Polish |
-| `reference/FORMULAS.md` | P3 | Reference |
+### Remaining (Polish Phase)
+- UI_MOCKUPS.md - Create during implementation
 
 ---
 
 ## How to Use This Documentation
 
-### For Design Work
-1. Check `planning/DESIGN_STATUS.md` to see what needs elaboration
-2. Pick a SCAFFOLDED system to elaborate
-3. Add specific numbers, content, and details
-4. Update status to ELABORATED when complete
-
 ### For Implementation
-1. Only implement systems marked ELABORATED
+1. Start with `design/TECH_DESIGN.md` for architecture
 2. Reference `systems/` docs for mechanics
-3. Reference `story/` docs for content
-4. Use `reference/` for quick lookups
+3. Use `reference/FORMULAS.md` for exact calculations
+4. Reference `story/` docs for content
 
-### For Session Planning
-1. Review `planning/TODO.md` for current priorities
-2. Check `planning/DESIGN_STATUS.md` for blockers
-3. Pick ONE system to elaborate per session
-4. Update docs as you work
-
----
-
-## Documentation Principles
-
-1. **Specificity over vagueness** - "Power: 25" not "heavy damage"
-2. **Numbers are required** - Every stat needs a value
-3. **Examples clarify** - Show don't just tell
-4. **Single source of truth** - One place for each piece of info
-5. **Update as you go** - Docs reflect current decisions
+### For Understanding the World
+1. Start with `lore/WORLDBUILDING.md` for universe context
+2. Read `lore/CHI_SYSTEM.md` for power mechanics
+3. Check `lore/GLOSSARY.md` for terminology
 
 ---
 
 ## Current Focus
 
-**Phase:** Design (Week 1-2)
-**Goal:** Move systems from SCAFFOLDED to ELABORATED
+**Phase:** Implementation (Weeks 3-4)
+**Goal:** Build playable combat prototype
 
 **Priority Order:**
-1. Finalize damage formula (blocks everything)
-2. Create TECHNIQUES.md with all stats
-3. Create ENEMIES.md with all stats
-4. Write CHAPTER_1.md script
+1. Set up TypeScript + Ink project
+2. Build ATB turn system
+3. Implement basic combat loop
+4. Add technique system
+5. Create first enemy with AI
 
-**Exit Criteria for Design Phase:**
-- [ ] Can describe any combat interaction with exact numbers
-- [ ] Can simulate a fight on paper
-- [ ] Chapter 1 has scene-by-scene breakdown
+See `planning/TODO.md` for full task breakdown.
+
+---
+
+## Key Stats
+
+- **Total Documents:** 26
+- **Total Lines:** 11,000+
+- **Techniques:** 15 with full stats
+- **Enemies:** 11 (8 regular + 3 bosses)
+- **NPCs:** 9 with dialogue
+- **Chapters:** 3 fully scripted

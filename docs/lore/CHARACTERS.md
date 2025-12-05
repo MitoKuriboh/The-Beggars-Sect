@@ -10,11 +10,13 @@
 
 | Related Document | Content |
 |------------------|---------|
+| **NPC_CAST.md** | **Implementation details** - dialogue, techniques taught, story function |
 | FACTIONS.md | Faction politics, organizational structure |
 | SECTS.md | Sect backgrounds, martial philosophies |
 | CHI_SYSTEM.md | Chi mechanics referenced in fighting styles |
 | MYSTERIES.md | Hidden truths about key characters |
-| NPC_CAST.md | Gameplay interaction details |
+
+**Note:** This document provides deep lore and character backgrounds. For implementation (dialogue lines, technique unlocks, scene appearances), see `story/NPC_CAST.md`.
 
 ---
 

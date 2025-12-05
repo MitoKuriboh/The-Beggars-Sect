@@ -1,268 +1,157 @@
 # The Beggars Sect - TODO & Roadmap
 
 **Last Updated:** 2025-12-05
-**Current Phase:** DESIGN (Phase 1 of 6)
-**Design Status:** See `DESIGN_STATUS.md` for detailed system breakdown
+**Current Phase:** IMPLEMENTATION (Phase 2 of 6)
+**Design Status:** COMPLETE - See `DESIGN_STATUS.md`
 
 ---
 
-## Current State: SCAFFOLDING COMPLETE
+## Current State: READY FOR IMPLEMENTATION
 
-We have ~2,300 lines of design documentation establishing:
-- Vision, concept, and core pillars
-- Combat system concepts (ATB, stances, combos, chi)
-- Progression philosophy (discover, don't grind)
-- World and faction foundations
-- Technical approach
+Design phase complete with 15,000+ lines of documentation:
+- ✅ All combat formulas finalized (FORMULAS.md)
+- ✅ 15 techniques with full stats (TECHNIQUES.md)
+- ✅ 11 enemies with AI patterns (ENEMIES.md)
+- ✅ Non-linear story with 3 paths and 3 endings (STORY_STRUCTURE.md)
+- ✅ Prologue + 3 chapters fully scripted with branching
+- ✅ 9 NPCs with characterization
+- ✅ Complete worldbuilding and lore (11 lore docs)
+- ✅ Technical architecture (TECH_DESIGN.md)
 
-**BUT:** All 39 identified systems are in "scaffolded" state - concepts exist but lack the specific numbers, content, and details needed for implementation.
+**Total playtime:** ~5-6 hours first playthrough, ~12-15 hours for all content.
 
-**No system is ready for coding yet.**
-
----
-
-## Phase 1: Design (Current)
-
-### Status: Scaffolding Done, Elaboration Needed
-
-**Completed (Scaffolding):**
-- [x] GAME_DESIGN.md - Vision, story, world concepts
-- [x] COMBAT_SYSTEM.md - Combat mechanics concepts
-- [x] Project structure and package.json
-- [x] Basic Ink app placeholder
-- [x] DESIGN_STATUS.md - System breakdown tracker
-
-**Not Yet Done (Elaboration):**
-
-#### Priority 1: Core Combat (Blocks everything)
-- [ ] **Finalize damage formula** - Exact calculation with real numbers
-- [ ] **Technique database** - All techniques with actual stats (power, cost, speed, effects)
-- [ ] **Enemy roster** - All enemies with stats, AI patterns, drops
-- [ ] **Stat system** - Starting values, growth rates, caps
-
-#### Priority 2: Content Foundation
-- [ ] **Chapter 1 script** - Exact story beats, dialogue, encounters
-- [ ] **NPC cast** - Elders and key characters with personalities
-- [ ] **World map** - Areas for Chapter 1 with connections and encounters
-
-#### Priority 3: Systems Details
-- [ ] **Combo chains** - Complete list of valid combos
-- [ ] **Item database** - All items with stats and drop rates
-- [ ] **Mastery system** - Uses per level, bonuses, UI
-
-#### Priority 4: Polish Details
-- [ ] **UI mockups** - All screens finalized
-- [ ] **ASCII art** - Key moments and technique animations
-- [ ] **Balance parameters** - Difficulty curve, economy
+**Ready to begin coding.**
 
 ---
 
-## Elaboration Checklist
+## Phase 2: Core Systems (Current)
 
-### Combat System Elaboration
-- [ ] Damage formula: `_______________________`
-- [ ] Starting HP: `___` Chi: `___`
-- [ ] Base stats (STR/DEX/END/WIS): `___/___/___/___`
-- [ ] Turn delay per action: Attack `___` Defend `___` Technique `___`
-- [ ] Status effect durations: Stun `___` turns
-- [ ] Combo timing window: `___` turns
+### Week 3-4 Tasks
 
-### Technique Database (Target: 25-40)
-- [ ] Flowing Stance techniques: `___` defined
-- [ ] Weathered Stance techniques: `___` defined
-- [ ] Hungry Stance techniques: `___` defined
-- [ ] General techniques: `___` defined
-- [ ] Each technique has: name, power, cost, speed, effect, mastery bonuses
+#### Combat Foundation
+- [ ] Set up TypeScript + Ink project (npm install, verify)
+- [ ] Build turn order system (ATB)
+- [ ] Implement basic combat loop (attack, defend)
+- [ ] Create character stats system (STR, DEX, END, WIS)
+- [ ] Build chi management (generation, consumption)
+- [ ] Simple UI (combat display, basic menus)
 
-### Enemy Roster (Target: 12-15)
-- [ ] Urban Thugs: `___` types defined
-- [ ] Spartans: `___` types defined
-- [ ] Lone Wolves: `___` defined
-- [ ] Bosses: `___` defined
-- [ ] Each enemy has: name, stats, techniques, AI pattern, drops, dialogue
+#### Techniques & Stances
+- [ ] Implement technique system (5 techniques initially)
+- [ ] Build 3 stances (Flowing, Weathered, Hungry)
+- [ ] Stance switching mechanics
+- [ ] Damage calculation (per FORMULAS.md)
+- [ ] Add 1 simple enemy with AI
+- [ ] Test combat feel (iterate until fun)
 
-### Chapter 1 Content
-- [ ] Opening scene script
-- [ ] Tutorial combat design
-- [ ] Meeting Beggars Sect scene
-- [ ] First elder encounter
-- [ ] Chapter 1 boss fight
-- [ ] Total estimated playtime: `___` minutes
+**Exit Criteria:** Playable combat prototype that feels good
 
 ---
 
-## Design Documents to Create
+## Phase 3: Chapter 1 + AI (Weeks 5-6)
 
-### Must Have Before Coding
-1. `design/TECHNIQUES.md` - Complete technique database
-2. `design/ENEMIES.md` - Complete enemy roster
-3. `design/CHAPTER_1.md` - Full Chapter 1 design
+- [ ] Implement Chapter 1 scenes (using CHAPTER_1.md)
+- [ ] Navigation system (areas, exploration)
+- [ ] NPC dialogue system
+- [ ] Tutorial integration
+- [ ] Add remaining Chapter 1 techniques
+- [ ] Claude API integration for enemy variation
 
-### Should Have Before Content Phase
-4. `design/CHAPTER_2.md`
-5. `design/CHAPTER_3.md`
-6. `design/NPC_CAST.md`
-7. `design/WORLDBUILDING.md`
-
-### Nice to Have
-8. `design/UI_MOCKUPS.md`
-9. `design/BALANCE.md`
-10. `design/ITEMS.md`
+**Exit Criteria:** Playable Chapter 1 with AI enhancements
 
 ---
 
-## Development Roadmap
+## Phase 4: Expand Content (Weeks 7-8)
 
-### Phase 1: Design (Weeks 1-2) - CURRENT
-**Goal:** Complete design foundation with real numbers
+- [ ] Chapter 2 story + encounters
+- [ ] Chapter 3 story + encounters
+- [ ] All 15 techniques implemented
+- [ ] Implement combo chains
+- [ ] All enemy types (8 + 3 bosses)
+- [ ] Mastery progression system
+- [ ] Save/load system
 
-- [ ] Elaborate combat system (formulas, stats)
-- [ ] Create technique database
-- [ ] Create enemy roster
-- [ ] Write Chapter 1 script
-- [ ] Design NPCs
-
-**Exit Criteria:** Can describe any game interaction with specific numbers
-
----
-
-### Phase 2: Core Systems (Weeks 3-4)
-**Goal:** Playable combat prototype
-
-- [ ] Implement turn order (ATB system)
-- [ ] Basic attack/defend actions
-- [ ] Technique system foundation
-- [ ] Chi management
-- [ ] Damage calculation
-- [ ] Status effects
-- [ ] Basic UI framework
-
-**Exit Criteria:** Can fight a test enemy with real mechanics
+**Exit Criteria:** Complete 3-chapter game, rough
 
 ---
 
-### Phase 3: Content Creation (Weeks 5-6)
-**Goal:** Chapter 1 complete
+## Phase 5: Polish & Balance (Weeks 9-10)
 
-- [ ] Implement Chapter 1 story
-- [ ] All Chapter 1 techniques
-- [ ] All Chapter 1 enemies
-- [ ] NPCs and dialogue
-- [ ] Tutorial flow
+- [ ] Combat balance pass
+- [ ] Difficulty curve tuning
+- [ ] ASCII art for key moments
+- [ ] Combat animations (text-based)
+- [ ] UI polish
+- [ ] Feedback system setup
 
-**Exit Criteria:** Player can complete Chapter 1
-
----
-
-### Phase 4: AI Integration (Weeks 7-8)
-**Goal:** Claude-powered variations
-
-- [ ] Claude API integration
-- [ ] Enemy variation generation
-- [ ] Dynamic difficulty
-- [ ] Procedural dialogue
-
-**Exit Criteria:** Each playthrough feels unique
+**Exit Criteria:** Balanced, polished game
 
 ---
 
-### Phase 5: Polish & Chapters 2-3 (Weeks 9-10)
-**Goal:** Full MVP experience
+## Phase 6: Launch (Weeks 11-12)
 
-- [ ] Chapter 2 content
-- [ ] Chapter 3 content + cliffhanger
-- [ ] All 3 stances working
-- [ ] Balance tuning
+- [ ] External playtesting (3-5 testers)
+- [ ] Bug fixes and final balance
+- [ ] README and player guide
+- [ ] Demo video/GIF
+- [ ] Publish to npm
+- [ ] GitHub release v1.0
+- [ ] Update genkaw.com
 
-**Exit Criteria:** 3-chapter game is playable start to finish
-
----
-
-### Phase 6: Showcase & Release (Weeks 11-12)
-**Goal:** Public launch
-
-- [ ] ASCII art polish
-- [ ] README and documentation
-- [ ] Demo video
-- [ ] Launch on npm/GitHub
-
-**Exit Criteria:** Game is publicly available
+**Exit Criteria:** Public launch
 
 ---
 
-## Scoping Decisions (MVP)
+## v1.0 Scope (Locked)
 
-**In Scope (v1.0):**
-- 3 chapters (not 5)
+**Included:**
+- Prologue + 3 chapters (complete story arc)
+- Non-linear branching with 3 paths (Blade, Stream, Shadow)
+- 3 distinct endings (Destroyer, Reformer, Wanderer)
 - 3 stances (Flowing, Weathered, Hungry)
-- Core combat mechanics
-- Claude AI for enemy variations
-- CLI experience
+- 15 techniques
+- 11 enemies (8 regular + 3 bosses)
+- Claude AI enemy variations
+- Save/load system
 
-**Deferred to v1.5+:**
-- Deceptive stance (4th stance)
+**Deferred to v1.5:**
+- Deceptive Stance (4th stance)
 - Environmental combat
-- Chapters 4-5
-- Web version
+- Items/consumables system
+- New Game+ mode
 
 ---
 
-## Open Design Questions
+## Open Questions
 
-### Must Answer Before Coding
-1. What are Li Wei's starting stats?
-2. How many uses to master a technique?
-3. What's the exact turn order formula?
-4. What techniques does Li Wei start with?
+### Technical
+1. Ink vs raw terminal output for combat display?
+2. Save file location (home dir vs project dir)?
+3. Claude API caching strategy?
 
-### Can Answer During Development
-5. Exact enemy stat scaling per chapter
-6. Drop rate percentages
-7. Chi economy fine-tuning
-
----
-
-## Technical Prep Checklist
-
-- [x] Project structure created
-- [x] package.json configured
-- [x] TypeScript setup
-- [ ] `npm install` (dependencies not installed)
-- [ ] Verify Ink renders correctly
-- [ ] Basic game loop architecture
+### Design
+1. Tutorial pacing - how many fights before full mechanics?
+2. Death penalty - respawn at checkpoint or reload save?
 
 ---
 
 ## Success Metrics
 
-### Design Phase Success
-- [ ] Every technique has 5+ defined stats
-- [ ] Every enemy has stats, AI, and drops defined
-- [ ] Chapter 1 has scene-by-scene script
-- [ ] Can simulate combat on paper/spreadsheet
-
-### Implementation Success
-- [ ] Combat feels strategic (average fight: 8-12 turns)
-- [ ] Progression feels rewarding (new technique every 10-15 min)
+### Development
+- [ ] Stay on 12-week schedule (± 1 week)
+- [ ] Combat feels strategic and fun
 - [ ] AI variations are noticeable
-- [ ] CLI is readable and responsive
+
+### Quality
+- [ ] 0 game-breaking bugs at launch
+- [ ] Average playthrough: 3-5 hours
+- [ ] Chapter 1 completion rate: >80%
+
+### Launch
+- [ ] 50+ GitHub stars (first month)
+- [ ] 20+ feedback submissions
+- [ ] Featured on genkaw.com
 
 ---
 
-## Notes
-
-### Key Insight from Session 7
-The docs are impressive in vision but lack specificity. "Weathered Palm deals heavy damage" means nothing to code. We need "Weathered Palm: Power 25, Chi Cost 5, Speed -2, Effect: 15% armor break".
-
-### Design-First Philosophy
-Every feature should be fully designed before coding:
-1. What does it do? (concept)
-2. How exactly does it work? (mechanics)
-3. What are the numbers? (stats)
-4. How does it feel? (UX)
-
----
-
-**Current Focus:** Elaborate combat system, then create technique database.
-
-**Next Session Goal:** Have at least one system move from SCAFFOLDED to ELABORATED.
+**Next Action:** Run `npm install` and verify Ink renders correctly
