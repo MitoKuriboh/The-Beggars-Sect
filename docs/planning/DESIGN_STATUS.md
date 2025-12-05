@@ -28,22 +28,32 @@ This document tracks the design status of every system and aspect of The Beggars
 | COMBAT_SYSTEM.md | `systems/` | SCAFFOLDED | P1 |
 | **TECHNIQUES.md** | `systems/` | **ELABORATED** | P1 |
 | **ENEMIES.md** | `systems/` | **ELABORATED** | P1 |
-| CHAPTER_1.md | `story/` | SCAFFOLDED | **P1** |
+| **CHAPTER_1.md** | `story/` | **ELABORATED** | P1 |
+| **CHAPTER_2.md** | `story/` | **ELABORATED** | P1 |
+| **CHAPTER_3.md** | `story/` | **ELABORATED** | P1 |
 | **NPC_CAST.md** | `story/` | **ELABORATED** | P2 |
 | **FORMULAS.md** | `reference/` | **ELABORATED** | P1 |
-| WORLDBUILDING.md | `design/` | NOT STARTED | P2 |
-| CHAPTER_2.md | `story/` | NOT STARTED | P2 |
-| CHAPTER_3.md | `story/` | NOT STARTED | P2 |
+| WORLDBUILDING.md | `lore/` | **ELABORATED** | P2 |
+| LOCATIONS.md | `lore/` | **ELABORATED** | P2 |
+| FACTIONS.md | `lore/` | **ELABORATED** | P2 |
+| MYSTERIES.md | `lore/` | **ELABORATED** | P2 |
 | ITEMS.md | `systems/` | NOT STARTED | P3 |
 | BALANCE.md | `systems/` | NOT STARTED | P3 |
 | UI_MOCKUPS.md | `design/` | NOT STARTED | P3 |
 
 ### Progress Summary (2025-12-05)
-**4 documents now ELABORATED and ready for implementation:**
+**12 documents now ELABORATED and ready for implementation:**
 - `FORMULAS.md` - All combat math, stats, progression formulas finalized
 - `TECHNIQUES.md` - 15 techniques with full stats, mastery, combos
 - `ENEMIES.md` - 8 enemies + 3 bosses with stats, AI, dialogue
 - `NPC_CAST.md` - 9 NPCs with personalities, dialogue, relationships
+- `CHAPTER_1.md` - Complete 12-scene chapter with dialogue and encounters
+- `CHAPTER_2.md` - Complete 11-scene chapter with Commander Vex boss
+- `CHAPTER_3.md` - Complete 10-scene chapter with The Hollow One finale
+- `WORLDBUILDING.md` - Universe bible, aptitude system, Haven's Cradle
+- `LOCATIONS.md` - All areas with history and secrets
+- `FACTIONS.md` - Detailed faction histories
+- `MYSTERIES.md` - Li Wei's origin, Calibration Initiative, prophecies
 
 ---
 

@@ -6,13 +6,6 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Planned - Phase 1: Foundation & Design (Weeks 1-2)
-- [ ] Complete worldbuilding document
-- [ ] Design all Chapter 1 content
-- [ ] Create complete technique database
-- [ ] UI/UX wireframes (CLI mockups)
-- [ ] NPC cast and dialogue design
-
 ### Planned - Phase 2: Core Systems (Weeks 3-4)
 - [ ] Implement combat system
 - [ ] Character stats and progression
@@ -21,6 +14,38 @@ All notable changes to this project will be documented in this file.
 
 ### Planned - Phase 3-6
 See TODO.md for complete roadmap
+
+---
+
+## [2025-12-05] - Chapter 3 Complete: The Hollow Truth
+
+### Added
+- **CHAPTER_3.md** (500+ lines) - Complete final chapter
+  - 10 scenes: The Calm → The Path Forward
+  - Initiative Hunter combat encounter (new enemy type)
+  - Elder's final teaching: Wanderer's Path technique
+  - The Forgotten Temple exploration
+  - Full memory restoration flashback sequence
+  - The Hollow One boss fight (3 phases)
+  - Li Wei's origin revelation (Transcendent Inverse)
+  - Dog Beating Staff sequel hook
+  - Cliffhanger ending with multiple dialogue choices
+
+### Changed
+- **DESIGN_STATUS.md** - Updated to reflect 12 elaborated documents
+- All three story chapters now complete and ready for implementation
+
+### Context
+**Why:** Complete the story design before moving to implementation. All narrative beats, character revelations, and boss encounters are now fully scripted.
+
+**Story Delivered:**
+- Li Wei's complete origin (Subject 17, Calibration Initiative)
+- The Hollow One's tragic backstory (Wei Lin, Wei Zhong's descendant)
+- The prophecy of the Inverted One explained
+- Dog Beating Staff location revealed
+- Perfect cliffhanger for Book 2
+
+**Impact:** Design phase essentially complete. 12 core documents elaborated. Ready to move to implementation phase (Week 3+).
 
 ---
 
