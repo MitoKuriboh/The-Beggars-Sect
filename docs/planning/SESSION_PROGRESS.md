@@ -1,9 +1,43 @@
 # Session Progress - December 5, 2025
 
-## Design Phase: COMPLETE
+## Implementation Phase: IN PROGRESS
 
-All design documentation is now elaborated and ready for implementation.
-Story fully overhauled with non-linear branching, 3 paths, and 3 endings.
+Week 1 Foundation complete. Core engine infrastructure built.
+Design documentation complete. Moving to combat system implementation.
+
+---
+
+## Week 1 Foundation: COMPLETE ✓
+
+### Code Created
+- **Type Definitions** (`src/types/`) - 6 files
+  - `character.ts` - Stats, Stance, ChiAspect, Character, Enemy
+  - `technique.ts` - Technique, ComboRole, TechniqueEffect
+  - `combat.ts` - CombatState, ActionType, TurnQueue
+  - `item.ts` - Item, Inventory, ItemEffect
+  - `game.ts` - GameState, StoryProgress, GameFlags
+  - `index.ts` - Barrel export
+
+- **Game State Store** (`src/game/state/GameStore.ts`)
+  - Singleton state management
+  - Save/load with checksum
+  - Player, inventory, story progress tracking
+
+- **Character Factory** (`src/game/factories/CharacterFactory.ts`)
+  - Player creation (Li Wei)
+  - 11 enemy templates with AI patterns
+  - Boss creation (Razor, Vex, Hollow One)
+
+- **CLI Shell** (`src/ui/App.tsx`)
+  - Title screen with Chinese characters
+  - Menu system (New Game, Continue, Credits)
+  - Stats display
+  - Game initialization flow
+
+### Build Status
+- TypeScript compiles successfully
+- Game launches and displays correctly
+- Ready for Week 2 (Combat Engine)
 
 ---
 
@@ -95,12 +129,12 @@ Story fully overhauled with non-linear branching, 3 paths, and 3 endings.
 
 ---
 
-## Next Phase: Implementation
+## Next Phase: Week 2 Combat Engine
 
-Begin coding with:
-1. `npm install` and verify Ink
-2. Build ATB combat system
-3. Implement basic techniques
-4. Add first enemy with AI
+Continue implementation with:
+1. Build ATB turn order system (`TurnOrderManager.ts`)
+2. Implement action execution (`ActionExecutor.ts`)
+3. Add damage calculation with formulas from FORMULAS.md
+4. Build combo chain tracking
 
-See **TODO.md** for full implementation roadmap.
+See **TODO.md** and **CORE_ENGINE_PLAN.md** for full implementation roadmap.

@@ -6,14 +6,60 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Planned - Phase 2: Core Systems (Weeks 3-4)
-- [ ] Implement combat system
-- [ ] Character stats and progression
-- [ ] Save/load system
-- [ ] Basic navigation
+### Planned - Week 2: Combat Engine
+- [ ] ATB turn order system
+- [ ] Action execution (attack, technique, defend, chi-focus, item, stance, flee)
+- [ ] Damage calculation with stance/chi modifiers
+- [ ] Combo chain system
 
-### Planned - Phase 3-6
+### Planned - Week 3-4: Techniques & Integration
 See TODO.md for complete roadmap
+
+---
+
+## [2025-12-05] - Week 1 Foundation: Core Engine Implementation
+
+### Added
+- **Type Definitions** (`src/types/`) - Complete TypeScript interfaces
+  - `character.ts` - Stats, Stance, ChiAspect, Character, Enemy interfaces
+  - `technique.ts` - Technique, ComboRole, TechniqueEffect, MasteryLevel
+  - `combat.ts` - CombatState, ActionType, TurnQueueEntry, ComboChain
+  - `item.ts` - Item, Inventory, ItemEffect interfaces
+  - `game.ts` - GameState, StoryProgress, GameFlags, GameStats
+  - `index.ts` - Barrel export for all types
+
+- **Game State Store** (`src/game/state/GameStore.ts`)
+  - Singleton state management pattern
+  - Player/inventory management
+  - Story progress tracking
+  - Save/load with checksum validation
+  - NPC relationship system
+  - Game flags and statistics
+
+- **Character Factory** (`src/game/factories/CharacterFactory.ts`)
+  - `createPlayer()` - Creates Li Wei with starting stats
+  - `createEnemy(templateId)` - 11 enemy templates with full AI patterns
+  - `createBoss(bossId)` - Razor, Commander Vex, The Hollow One
+  - Enemy templates include loot tables, dialogue, phase triggers
+
+- **CLI Shell** (`src/ui/App.tsx`)
+  - Ink-based terminal interface
+  - Title screen with Chinese characters (丐帮：李伟的崛起)
+  - Main menu (New Game, Continue, Credits, Quit)
+  - New game initialization flow
+  - Character stats display
+  - Dev combat test placeholder
+
+### Technical
+- Updated `tsconfig.json` for Node16 module resolution
+- Fixed export conflicts in type definitions
+- TypeScript compiles successfully
+- Game launches and displays title screen
+
+### Context
+**Why:** Week 1 of the 4-week Core Engine implementation plan. Established the foundation for all game systems: types, state management, character creation, and basic UI.
+
+**Impact:** Core infrastructure complete. Ready for Week 2 (Combat Engine).
 
 ---
 
