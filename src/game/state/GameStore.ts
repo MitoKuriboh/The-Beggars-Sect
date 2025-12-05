@@ -12,16 +12,16 @@ import type {
   Character,
   Inventory,
   NPCRelationship,
-} from '../../types/index.js';
+} from '../../types/index';
 
 import {
   DEFAULT_STORY_PROGRESS,
   DEFAULT_FLAGS,
   DEFAULT_STATS,
   generateChecksum,
-} from '../../types/game.js';
+} from '../../types/game';
 
-import { createInventory } from '../../types/item.js';
+import { createInventory } from '../../types/item';
 
 // =============================================================================
 // GAME STORE

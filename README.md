@@ -14,9 +14,10 @@ Follow Li Wei's journey from a confused stranger spawned into an unknown world, 
 
 **Genre:** Wuxia Turn-Based RPG
 **Platform:** CLI (Command Line Interface)
-**Status:** Design Complete, Ready for Implementation
+**Status:** Week 1 Foundation Complete - Playable Demo Available
 **Playtime:** ~5-6 hours (first playthrough), ~12-15 hours (all content)
 **Created:** December 2024
+**Download:** [beggars-sect.genkaw.com/download](https://beggars-sect.genkaw.com/download)
 
 ---
 
@@ -140,20 +141,31 @@ This game showcases what's possible when AI automation meets game development:
 
 ## 📅 Development Status
 
-### Current Phase: Ready for Implementation
+### Current Phase: Week 1 Foundation COMPLETE
 
+**Design Phase:**
 - ✅ Core vision established
 - ✅ Non-linear story with 3 paths and 3 endings
 - ✅ Combat system fully designed (ATB, stances, combos)
 - ✅ 15 techniques with full stats
 - ✅ 11 enemies with AI patterns (8 regular + 3 bosses)
 - ✅ 15,000+ lines of design documentation
-- ⏳ Technical implementation (next)
+
+**Week 1 Implementation:**
+- ✅ TypeScript interfaces (all types)
+- ✅ GameStore singleton (save/load)
+- ✅ CharacterFactory (player + enemies + bosses)
+- ✅ CLI shell with Ink (title, menu, stats)
+- ✅ Standalone executables (Windows, macOS, Linux)
+- ✅ GitHub Release v0.1.0
+- ✅ Download page live
+
+**Next:** Week 2 - ATB Combat Engine
 
 ### Roadmap
 
-**Phase 1:** Foundation & Design (Weeks 1-2)
-**Phase 2:** Core Systems (Weeks 3-4)
+**Phase 1:** Foundation & Design (Weeks 1-2) ✅ COMPLETE
+**Phase 2:** Core Systems (Weeks 3-4) ⏳ IN PROGRESS
 **Phase 3:** Content Creation (Weeks 5-6)
 **Phase 4:** Automation Integration (Weeks 7-8)
 **Phase 5:** Polish & Expand (Weeks 9-10)

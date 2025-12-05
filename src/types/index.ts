@@ -4,16 +4,16 @@
  */
 
 // Character types
-export * from './character.js';
+export * from './character';
 
 // Technique types
-export * from './technique.js';
+export * from './technique';
 
 // Combat types
-export * from './combat.js';
+export * from './combat';
 
 // Item types
-export * from './item.js';
+export * from './item';
 
 // Game state types
-export * from './game.js';
+export * from './game';

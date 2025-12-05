@@ -3,8 +3,8 @@
  * Overall game progress, story, and save/load
  */
 
-import type { Character } from './character.js';
-import type { Inventory } from './item.js';
+import type { Character } from './character';
+import type { Inventory } from './item';
 
 // =============================================================================
 // STORY PROGRESS

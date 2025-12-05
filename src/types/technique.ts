@@ -3,7 +3,7 @@
  * Combat techniques and their effects
  */
 
-import type { Stance, ChiAspect } from './character.js';
+import type { Stance, ChiAspect } from './character';
 
 // =============================================================================
 // TECHNIQUE EFFECTS

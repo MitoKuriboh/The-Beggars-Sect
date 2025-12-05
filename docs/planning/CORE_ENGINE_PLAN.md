@@ -4,7 +4,8 @@
 **Phase:** 2 - Core Engine Development
 **Author:** Claude (Technical Officer)
 **Created:** 2025-12-05 (Session 12)
-**Status:** PLANNING
+**Updated:** 2025-12-06 (Session 13)
+**Status:** WEEK 1 COMPLETE - Week 2 Ready
 
 ---
 
@@ -44,14 +45,17 @@ This document outlines the detailed implementation plan for the Core Engine of T
 - ✅ Tech architecture planned (TECH_DESIGN.md)
 - ✅ package.json with dependencies
 
-### What's Scaffolded (MINIMAL)
-- 📁 src/index.tsx - Entry point (placeholder)
-- 📁 src/ui/App.tsx - Main app (placeholder)
-- 📁 Empty directories for game logic, data, automation
+### Week 1 Foundation (COMPLETE - Session 13)
+- ✅ src/types/ - All TypeScript interfaces (character, combat, technique, item, game)
+- ✅ src/game/state/GameStore.ts - Singleton with save/load
+- ✅ src/game/factories/CharacterFactory.ts - Player + 11 enemies + 3 bosses
+- ✅ src/ui/App.tsx - CLI shell (title, menu, new game, stats, credits)
+- ✅ src/index.tsx - Entry point with waitUntilExit()
+- ✅ Standalone executables (Windows .exe, macOS, Linux)
+- ✅ GitHub Release v0.1.0
+- ✅ beggars-sect.genkaw.com/download page
 
-### What Needs Building (THIS PLAN)
-- ❌ Data structures (TypeScript interfaces)
-- ❌ Game state management
+### What Needs Building (Week 2+)
 - ❌ Combat engine (ATB system)
 - ❌ Damage calculation
 - ❌ Chi management

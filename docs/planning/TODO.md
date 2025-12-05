@@ -1,13 +1,23 @@
 # The Beggars Sect - TODO & Roadmap
 
-**Last Updated:** 2025-12-05
-**Current Phase:** IMPLEMENTATION (Phase 2 of 6)
+**Last Updated:** 2025-12-06
+**Current Phase:** IMPLEMENTATION - Week 1 Foundation COMPLETE
 **Design Status:** COMPLETE - See `DESIGN_STATUS.md`
 
 ---
 
-## Current State: READY FOR IMPLEMENTATION
+## Current State: WEEK 1 FOUNDATION COMPLETE
 
+### What's Done
+- ✅ TypeScript interfaces (all types defined)
+- ✅ GameStore singleton (save/load, state management)
+- ✅ CharacterFactory (player + 11 enemies + 3 bosses)
+- ✅ CLI shell with Ink (title screen, menus, navigation)
+- ✅ Standalone executables (Windows, macOS, Linux)
+- ✅ Download page on beggars-sect.genkaw.com
+- ✅ GitHub Release v0.1.0 published
+
+### What's Built
 Design phase complete with 15,000+ lines of documentation:
 - ✅ All combat formulas finalized (FORMULAS.md)
 - ✅ 15 techniques with full stats (TECHNIQUES.md)
@@ -20,29 +30,36 @@ Design phase complete with 15,000+ lines of documentation:
 
 **Total playtime:** ~5-6 hours first playthrough, ~12-15 hours for all content.
 
-**Ready to begin coding.**
-
 ---
 
-## Phase 2: Core Systems (Current)
+## Phase 2: Core Systems
 
-### Week 3-4 Tasks
+### Week 1: Foundation ✅ COMPLETE
+- [x] Set up TypeScript + Ink project
+- [x] TypeScript interfaces (character, combat, technique, item, game)
+- [x] GameStore singleton with save/load
+- [x] CharacterFactory with all templates
+- [x] Basic CLI shell (title, menu, new game, stats, credits)
+- [x] Standalone executable builds (pkg)
+- [x] GitHub Release + download page
 
-#### Combat Foundation
-- [ ] Set up TypeScript + Ink project (npm install, verify)
-- [ ] Build turn order system (ATB)
-- [ ] Implement basic combat loop (attack, defend)
-- [ ] Create character stats system (STR, DEX, END, WIS)
-- [ ] Build chi management (generation, consumption)
-- [ ] Simple UI (combat display, basic menus)
+### Week 2: Combat Engine (NEXT)
+- [ ] ATB turn order system
+- [ ] Action system (7 actions: attack, technique, defend, chi-focus, item, stance, flee)
+- [ ] Damage calculator with formulas
+- [ ] Chi management (generation, consumption, inverse chi)
 
-#### Techniques & Stances
-- [ ] Implement technique system (5 techniques initially)
-- [ ] Build 3 stances (Flowing, Weathered, Hungry)
-- [ ] Stance switching mechanics
-- [ ] Damage calculation (per FORMULAS.md)
-- [ ] Add 1 simple enemy with AI
-- [ ] Test combat feel (iterate until fun)
+### Week 3: Techniques & Stances
+- [ ] Technique database (all 15 techniques)
+- [ ] Stance system (3 stances with modifiers)
+- [ ] Mastery tracking
+- [ ] Combo system (basic)
+
+### Week 4: Integration
+- [ ] Combat UI (Ink components)
+- [ ] Enemy AI (basic patterns)
+- [ ] Test combat loop
+- [ ] Balance pass
 
 **Exit Criteria:** Playable combat prototype that feels good
 

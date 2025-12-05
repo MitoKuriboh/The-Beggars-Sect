@@ -4,8 +4,7 @@
   "description": "A CLI RPG set in the Martial Arts Haven universe",
   "main": "dist/index.js",
   "bin": "dist/index.js",
-  "type": "module",
-  "scripts": {
+    "scripts": {
     "dev": "tsx watch src/index.tsx",
     "build": "tsc",
     "start": "node dist/index.js",
@@ -13,9 +12,9 @@
     "package": "npm run build && pkg . --targets node18-win-x64,node18-linux-x64,node18-macos-x64 --output dist/beggars-sect --compress GZip"
   },
   "pkg": {
-    "scripts": "dist/**/*.js",
-    "assets": [],
-    "outputPath": "dist/bin"
+    "scripts": ["dist/**/*.js", "node_modules/**/*.js"],
+    "assets": ["node_modules/yoga-layout-prebuilt/**/*"],
+    "outputPath": "dist"
   },
   "keywords": [
     "cli",
@@ -32,9 +31,8 @@
     "chalk": "^5.3.0",
     "cli-spinners": "^2.9.2",
     "figlet": "^1.7.0",
-    "ink": "^4.4.1",
-    "ink-select-input": "^5.0.0",
-    "ink-text-input": "^5.0.1",
+    "ink": "^3.2.0",
+    "ink-select-input": "^4.0.0",
     "react": "^18.2.0"
   },
   "devDependencies": {
@@ -43,8 +41,11 @@
     "@types/react": "^18.2.45",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
+    "@vercel/ncc": "^0.38.4",
+    "esbuild": "^0.27.1",
     "eslint": "^8.56.0",
     "pkg": "^5.8.1",
+    "react-devtools-core": "^4.28.5",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3"
   },

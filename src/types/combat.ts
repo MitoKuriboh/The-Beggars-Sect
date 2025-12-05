@@ -3,9 +3,9 @@
  * Turn-based combat system types
  */
 
-import type { Character, Enemy, Stance } from './character.js';
-import type { Technique } from './technique.js';
-import type { Item } from './item.js';
+import type { Character, Enemy, Stance } from './character';
+import type { Technique } from './technique';
+import type { Item } from './item';
 
 // =============================================================================
 // ACTIONS

@@ -1,9 +1,10 @@
 import React, { useState, useCallback } from 'react';
 import { Box, Text, useApp, useInput } from 'ink';
 import SelectInput from 'ink-select-input';
+const SelectInputComponent = (SelectInput as any).default || SelectInput;
 
-import { GameStore } from '../game/state/GameStore.js';
-import { createPlayer } from '../game/factories/CharacterFactory.js';
+import { GameStore } from '../game/state/GameStore';
+import { createPlayer } from '../game/factories/CharacterFactory';
 
 // =============================================================================
 // TYPES
@@ -96,7 +97,7 @@ const MainMenu: React.FC<{ onSelect: (screen: Screen) => void }> = ({ onSelect }
         A CLI RPG in the Martial Arts Haven
       </Text>
       <Box marginTop={1} flexDirection="column">
-        <SelectInput items={menuItems} onSelect={handleSelect} />
+        <SelectInputComponent items={menuItems} onSelect={handleSelect} />
       </Box>
     </Box>
   );
@@ -247,7 +248,7 @@ const StatsScreen: React.FC<{ onBack: () => void; onCombatTest: () => void }> = 
         </Box>
       </Box>
       <Box marginTop={2}>
-        <SelectInput items={menuItems} onSelect={handleSelect} />
+        <SelectInputComponent items={menuItems} onSelect={handleSelect} />
       </Box>
     </Box>
   );

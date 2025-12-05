@@ -14,9 +14,9 @@ import type {
   AIPattern,
   LootDrop,
   EnemyDialogue,
-} from '../../types/index.js';
+} from '../../types/index';
 
-import { calculateMaxHp, calculateMaxChi } from '../../types/character.js';
+import { calculateMaxHp, calculateMaxChi } from '../../types/character';
 
 // =============================================================================
 // PLAYER CREATION

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import React from 'react';
 import { render } from 'ink';
-import { App } from './ui/App.js';
+import { App } from './ui/App';
 
 // Main entry point
 const { waitUntilExit } = render(<App />);
