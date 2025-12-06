@@ -306,26 +306,6 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
     }
   }, [content, contentIndex, isPaused, handleResult]);
 
-  // Auto-handle pause lines when content changes
-  useEffect(() => {
-    const currentLine = content[contentIndex];
-    if (currentLine?.type === 'pause' && !isPaused && phase === 'content') {
-      // Automatically start the pause (user can still skip with SPACE)
-      setIsPaused(true);
-      pauseTimeoutRef.current = setTimeout(() => {
-        pauseTimeoutRef.current = null;
-        setIsPaused(false);
-        if (contentIndex < content.length - 1) {
-          setContentIndex((i) => i + 1);
-          setIsTyping(true);
-          setTypewriterComplete(false);
-        } else {
-          const result = engineRef.current?.advance();
-          if (result) handleResult(result);
-        }
-      }, currentLine.duration || 1000);
-    }
-  }, [content, contentIndex, isPaused, phase, handleResult, setIsPaused, setContentIndex, setIsTyping, setTypewriterComplete]);
 
   // Handle choice selection
   const handleChoice = useCallback((choiceId: string) => {
@@ -436,6 +416,33 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
           // Auto-advance after brief delay so user sees completed text
           autoAdvanceTimeoutRef.current = setTimeout(() => {
             autoAdvanceTimeoutRef.current = null;
+
+            // Check if next line is a pause - if so, handle it automatically
+            const nextIndex = idx + 1;
+            if (nextIndex < lines.length) {
+              const nextLine = lines[nextIndex];
+              if (nextLine?.type === 'pause') {
+                // Skip directly over the pause to the line after it
+                setIsPaused(true);
+                pauseTimeoutRef.current = setTimeout(() => {
+                  pauseTimeoutRef.current = null;
+                  setIsPaused(false);
+
+                  // Advance past the pause
+                  if (nextIndex + 1 < lines.length) {
+                    setContentIndex(nextIndex + 1);
+                    setIsTyping(true);
+                    setTypewriterComplete(false);
+                  } else {
+                    const result = engineRef.current?.advance();
+                    if (result) handleResult(result);
+                  }
+                }, nextLine.duration || 1000);
+                return;
+              }
+            }
+
+            // Normal advance (no pause)
             if (idx < lines.length - 1) {
               setContentIndex(idx + 1);
               setIsTyping(true);
