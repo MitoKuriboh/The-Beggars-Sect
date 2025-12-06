@@ -1,0 +1,189 @@
+# Changelog
+
+All notable changes to The Beggars Sect project.
+
+**Format:** Based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
+**Versioning:** [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
+
+---
+
+## [0.2.0] - 2025-12-06
+
+### Added
+- **Complete Combat System**
+  - ATB (Active Time Battle) engine with DEX-based speed
+  - 55+ techniques (8 player, 48 enemy/boss)
+  - Full effect processing: damage, heal, chi-restore, buff, debuff, stun, armor-break, counter-setup, multi-hit
+  - Conditional effects support (e.g., "hp < 50%")
+
+- **AI Controller**
+  - Pattern-based decision making with priority weighting
+  - Combat log analysis for tactical decisions
+  - Boss phase transitions (HP thresholds)
+  - Condition evaluation (player state, chi levels, buffs)
+
+- **Technique Registry** (41 new techniques)
+  - Boss Razor: razor-slash, street-kings-authority, brutal-combo, desperate-fury, last-resort
+  - Boss Vex: commanders-strike, analyze-opponent, shield-formation, disciplined-assault, rally-cry, final-command, spartans-pride
+  - Boss Hollow One: empty-palm, mirror-stance, hollow-guard, formless-strike, chi-disruption, perfect-form, hollow-resonance, enlightenment
+  - Spartan techniques: precision-strike, formation-guard, disciplined-thrust, lance-strike, shield-bash, phalanx-stance, execute
+  - Lone wolf techniques: swift-palm, flowing-counter, chi-burst, second-wind, shadowless-palm, void-step, killing-intent, perfect-strike, meditate
+  - Gang techniques: iron-fist, gang-tactics, takedown, last-stand, block
+
+- **Save System**
+  - SaveManager with file persistence
+  - Auto-save triggers
+  - Save slot management (3 slots)
+  - Checksum validation
+
+- **Story Engine**
+  - Non-linear narrative system
+  - 3 paths (Blade, Stream, Shadow)
+  - 3 endings
+  - Choice consequences
+
+- **CLI Packaging**
+  - Standalone executables for Windows (79 MB), macOS (92 MB), Linux (87 MB)
+  - pkg-based bundling with CommonJS
+
+### Fixed
+- AIController now properly connected to CombatEngine
+- All 41 missing technique definitions added
+- Effect processing implemented in executeTechnique()
+- Hardcoded AI conditions now use combat log analysis:
+  - `player.usedHeavyTechnique` - checks for heavy technique keywords
+  - `player.usedTechnique` - checks combat log for technique usage
+  - `!healed`, `!meditated` - track ability usage via combat log
+  - `!shielded`, `!prideBuff`, `!enlightened` - check status effect descriptions
+
+### Changed
+- Updated GAME_DESIGN.md to reflect v0.2.0 implementation
+- Updated TECH_DESIGN.md with actual project structure and dependencies
+- Updated README.md with implementation status
+
+---
+
+## [0.1.0] - 2025-12-05
+
+### Added
+- **Week 4: Save System**
+  - File-based persistence
+  - Auto-save functionality
+  - v0.1.0 release preparation
+
+- **Week 3: Story Integration**
+  - StoryEngine implementation
+  - Non-linear narrative with branching
+  - Choice system with consequences
+
+- **Week 2: Combat Engine**
+  - ATB combat system (~2,500 lines)
+  - Turn queue management
+  - Basic technique execution
+  - Stance system (Flowing, Weathered, Hungry)
+
+- **Week 1: Foundation**
+  - TypeScript + Ink 3.x setup
+  - Project structure
+  - Type definitions (~1,457 lines)
+  - Basic UI components
+
+---
+
+## [0.0.1] - 2025-12-04
+
+### Added
+- **Documentation Foundation**
+  - 15,000+ lines of design documentation
+  - Complete lore (11 documents)
+  - Story scripts (Prologue + 3 chapters)
+  - Combat system specification
+  - Technique definitions (15 player techniques)
+  - Enemy specifications (11 enemies + 3 bosses)
+
+- **Lore Documents**
+  - WORLDBUILDING.md - Realm context, multiverse
+  - CHI_SYSTEM.md - Eight aspects, inverse meridians
+  - SECTS.md - 12 martial arts sects
+  - FACTIONS.md - Power groups, organizations
+  - HISTORY.md - Timeline from Ancient Era
+  - LOCATIONS.md - All areas with secrets
+  - CHARACTERS.md - Deep character profiles
+  - MYSTERIES.md - Hidden lore, prophecies
+  - CULTURE.md - Daily life, customs
+  - ARTIFACTS.md - Legendary items
+  - GLOSSARY.md - Chinese terminology
+
+- **Story Scripts**
+  - PROLOGUE.md - 7 scenes, awakening
+  - CHAPTER_1.md - 12 scenes, Razor boss
+  - CHAPTER_2.md - 11 scenes, Commander Vex
+  - CHAPTER_3.md - 10 scenes, The Hollow One
+
+---
+
+## Development Sessions
+
+### Session 17 (2025-12-06)
+- Complete combat system fixes from code review
+- Add 41 missing technique definitions
+- Implement effect processing
+- Fix hardcoded AI conditions
+- Update all design documentation
+
+### Session 16 (2025-12-06)
+- Connect AIController to CombatEngine
+- Add agent system configuration
+- Code review fixes
+
+### Session 15 (2025-12-05)
+- Week 4: Save System complete
+- Reorganize docs folder
+- Add comprehensive CODE_REVIEW.md
+
+### Session 14 (2025-12-05)
+- Week 3: Story Integration
+- Non-linear narrative system
+- Choice consequences
+
+### Session 13 (2025-12-04)
+- Week 2: ATB Combat Engine
+- 2,500+ lines of combat code
+- Technique and stance systems
+
+### Session 12 (2025-12-04)
+- Week 1: Foundation complete
+- Standalone executables working
+- TypeScript + Ink setup
+
+### Sessions 1-11 (2025-12-03 to 2025-12-04)
+- Documentation phase
+- Lore creation (15,000+ lines)
+- Design specifications
+- Story scripting
+
+---
+
+## Roadmap
+
+### v0.3.0 (Planned)
+- [ ] Item registry and inventory system
+- [ ] Location registry for exploration
+- [ ] Additional story content
+- [ ] Balance tuning
+
+### v1.0.0 (Planned)
+- [ ] Complete Chapters 1-3 implementation
+- [ ] Full tutorial integration
+- [ ] Achievement system
+- [ ] Claude AI enemy variation (optional)
+
+### v1.5.0+ (Future)
+- [ ] 4th stance (Deceptive)
+- [ ] Staff techniques (Dog Beating Staff)
+- [ ] Chapters 4-5
+- [ ] Web version
+
+---
+
+*Last Updated: 2025-12-06*
