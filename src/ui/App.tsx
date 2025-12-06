@@ -33,28 +33,46 @@ const TitleScreen: React.FC<{ onContinue: () => void }> = ({ onContinue }) => {
     onContinue();
   });
 
+  // ASCII Art Title
+  const titleArt = [
+    '╔═══════════════════════════════════════════════════════════╗',
+    '║                                                           ║',
+    '║   ▄▄▄▄▄▄▄ ▄▄   ▄▄ ▄▄▄▄▄▄▄    ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄     ║',
+    '║      █    █  █ █  █       █  █       █       █       █    ║',
+    '║      █    █  █▄█  █    ▄▄▄█  █▄     ▄█    ▄▄▄█    ▄▄▄█    ║',
+    '║      █    █       █   █▄▄▄    █     █ █   █▄▄▄█   █▄▄▄    ║',
+    '║      █    █   ▄   █    ▄▄▄█   █     █ █    ▄▄▄█    ▄▄▄█   ║',
+    '║      █    █  █ █  █   █▄▄▄    █     █ █   █▄▄▄█   █▄▄▄    ║',
+    '║      █    █▄▄█ █▄▄█▄▄▄▄▄▄▄█   █▄▄▄▄▄█ █▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█   ║',
+    '║                                                           ║',
+    '║        ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄                    ║',
+    '║       █       █       █       █       █                   ║',
+    '║       █  ▄▄▄▄▄█    ▄▄▄█       █▄     ▄█                   ║',
+    '║       █ █▄▄▄▄▄█   █▄▄▄█     ▄▄█ █   █                     ║',
+    '║       █▄▄▄▄▄  █    ▄▄▄█    █▄▄█ █   █                     ║',
+    '║        ▄▄▄▄▄█ █   █▄▄▄█       █ █   █                     ║',
+    '║       █▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█ █▄▄▄█                     ║',
+    '║                                                           ║',
+    '║                   丐 帮 ： 李 伟 的 崛 起                  ║',
+    '║                                                           ║',
+    '╚═══════════════════════════════════════════════════════════╝',
+  ];
+
   return (
     <Box flexDirection="column" alignItems="center" padding={1}>
-      <Text bold color="yellow">
-        ═══════════════════════════════════════════
-      </Text>
-      <Text bold color="cyan">
-        {' '}THE BEGGARS SECT{' '}
-      </Text>
-      <Text color="white">
-        丐帮：李伟的崛起
-      </Text>
-      <Text bold color="yellow">
-        ═══════════════════════════════════════════
-      </Text>
+      {titleArt.map((line, i) => (
+        <Text key={i} color={i === 0 || i === titleArt.length - 1 ? 'yellow' : i >= 2 && i <= 9 ? 'cyan' : i >= 10 && i <= 16 ? 'magenta' : 'white'}>
+          {line}
+        </Text>
+      ))}
       <Box marginTop={1}>
         <Text dimColor italic>
           Li Wei's Ascension
         </Text>
       </Box>
-      <Box marginTop={2}>
+      <Box marginTop={1}>
         <Text color="gray">
-          Press any key to continue...
+          ▸ Press any key to begin ◂
         </Text>
       </Box>
     </Box>
