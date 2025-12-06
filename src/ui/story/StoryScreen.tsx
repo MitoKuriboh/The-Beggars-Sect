@@ -77,6 +77,7 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
   const contentIndexRef = useRef(contentIndex);
   const isPausedRef = useRef(isPaused);
   const pauseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const autoAdvanceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isTypingRef = useRef(isTyping);
   const typewriterCompleteRef = useRef(typewriterComplete);
 
@@ -115,6 +116,18 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
   const setTypewriterComplete = useCallback((value: boolean) => {
     typewriterCompleteRef.current = value;
     _setTypewriterComplete(value);
+  }, []);
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (pauseTimeoutRef.current) {
+        clearTimeout(pauseTimeoutRef.current);
+      }
+      if (autoAdvanceTimeoutRef.current) {
+        clearTimeout(autoAdvanceTimeoutRef.current);
+      }
+    };
   }, []);
 
   // Initialize story engine
@@ -345,6 +358,11 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
     const typeComplete = typewriterCompleteRef.current;
 
     if ((key.return || input === ' ')) {
+      // Block input if auto-advance is pending
+      if (autoAdvanceTimeoutRef.current) {
+        return;
+      }
+
       // If paused, skip the pause
       if (paused) {
         skipPauseAndAdvance();
@@ -395,7 +413,8 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
           setIsTyping(false);
           setTypewriterComplete(true);
           // Auto-advance after brief delay so user sees completed text
-          setTimeout(() => {
+          autoAdvanceTimeoutRef.current = setTimeout(() => {
+            autoAdvanceTimeoutRef.current = null;
             if (idx < lines.length - 1) {
               setContentIndex(idx + 1);
               setIsTyping(true);
