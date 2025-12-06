@@ -68,13 +68,17 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
   const [location, setLocation] = useState('');
   const [isPaused, _setIsPaused] = useState(false);
   const [sceneProgress, setSceneProgress] = useState({ current: 1, total: 7 });
+  const [isTyping, _setIsTyping] = useState(true);
+  const [typewriterComplete, _setTypewriterComplete] = useState(false);
 
   // Refs for input handling (avoid stale closures)
   const phaseRef = useRef(phase);
   const contentRef = useRef(content);
   const contentIndexRef = useRef(contentIndex);
   const isPausedRef = useRef(isPaused);
-  const pauseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const pauseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isTypingRef = useRef(isTyping);
+  const typewriterCompleteRef = useRef(typewriterComplete);
 
   // Sync state setters - update ref immediately, then state
   const setPhase = useCallback((value: StoryPhase) => {
@@ -101,6 +105,16 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
   const setIsPaused = useCallback((value: boolean) => {
     isPausedRef.current = value;
     _setIsPaused(value);
+  }, []);
+
+  const setIsTyping = useCallback((value: boolean) => {
+    isTypingRef.current = value;
+    _setIsTyping(value);
+  }, []);
+
+  const setTypewriterComplete = useCallback((value: boolean) => {
+    typewriterCompleteRef.current = value;
+    _setTypewriterComplete(value);
   }, []);
 
   // Initialize story engine
@@ -167,6 +181,8 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
           setPhase('content');
           setContent(result.content || []);
           setContentIndex(0);
+          setIsTyping(true);
+          setTypewriterComplete(false);
           break;
 
         case 'choice':
@@ -265,6 +281,11 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
     if (result) handleResult(result);
   }, [handleResult]);
 
+  // Handle typewriter completion
+  const handleTypeComplete = useCallback(() => {
+    setTypewriterComplete(true);
+  }, [setTypewriterComplete]);
+
   // Skip pause and advance to next content
   const skipPauseAndAdvance = useCallback(() => {
     // Clear any pending timeout
@@ -289,6 +310,8 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
   useInput((input, key) => {
     const currentPhase = phaseRef.current;
     const paused = isPausedRef.current;
+    const typing = isTypingRef.current;
+    const typeComplete = typewriterCompleteRef.current;
 
     if ((key.return || input === ' ')) {
       // If paused, skip the pause
@@ -303,6 +326,13 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
         const lines = contentRef.current;
         const currentLine = lines[idx];
 
+        // If typewriter is still typing and enabled, skip to show full text
+        if (typing && !typeComplete && GameStore.isTypewriterEnabled()) {
+          setIsTyping(false);
+          setTypewriterComplete(true);
+          return;
+        }
+
         // Handle pause type - start pause but allow skip
         if (currentLine?.type === 'pause') {
           setIsPaused(true);
@@ -311,6 +341,8 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
             setIsPaused(false);
             if (idx < lines.length - 1) {
               setContentIndex(idx + 1);
+              setIsTyping(true);
+              setTypewriterComplete(false);
             } else {
               const result = engineRef.current?.advance();
               if (result) handleResult(result);
@@ -319,9 +351,11 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
           return;
         }
 
-        // Normal advancement
+        // Normal advancement - reset typewriter for next line
         if (idx < lines.length - 1) {
           setContentIndex(idx + 1);
+          setIsTyping(true);
+          setTypewriterComplete(false);
         } else {
           const result = engineRef.current?.advance();
           if (result) handleResult(result);
@@ -365,11 +399,18 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
             <ContentBlock
               lines={content}
               currentIndex={contentIndex}
+              isTyping={isTyping && GameStore.isTypewriterEnabled()}
+              typewriterSpeed={GameStore.getTypewriterSpeed()}
+              onTypeComplete={handleTypeComplete}
             />
             <Box marginTop={1}>
               {isPaused ? (
                 <Text dimColor italic>
                   ... [SPACE] skip
+                </Text>
+              ) : isTyping && !typewriterComplete && GameStore.isTypewriterEnabled() ? (
+                <Text dimColor italic>
+                  [SPACE] skip
                 </Text>
               ) : (
                 <Text dimColor>

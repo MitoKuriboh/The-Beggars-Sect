@@ -13,12 +13,14 @@ import type {
   Character,
   Inventory,
   NPCRelationship,
+  GameSettings,
 } from '../../types/index';
 
 import {
   DEFAULT_STORY_PROGRESS,
   DEFAULT_FLAGS,
   DEFAULT_STATS,
+  DEFAULT_SETTINGS,
   generateChecksum,
 } from '../../types/game';
 
@@ -35,6 +37,7 @@ import { SaveManager, SaveSlot } from './SaveManager';
  */
 class GameStoreClass {
   private state: GameState | null = null;
+  private settings: GameSettings = { ...DEFAULT_SETTINGS };
   private listeners: Set<() => void> = new Set();
 
   // ---------------------------------------------------------------------------
@@ -153,6 +156,56 @@ class GameStoreClass {
    */
   getDiscoveredTechniques(): string[] {
     return this.getState().discoveredTechniques;
+  }
+
+  // ---------------------------------------------------------------------------
+  // SETTINGS
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Get all settings
+   */
+  getSettings(): GameSettings {
+    return this.settings;
+  }
+
+  /**
+   * Check if typewriter effect is enabled
+   */
+  isTypewriterEnabled(): boolean {
+    return this.settings.typewriterEnabled;
+  }
+
+  /**
+   * Get typewriter speed (characters per second)
+   */
+  getTypewriterSpeed(): number {
+    return this.settings.typewriterSpeed;
+  }
+
+  /**
+   * Update settings
+   */
+  updateSettings(updates: Partial<GameSettings>): void {
+    this.settings = { ...this.settings, ...updates };
+    this.notifyListeners();
+  }
+
+  /**
+   * Toggle typewriter effect
+   */
+  toggleTypewriter(): boolean {
+    this.settings.typewriterEnabled = !this.settings.typewriterEnabled;
+    this.notifyListeners();
+    return this.settings.typewriterEnabled;
+  }
+
+  /**
+   * Set typewriter speed (clamped to 20-100)
+   */
+  setTypewriterSpeed(speed: number): void {
+    this.settings.typewriterSpeed = Math.max(20, Math.min(100, speed));
+    this.notifyListeners();
   }
 
   // ---------------------------------------------------------------------------

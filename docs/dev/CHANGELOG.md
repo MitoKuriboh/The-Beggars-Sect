@@ -7,6 +7,64 @@ All notable changes to The Beggars Sect project.
 
 ---
 
+## [0.2.7] - 2025-12-06
+
+### Added
+- **Settings Menu UI**
+  - New "Settings" option in main menu
+  - Toggle typewriter effect on/off with visual feedback (✓ ON / ✗ OFF)
+  - Text speed presets: Slow (30), Normal (50), Fast (70), Very Fast (90) cps
+  - Setting descriptions panel explaining each option
+  - ESC navigation to go back from submenus
+
+### Technical
+- `src/ui/SettingsScreen.tsx` - New settings screen component
+- `src/ui/App.tsx` - Added 'settings' screen type, menu item, and render
+
+---
+
+## [0.2.6] - 2025-12-06
+
+### Added
+- **Settings System (R03)**
+  - `GameSettings` interface with typewriter options
+  - `typewriterEnabled` toggle (default: true)
+  - `typewriterSpeed` setting (20-100 cps, default: 50)
+  - Settings stored separately from save data
+  - GameStore methods: `isTypewriterEnabled()`, `getTypewriterSpeed()`, `toggleTypewriter()`, `setTypewriterSpeed()`
+
+- **Accessibility: Disable Typewriter Option**
+  - When disabled, text displays instantly
+  - Speed scales all content types proportionally
+  - Dialogue 10% faster, internal thoughts 10% slower than base speed
+
+### Technical
+- `src/types/game.ts` - Added `GameSettings` interface and `DEFAULT_SETTINGS`
+- `src/game/state/GameStore.ts` - Added settings state and accessor methods
+- `ContentRenderer.tsx` - Added `typewriterSpeed` prop with per-content-type scaling
+- `StoryScreen.tsx` - Passes settings to ContentBlock, conditional skip prompt
+
+---
+
+## [0.2.5] - 2025-12-06
+
+### Added
+- **Typewriter Effect (R01/C1)**
+  - Text reveals character-by-character for immersive storytelling
+  - Applies to narration, dialogue, and internal thoughts
+  - Blinking cursor (▌) shows typing progress
+  - Different speeds per content type: narration (50 cps), dialogue (55 cps), internal (45 cps)
+  - Press SPACE to skip to full text instantly
+  - Prompt shows `[SPACE] skip` during typing, `[SPACE] next` when complete
+
+### Technical
+- `src/ui/hooks/useTypewriter.ts` - New hook for typewriter effect
+- `src/ui/hooks/index.ts` - New hooks barrel export
+- `ContentRenderer.tsx` - Added `TypewriterText` component, integrated typewriter for text content
+- `StoryScreen.tsx` - Added typewriter state tracking, skip functionality on SPACE
+
+---
+
 ## [0.2.4] - 2025-12-06
 
 ### Added
@@ -269,6 +327,17 @@ All notable changes to The Beggars Sect project.
 ---
 
 ## Development Sessions
+
+### Session 21 (2025-12-06)
+- Implement Typewriter Effect (R01/C1) for immersive storytelling
+- Create `useTypewriter` hook with speed control and skip functionality
+- Integrate typewriter into ContentRenderer for narration/dialogue/internal
+- Add blinking cursor during typing animation
+- Add skip-to-full-text on SPACE press during typing
+- Add Settings System (R03) with typewriter toggle and speed control
+- Create `GameSettings` interface and integrate into GameStore
+- Add Settings Menu UI with toggle and speed presets
+- Update version to 0.2.7
 
 ### Session 20 (2025-12-06)
 - Conduct comprehensive gameplay loop research

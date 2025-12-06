@@ -8,13 +8,14 @@ import { createPlayer, createEnemy } from '../game/factories/CharacterFactory';
 import { CombatScreen } from './combat/CombatScreen';
 import { StoryScreen } from './story/StoryScreen';
 import { SaveLoadScreen } from './SaveLoadScreen';
+import { SettingsScreen } from './SettingsScreen';
 import type { Character, Enemy, StoryState } from '../types/index';
 
 // =============================================================================
 // TYPES
 // =============================================================================
 
-type Screen = 'title' | 'menu' | 'newgame' | 'stats' | 'story' | 'combat' | 'credits' | 'save' | 'load';
+type Screen = 'title' | 'menu' | 'newgame' | 'stats' | 'story' | 'combat' | 'credits' | 'save' | 'load' | 'settings';
 
 interface MenuItem {
   label: string;
@@ -108,6 +109,7 @@ const MainMenu: React.FC<{ onSelect: (screen: Screen) => void }> = ({ onSelect }
   if (hasSaves) {
     menuItems.push({ label: 'Load Game', value: 'load' });
   }
+  menuItems.push({ label: 'Settings', value: 'settings' });
   menuItems.push({ label: 'Credits', value: 'credits' });
   menuItems.push({ label: 'Quit', value: 'quit' });
 
@@ -470,6 +472,7 @@ export const App: React.FC = () => {
         />
       )}
       {screen === 'credits' && <CreditsScreen onBack={goToMenu} />}
+      {screen === 'settings' && <SettingsScreen onBack={goToMenu} />}
       {screen === 'save' && (
         <SaveLoadScreen mode="save" onComplete={goToStats} onBack={goToStats} />
       )}

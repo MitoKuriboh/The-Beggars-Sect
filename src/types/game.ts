@@ -137,6 +137,26 @@ export interface GameStats {
 }
 
 // =============================================================================
+// SETTINGS
+// =============================================================================
+
+export interface GameSettings {
+  // Accessibility
+  typewriterEnabled: boolean;   // Enable typewriter text effect
+  typewriterSpeed: number;      // Characters per second (20-100)
+
+  // Audio (future)
+  // soundEnabled: boolean;
+  // musicVolume: number;
+  // sfxVolume: number;
+}
+
+export const DEFAULT_SETTINGS: GameSettings = {
+  typewriterEnabled: true,
+  typewriterSpeed: 50,
+};
+
+// =============================================================================
 // GAME STATE
 // =============================================================================
 

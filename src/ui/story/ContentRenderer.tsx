@@ -1,11 +1,12 @@
 /**
  * Content Renderer
- * Renders different types of story content lines
+ * Renders different types of story content lines with typewriter effect
  */
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Box, Text } from 'ink';
 import type { ContentLine } from '../../types/index';
+import { useTypewriter } from '../hooks';
 
 // =============================================================================
 // SPEAKER COLOR MAPPING
@@ -62,28 +63,106 @@ function getEmotionIndicator(emotion?: string): string {
 }
 
 // =============================================================================
+// TYPEWRITER TEXT COMPONENT
+// =============================================================================
+
+interface TypewriterTextProps {
+  text: string;
+  color?: string;
+  italic?: boolean;
+  speed?: number;
+  onComplete?: () => void;
+}
+
+const TypewriterText: React.FC<TypewriterTextProps> = ({
+  text,
+  color = 'white',
+  italic = false,
+  speed = 50,
+  onComplete,
+}) => {
+  const { displayedText, isComplete } = useTypewriter(text, {
+    speed,
+    autoStart: true,
+    onComplete,
+  });
+
+  // Track if we've called onComplete for this text
+  const completedRef = useRef(false);
+  useEffect(() => {
+    if (isComplete && !completedRef.current) {
+      completedRef.current = true;
+    }
+  }, [isComplete]);
+
+  // Reset tracking when text changes
+  useEffect(() => {
+    completedRef.current = false;
+  }, [text]);
+
+  return (
+    <Text color={color} italic={italic}>
+      {displayedText}
+      {!isComplete && <Text color="gray">▌</Text>}
+    </Text>
+  );
+};
+
+// =============================================================================
 // CONTENT RENDERER
 // =============================================================================
 
 interface ContentRendererProps {
   line: ContentLine;
+  isTyping?: boolean;
+  typewriterSpeed?: number;
+  onTypeComplete?: () => void;
 }
 
-export const ContentRenderer: React.FC<ContentRendererProps> = ({ line }) => {
+export const ContentRenderer: React.FC<ContentRendererProps> = ({
+  line,
+  isTyping = false,
+  typewriterSpeed = 50,
+  onTypeComplete,
+}) => {
+  // Speed modifiers per content type (relative to base speed)
+  const narrationSpeed = typewriterSpeed;
+  const internalSpeed = Math.round(typewriterSpeed * 0.9);  // Slower for contemplation
+  const dialogueSpeed = Math.round(typewriterSpeed * 1.1);  // Faster for speech
+
   switch (line.type) {
     case 'narration':
       return (
         <Box marginY={1}>
-          <Text color="white">{line.text}</Text>
+          {isTyping ? (
+            <TypewriterText
+              text={line.text}
+              color="white"
+              speed={narrationSpeed}
+              onComplete={onTypeComplete}
+            />
+          ) : (
+            <Text color="white">{line.text}</Text>
+          )}
         </Box>
       );
 
     case 'internal':
       return (
         <Box marginY={1} paddingLeft={2}>
-          <Text color="gray" italic>
-            {line.text}
-          </Text>
+          {isTyping ? (
+            <TypewriterText
+              text={line.text}
+              color="gray"
+              italic
+              speed={internalSpeed}
+              onComplete={onTypeComplete}
+            />
+          ) : (
+            <Text color="gray" italic>
+              {line.text}
+            </Text>
+          )}
         </Box>
       );
 
@@ -97,7 +176,16 @@ export const ContentRenderer: React.FC<ContentRendererProps> = ({ line }) => {
               {line.speaker}{emotion}:
             </Text>
             {' '}
-            <Text color="white">{line.text}</Text>
+            {isTyping ? (
+              <TypewriterText
+                text={line.text}
+                color="white"
+                speed={dialogueSpeed}
+                onComplete={onTypeComplete}
+              />
+            ) : (
+              <Text color="white">{line.text}</Text>
+            )}
           </Text>
         </Box>
       );
@@ -166,12 +254,18 @@ interface ContentBlockProps {
   lines: ContentLine[];
   currentIndex?: number;
   showAll?: boolean;
+  isTyping?: boolean;
+  typewriterSpeed?: number;
+  onTypeComplete?: () => void;
 }
 
 export const ContentBlock: React.FC<ContentBlockProps> = ({
   lines,
   currentIndex,
   showAll = false,
+  isTyping = false,
+  typewriterSpeed = 50,
+  onTypeComplete,
 }) => {
   const visibleLines = showAll
     ? lines
@@ -181,9 +275,21 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({
 
   return (
     <Box flexDirection="column">
-      {visibleLines.map((line, index) => (
-        <ContentRenderer key={index} line={line} />
-      ))}
+      {visibleLines.map((line, index) => {
+        // Only the last visible line should be typing (if isTyping is true)
+        const isLastLine = index === visibleLines.length - 1;
+        const shouldType = isTyping && isLastLine && !showAll;
+
+        return (
+          <ContentRenderer
+            key={index}
+            line={line}
+            isTyping={shouldType}
+            typewriterSpeed={typewriterSpeed}
+            onTypeComplete={shouldType ? onTypeComplete : undefined}
+          />
+        );
+      })}
     </Box>
   );
 };
