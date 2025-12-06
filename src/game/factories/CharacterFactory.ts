@@ -83,6 +83,36 @@ const ENEMY_TEMPLATES: Record<string, EnemyTemplate> = {
   // URBAN THUGS
   // ─────────────────────────────────────────────────────────────────────────
 
+  'desperate-thug': {
+    id: 'desperate-thug',
+    name: 'Desperate Thug',
+    chinese: '亡命徒',
+    faction: 'thugs',
+    tier: 'common',
+    chiAspect: 'force',
+    stats: { str: 6, dex: 5, end: 5, wis: 3 },
+    speed: 100,
+    defense: 2,
+    techniques: ['punch', 'wild-swing'],
+    aiPattern: {
+      name: 'BASIC_DESPERATE',
+      behavior: 'aggressive',
+      rules: [
+        { condition: 'hp < 40%', action: 'use:wild-swing', priority: 1 },
+        { condition: 'default', action: 'use:punch', priority: 0 },
+      ],
+    },
+    drops: [
+      { itemId: 'coins', chance: 0.3, quantity: 2 },
+    ],
+    dialogue: {
+      intro: ['Hand over the pendant!'],
+      lowHp: ['This... this was supposed to be easy!'],
+      victory: ['Heh... told you.'],
+      defeat: ['Not worth it!'],
+    },
+  },
+
   'street-punk': {
     id: 'street-punk',
     name: 'Street Punk',

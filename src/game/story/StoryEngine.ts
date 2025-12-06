@@ -26,6 +26,10 @@ export class StoryEngine {
   private state: StoryState;
   private onStateChange?: (state: StoryState) => void;
 
+  // Pending content to show (e.g., choice responses)
+  private pendingContent: ContentLine[] | null = null;
+  private pendingNextScene: string | null = null;
+
   constructor(onStateChange?: (state: StoryState) => void) {
     this.state = createStoryState();
     this.onStateChange = onStateChange;
@@ -37,9 +41,57 @@ export class StoryEngine {
 
   /**
    * Register a chapter with all its scenes
+   * Validates scene references to catch errors early
    */
   registerChapter(chapter: Chapter): void {
     this.chapters.set(chapter.id, chapter);
+
+    // Validate scene references
+    const errors = this.validateChapter(chapter);
+    if (errors.length > 0) {
+      console.warn(`[StoryEngine] Chapter "${chapter.id}" has validation warnings:`);
+      errors.forEach((err) => console.warn(`  - ${err}`));
+    }
+  }
+
+  /**
+   * Validate a chapter's scene references
+   */
+  private validateChapter(chapter: Chapter): string[] {
+    const errors: string[] = [];
+    const sceneIds = new Set(chapter.scenes.map((s) => s.id));
+
+    // Check startScene exists
+    if (!sceneIds.has(chapter.startScene)) {
+      errors.push(`startScene "${chapter.startScene}" not found in chapter`);
+    }
+
+    // Check endScenes exist
+    for (const endScene of chapter.endScenes) {
+      if (!sceneIds.has(endScene)) {
+        errors.push(`endScene "${endScene}" not found in chapter`);
+      }
+    }
+
+    // Check each scene's nextScene reference
+    for (const scene of chapter.scenes) {
+      if (scene.nextScene && !sceneIds.has(scene.nextScene)) {
+        errors.push(`Scene "${scene.id}" references unknown nextScene "${scene.nextScene}"`);
+      }
+
+      // Check choice nextScene references
+      for (const block of scene.content) {
+        if (block.type === 'choice') {
+          for (const choice of block.choices) {
+            if (choice.nextScene && !sceneIds.has(choice.nextScene)) {
+              errors.push(`Choice "${choice.id}" in scene "${scene.id}" references unknown nextScene "${choice.nextScene}"`);
+            }
+          }
+        }
+      }
+    }
+
+    return errors;
   }
 
   /**
@@ -113,6 +165,21 @@ export class StoryEngine {
    * Advance the story (player pressed continue)
    */
   advance(): StoryResult {
+    // If we have pending content from a choice response, clear it and continue
+    if (this.pendingContent) {
+      this.pendingContent = null;
+      this.state.contentIndex++;
+
+      // If choice had a next scene, jump to it
+      if (this.pendingNextScene) {
+        const nextScene = this.pendingNextScene;
+        this.pendingNextScene = null;
+        return this.jumpToScene(nextScene);
+      }
+
+      return this.processCurrentPosition();
+    }
+
     this.state.contentIndex++;
     return this.processCurrentPosition();
   }
@@ -148,8 +215,21 @@ export class StoryEngine {
       this.applyChoiceEffects(choice.effects);
     }
 
-    // If choice has response content, we need to show it first
-    // For now, advance to next block
+    // If choice has response content, show it before advancing
+    if (choice.response && choice.response.length > 0) {
+      // Store pending content and optional next scene
+      this.pendingContent = choice.response;
+      this.pendingNextScene = choice.nextScene || null;
+
+      // Return the response content to display
+      return {
+        action: 'continue',
+        state: this.getState(),
+        content: choice.response,
+      };
+    }
+
+    // No response content - advance immediately
     this.state.contentIndex++;
 
     // If choice branches to a different scene
@@ -253,6 +333,22 @@ export class StoryEngine {
         for (const day of block.days) {
           montageContent.push({ type: 'divider', label: day.label });
           montageContent.push(...day.content);
+
+          // Handle autoCombat - add narrative content for the fight
+          if (day.autoCombat) {
+            const outcome = day.autoCombat.outcome;
+            if (outcome === 'win') {
+              montageContent.push({
+                type: 'system',
+                text: `[Combat resolved: Victory]`,
+              });
+            } else {
+              montageContent.push({
+                type: 'system',
+                text: `[Combat resolved: Defeat]`,
+              });
+            }
+          }
         }
         return {
           action: 'continue',
