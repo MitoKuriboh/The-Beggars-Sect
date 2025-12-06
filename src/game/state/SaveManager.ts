@@ -91,8 +91,19 @@ class SaveManagerClass {
     try {
       this.ensureSaveDir();
 
-      // Write save file
       const savePath = this.getSlotPath(slot);
+
+      // Backup existing save before overwriting
+      if (fs.existsSync(savePath)) {
+        const backupPath = `${savePath}.bak`;
+        try {
+          fs.copyFileSync(savePath, backupPath);
+        } catch (backupError) {
+          // Non-fatal - continue with save even if backup fails
+        }
+      }
+
+      // Write save file
       fs.writeFileSync(savePath, data, 'utf-8');
 
       // Update metadata

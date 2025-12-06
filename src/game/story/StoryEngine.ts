@@ -16,6 +16,7 @@ import type {
 } from '../../types/index';
 
 import { createStoryState } from '../../types/story';
+import { GameStore } from '../state/GameStore';
 
 // =============================================================================
 // STORY ENGINE
@@ -153,6 +154,9 @@ export class StoryEngine {
     this.state.currentScene = sceneId;
     this.state.contentIndex = 0;
     this.notifyStateChange();
+
+    // Auto-save on scene transition (checkpoint)
+    GameStore.autoSave();
 
     return this.processCurrentPosition();
   }

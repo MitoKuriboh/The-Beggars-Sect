@@ -3,6 +3,10 @@
  * Central state management for the game
  */
 
+import * as fs from 'fs';
+import * as path from 'path';
+import * as os from 'os';
+
 import type {
   GameState,
   StoryProgress,
@@ -36,9 +40,49 @@ import { SaveManager, SaveSlot } from './SaveManager';
  * Manages all persistent game data
  */
 class GameStoreClass {
+  private static readonly SETTINGS_PATH = path.join(os.homedir(), '.beggars-sect', 'settings.json');
+
   private state: GameState | null = null;
   private settings: GameSettings = { ...DEFAULT_SETTINGS };
   private listeners: Set<() => void> = new Set();
+
+  constructor() {
+    this.loadSettings();
+  }
+
+  // ---------------------------------------------------------------------------
+  // SETTINGS PERSISTENCE
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Load settings from file
+   */
+  private loadSettings(): void {
+    try {
+      if (fs.existsSync(GameStoreClass.SETTINGS_PATH)) {
+        const data = fs.readFileSync(GameStoreClass.SETTINGS_PATH, 'utf-8');
+        const loadedSettings = JSON.parse(data) as GameSettings;
+        this.settings = { ...DEFAULT_SETTINGS, ...loadedSettings };
+      }
+    } catch (error) {
+      // Silent fail - use default settings
+    }
+  }
+
+  /**
+   * Save settings to file
+   */
+  private saveSettings(): void {
+    try {
+      const dir = path.dirname(GameStoreClass.SETTINGS_PATH);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      fs.writeFileSync(GameStoreClass.SETTINGS_PATH, JSON.stringify(this.settings, null, 2), 'utf-8');
+    } catch (error) {
+      // Silent fail
+    }
+  }
 
   // ---------------------------------------------------------------------------
   // INITIALIZATION
@@ -188,6 +232,7 @@ class GameStoreClass {
    */
   updateSettings(updates: Partial<GameSettings>): void {
     this.settings = { ...this.settings, ...updates };
+    this.saveSettings();
     this.notifyListeners();
   }
 
@@ -196,6 +241,7 @@ class GameStoreClass {
    */
   toggleTypewriter(): boolean {
     this.settings.typewriterEnabled = !this.settings.typewriterEnabled;
+    this.saveSettings();
     this.notifyListeners();
     return this.settings.typewriterEnabled;
   }
@@ -205,6 +251,7 @@ class GameStoreClass {
    */
   setTypewriterSpeed(speed: number): void {
     this.settings.typewriterSpeed = Math.max(20, Math.min(100, speed));
+    this.saveSettings();
     this.notifyListeners();
   }
 
