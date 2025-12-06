@@ -7,6 +7,45 @@ All notable changes to The Beggars Sect project.
 
 ---
 
+## [0.2.2] - 2025-12-06
+
+### Added
+- **Story UX Improvements**
+  - Color-coded dialogue by speaker type (green=player, magenta=voices, red=enemies, yellow=elders, cyan=beggars)
+  - Emotion indicators as emoji (😈 threatening, 😱 panicked, 😊 kind, etc.)
+  - Scene progress indicator `[1/7]` in story header
+  - Pause skip hint shows `... [SPACE] skip` during dramatic pauses
+  - Pendant glow effect renders as colored italic text
+
+- **Combat UX Improvements**
+  - Damage numbers highlighted in bold red
+  - Heal numbers highlighted in bold green
+  - Action entries now cyan for better visibility
+  - Combat log header with ⚔️ icon
+
+- **Input & Engine Fixes**
+  - Spacebar now skips pause delays (was blocking)
+  - Fixed input delay by syncing refs immediately (was using useEffect)
+  - Choice responses now display before advancing (was skipped)
+  - Added `desperate-thug` enemy template (was missing from prologue)
+  - Montage `autoCombat` now renders as system message
+  - Added chapter validation on registration (warns about invalid scene refs)
+
+- **Visual Polish**
+  - ASCII art title screen with "THE BEGGARS SECT" in block letters
+  - Color-coded title: THE (cyan), BEGGARS (magenta), SECT (green)
+  - Chinese subtitle: 丐 帮 ： 李 伟 的 崛 起
+
+### Technical
+- `ContentRenderer.tsx` - Speaker color mapping, emotion emoji helper
+- `StoryScreen.tsx` - Immediate ref sync, pause skip, progress tracking
+- `CombatLog.tsx` - Number highlighting with regex parsing
+- `StoryEngine.ts` - Choice response handling, chapter validation
+- `CharacterFactory.ts` - Added desperate-thug template
+- `App.tsx` - ASCII art title screen
+
+---
+
 ## [0.2.1] - 2025-12-06
 
 ### Added
