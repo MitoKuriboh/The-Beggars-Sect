@@ -95,16 +95,22 @@ The demo showcases all core systems. Full chapters (1-3) coming in future releas
 
 ## Features
 
-### Implemented (v0.2.4 Demo)
+### Implemented (v0.3.5 Demo)
 
+**Combat Systems:**
 - **ATB Combat System** - DEX-based turn order, 7-turn preview
-- **3 Stances** - Flowing, Weathered, Hungry with stat modifiers
-- **Combo System** - Starter → Followup → Finisher chains
-- **8 Player Techniques** - Palm strikes, guards, counters
-- **12 Enemy Types** - 9 regular + 3 bosses with phases
-- **AI Controller** - Pattern-based enemy behavior
+- **3 Stances** - Flowing, Weathered, Hungry with meaningful stat modifiers
+- **Combo System** - Starter → Followup → Finisher chains (up to 60% damage bonus)
+- **8 Player Techniques** - Palm strikes, guards, counters with mastery progression
+- **Mastery System** - 5 levels per technique with power bonuses
+- **12 Enemy Types** - 9 regular + 3 bosses with multi-phase mechanics
+- **AI Controller** - Pattern-based enemy behavior with phase transitions
+- **Chapter Scaling** - Enemies scale automatically for chapters 2-3
+
+**Story & UX:**
 - **Non-Linear Story** - 3 paths (Blade/Stream/Shadow), 3 endings
-- **Prologue Chapter** - 7 scenes, ~25 minutes (serves as demo)
+- **Prologue Chapter** - 7 scenes, ~25 minutes (complete demo)
+- **Smooth Story Flow** - 1 SPACE per line, typewriter effect, optimized pacing
 - **Save System** - 3 slots + auto-save, file persistence
 - **Full UI** - Combat screen, story renderer, menus
 
@@ -181,11 +187,13 @@ npm run package  # Build standalone executables
 
 | Phase | Status | Details |
 |-------|--------|---------|
-| Week 1: Foundation | Complete | TypeScript, Ink, project structure |
-| Week 2: Combat | Complete | ATB engine, techniques, AI |
-| Week 3: Story | Complete | Non-linear narrative, 3 paths |
-| Week 4: Polish | Complete | Save system, v0.2.0 |
-| Week 5+: Content | Planned | Chapters, items, locations |
+| Week 1: Foundation | ✅ Complete | TypeScript, Ink, project structure |
+| Week 2: Combat | ✅ Complete | ATB engine, techniques, AI |
+| Week 3: Story | ✅ Complete | Non-linear narrative, 3 paths |
+| Week 4: Polish | ✅ Complete | Save system, v0.2.0 |
+| **Phase 1: Balance** | ✅ **Complete** | **Combat balance, mastery, scaling (v0.3.0)** |
+| **Phase 2: UX Polish** | ✅ **Complete** | **Story flow optimization (v0.3.1-0.3.5)** |
+| Phase 3: Content | Planned | Chapters 1-3, items, locations |
 
 ---
 
