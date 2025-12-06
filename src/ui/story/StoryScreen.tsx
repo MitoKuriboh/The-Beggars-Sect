@@ -456,10 +456,33 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
         }
 
         // Normal advancement - reset typewriter for next line
-        if (idx < lines.length - 1) {
-          setContentIndex(idx + 1);
-          setIsTyping(true);
-          setTypewriterComplete(false);
+        const nextIndex = idx + 1;
+        if (nextIndex < lines.length) {
+          const nextLine = lines[nextIndex];
+
+          // Check if next line is a pause - handle it automatically
+          if (nextLine?.type === 'pause') {
+            setIsPaused(true);
+            pauseTimeoutRef.current = setTimeout(() => {
+              pauseTimeoutRef.current = null;
+              setIsPaused(false);
+
+              // Advance past the pause
+              if (nextIndex + 1 < lines.length) {
+                setContentIndex(nextIndex + 1);
+                setIsTyping(true);
+                setTypewriterComplete(false);
+              } else {
+                const result = engineRef.current?.advance();
+                if (result) handleResult(result);
+              }
+            }, nextLine.duration || 1000);
+          } else {
+            // Normal line, just advance
+            setContentIndex(nextIndex);
+            setIsTyping(true);
+            setTypewriterComplete(false);
+          }
         } else {
           const result = engineRef.current?.advance();
           if (result) handleResult(result);
