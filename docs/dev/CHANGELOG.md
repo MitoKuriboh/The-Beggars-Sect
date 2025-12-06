@@ -7,6 +7,17 @@ All notable changes to The Beggars Sect project.
 
 ---
 
+## [0.3.2] - 2025-12-06
+
+### Fixed
+- **UX: Disabled typewriter effect by default**
+  - Typewriter was causing double SPACE requirement (once to complete typing, once to advance)
+  - Changed default from `typewriterEnabled: true` → `false`
+  - Players can re-enable in Settings if they prefer the cinematic effect
+  - **Result:** Single SPACE press now advances to next line immediately
+
+---
+
 ## [0.3.1] - 2025-12-06
 
 ### Fixed

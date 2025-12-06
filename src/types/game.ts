@@ -152,7 +152,7 @@ export interface GameSettings {
 }
 
 export const DEFAULT_SETTINGS: GameSettings = {
-  typewriterEnabled: true,
+  typewriterEnabled: false,  // Disabled by default for smoother UX
   typewriterSpeed: 50,
 };
 
