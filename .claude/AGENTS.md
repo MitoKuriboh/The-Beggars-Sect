@@ -1,5 +1,7 @@
 # Agent System Instructions
 
+> **See also:** `/home/mito/CLAUDE.md` for master configuration and working preferences
+
 This file contains instructions for Claude on how to use the project's specialized agents.
 
 ---

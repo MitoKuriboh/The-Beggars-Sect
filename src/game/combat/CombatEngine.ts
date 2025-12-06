@@ -29,6 +29,13 @@ import {
 
 import { getEffectiveStat, STANCE_MODIFIERS, STATUS_EFFECTS } from '../../types/character';
 import { AIController } from './AIController';
+import {
+  getAttackMessage,
+  getTechniqueMessage,
+  getStanceMessage,
+  getDefendMessage,
+  getChiFocusMessage,
+} from '../../data/combatPhrases';
 
 // =============================================================================
 // COMBAT ENGINE
@@ -394,7 +401,7 @@ export class CombatEngine {
     return {
       type: 'attack',
       success: true,
-      message: `${actor.name} attacks ${target.name} for ${damage.total} damage!`,
+      message: getAttackMessage(actor.name, target.name, damage.total, target.maxHp, damage.isCritical),
       damage: damage.total,
       isCritical: damage.isCritical,
       targetHpAfter: target.hp,
@@ -458,9 +465,9 @@ export class CombatEngine {
       actor.masteryLevels[technique.id] = (actor.masteryLevels[technique.id] || 0) + 1;
     }
 
-    const message = damage.total > 0
-      ? `${actor.name} uses ${technique.name} on ${target?.name} for ${damage.total} damage!`
-      : `${actor.name} uses ${technique.name}!`;
+    const message = damage.total > 0 && target
+      ? `${getTechniqueMessage(actor.name, target.name, technique.name, technique.id)} for ${damage.total} damage!`
+      : getTechniqueMessage(actor.name, target?.name || '', technique.name, technique.id);
 
     return {
       type: 'technique',
@@ -650,7 +657,7 @@ export class CombatEngine {
     return {
       type: 'defend',
       success: true,
-      message: `${actor.name} takes a defensive stance. (+${chiRecovered} chi)`,
+      message: `${getDefendMessage(actor.name)} (+${chiRecovered} chi)`,
       chiGained: chiRecovered,
     };
   }
@@ -666,7 +673,7 @@ export class CombatEngine {
     return {
       type: 'chi-focus',
       success: true,
-      message: `${actor.name} focuses chi. (+${chiRecovered} chi)`,
+      message: `${getChiFocusMessage(actor.name)} (+${chiRecovered} chi)`,
       chiGained: chiRecovered,
     };
   }
@@ -731,7 +738,7 @@ export class CombatEngine {
     return {
       type: 'stance',
       success: true,
-      message: `${actor.name} shifts to ${newStance} stance. (was: ${oldStance})`,
+      message: getStanceMessage(actor.name, newStance),
     };
   }
 

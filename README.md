@@ -34,7 +34,7 @@ Follow Li Wei's journey from a confused stranger spawned into an unknown world, 
 |---|---|
 | **Genre** | Wuxia Turn-Based RPG |
 | **Platform** | CLI (Terminal) |
-| **Version** | 0.2.7 (Demo) |
+| **Version** | 0.2.9 (Demo) |
 | **Status** | Prologue Complete - Demo Release |
 | **Playtime** | ~25 min (demo) / ~5-6 hours (full game) |
 

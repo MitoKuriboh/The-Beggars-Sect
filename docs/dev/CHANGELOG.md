@@ -7,6 +7,101 @@ All notable changes to The Beggars Sect project.
 
 ---
 
+## [0.2.9] - 2025-12-06
+
+### Added
+- **Combat Animation System (Bundle B: Combat Excitement)**
+  - Frame-based ASCII animations for all combat actions
+  - Directional attack animations with windup/strike/impact phases
+  - Critical hit explosion effects with stars (★★★★★)
+  - Technique charge animations with chi particles
+  - Defend, chi focus, and impact animations
+  - 60-80ms frame timing for smooth motion
+
+- **Boss ASCII Art**
+  - Dramatic boss intro screens for Razor, Commander Vex, The Hollow One
+  - Custom art and quotes for each boss
+  - Victory celebration displays
+  - Generic fallback for custom bosses
+
+- **Technique Learning Celebrations**
+  - ASCII art for mastering new techniques
+  - Technique-specific artwork for key abilities
+  - Flowing Palm, Weathered Guard, Starving Strike, Double Palm
+  - Inspirational quotes and Chinese characters (掌, 守, 擊)
+  - Generic fallback for all techniques
+
+- **Chapter Title Cards**
+  - Cinematic chapter intro displays
+  - Prologue: "The Awakening" (覚醒)
+  - Chapter 1: "Streets of the Forgotten" (忘れられた街)
+  - Chapter 2: "Shadows and Iron" (影と鉄)
+  - Chapter 3: "The Empty Palm" (空掌)
+
+- **Art Display Components**
+  - Reusable components for showing ASCII art
+  - TechniqueLearnedDisplay with customizable colors
+  - BossIntroDisplay for dramatic boss encounters
+  - ChapterIntroDisplay for story transitions
+  - VictoryDisplay with rewards list
+  - CombatStartBanner for battle transitions
+
+### Technical
+- `src/ui/combat/animations/CombatAnimations.tsx` - Animation system
+- `src/ui/art/TechniqueArt.ts` - Technique celebration art (100+ lines)
+- `src/ui/art/BossArt.ts` - Boss intro art (150+ lines)
+- `src/ui/art/ChapterArt.ts` - Chapter title cards
+- `src/ui/art/ArtDisplay.tsx` - Display components
+- `src/ui/art/index.ts` - Art barrel export
+
+### Notes
+- Animation and art systems are ready for integration
+- Components can be used in StoryEngine and CombatScreen
+- Future: Hook up to actual game events (boss encounters, technique learning)
+
+---
+
+## [0.2.8] - 2025-12-06
+
+### Added
+- **Semantic Color System (Bundle A: Visual Polish)**
+  - Consistent color palette across the entire game
+  - Path colors: Blade (red), Stream (blue), Shadow (magenta)
+  - Combat colors: damage, healing, chi effects, status effects
+  - Narrative colors: speakers, content types, chi voices
+  - Helper functions: `getHealthColor()`, `getProgressColor()`, `getSpeakerColor()`
+
+- **Combat Message Variety**
+  - Varied attack phrases - no more repetitive "X attacks Y"
+  - Context-aware messages based on damage tier (light/moderate/heavy/massive)
+  - Critical hit phrases ("finds an opening", "strikes with precision")
+  - Technique-specific flavor text for all techniques
+  - Varied defend, chi focus, and stance change messages
+  - 100+ unique combat message variations
+
+- **High-Resolution Progress Bars**
+  - Unicode eighth-block characters for smoother visual feedback
+  - ██████▌░░░ instead of ███████░░░
+  - Automatic color gradients based on percentage
+  - Specialized health and chi bar functions
+  - Precise visual representation of partial fill amounts
+
+- **Box Drawing Utilities**
+  - Rounded corner box style (╭╮╰╯) for modern aesthetic
+  - Multiple styles: rounded, double, single, heavy, dotted
+  - Helper functions for headers, footers, dividers
+  - Consistent box drawing across UI components
+
+### Technical
+- `src/ui/theme/colors.ts` - Semantic color system with Ink color types
+- `src/ui/theme/boxes.ts` - Box drawing styles and helpers
+- `src/ui/theme/progressBars.ts` - High-res progress bar utilities
+- `src/data/combatPhrases.ts` - Combat message variation system
+- `src/game/combat/CombatEngine.ts` - Integrated varied messages
+- `src/ui/combat/HealthBar.tsx` - Updated to use high-res bars
+
+---
+
 ## [0.2.7] - 2025-12-06
 
 ### Added
