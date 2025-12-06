@@ -7,6 +7,17 @@ All notable changes to The Beggars Sect project.
 
 ---
 
+## [0.3.4] - 2025-12-06
+
+### Fixed
+- **SPACE handler check order fixed**
+  - Effect/pause checks now run BEFORE typewriter check
+  - Previously: SPACE on effect line would toggle typewriter state (waste SPACE)
+  - Now: Effect/pause lines process immediately, typewriter only checks on text
+  - **Result:** Story starts immediately on first SPACE, no wasted presses
+
+---
+
 ## [0.3.3] - 2025-12-06
 
 ### Changed - Improved Story Pacing

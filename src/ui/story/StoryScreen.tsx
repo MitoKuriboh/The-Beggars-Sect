@@ -357,13 +357,7 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
         const lines = contentRef.current;
         const currentLine = lines[idx];
 
-        // If typewriter is still typing and enabled, skip to show full text
-        if (typing && !typeComplete && GameStore.isTypewriterEnabled()) {
-          setIsTyping(false);
-          setTypewriterComplete(true);
-          return;
-        }
-
+        // Check non-text content types FIRST (before typewriter check)
         // Handle pause type - start pause but allow skip
         if (currentLine?.type === 'pause') {
           setIsPaused(true);
@@ -392,6 +386,14 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
             const result = engineRef.current?.advance();
             if (result) handleResult(result);
           }
+          return;
+        }
+
+        // NOW check typewriter (only for text content)
+        // If typewriter is still typing and enabled, skip to show full text
+        if (typing && !typeComplete && GameStore.isTypewriterEnabled()) {
+          setIsTyping(false);
+          setTypewriterComplete(true);
           return;
         }
 
