@@ -12,6 +12,17 @@ build/
 !src/**/*.tsx
 !src/**/*.ts
 
+# Node SEA build artifacts
+sea-prep.blob
+*.blob
+
+# Standalone executables
+*.exe
+beggars-sect-*
+
+# Release builds (distributed separately)
+release/dist/
+
 # Environment
 .env
 .env.local
@@ -39,3 +50,8 @@ coverage/
 # Save files
 saves/
 *.save
+
+# Temporary files
+*.tmp
+*.temp
+.cache/

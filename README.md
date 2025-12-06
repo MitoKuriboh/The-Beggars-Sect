@@ -6,201 +6,202 @@
 
 ---
 
-## 🎮 About
+## Quick Start
+
+```bash
+# Install dependencies
+npm install
+
+# Run in development mode
+npm run dev
+
+# Build and run
+npm run build
+npm start
+```
+
+**Download standalone executables:** [beggars-sect.genkaw.com/download](https://beggars-sect.genkaw.com/download)
+
+---
+
+## About
 
 **The Beggars Sect** is the first game in the Martial Arts Haven multiverse - an ecosystem of interconnected games exploring different realms, teams, and characters.
 
 Follow Li Wei's journey from a confused stranger spawned into an unknown world, to a master of the mysterious Beggars Sect palm techniques.
 
-**Genre:** Wuxia Turn-Based RPG
-**Platform:** CLI (Command Line Interface)
-**Status:** Week 1 Foundation Complete - Playable Demo Available
-**Playtime:** ~5-6 hours (first playthrough), ~12-15 hours (all content)
-**Created:** December 2024
-**Download:** [beggars-sect.genkaw.com/download](https://beggars-sect.genkaw.com/download)
+| | |
+|---|---|
+| **Genre** | Wuxia Turn-Based RPG |
+| **Platform** | CLI (Terminal) |
+| **Version** | 0.2.0 |
+| **Status** | Week 4 Complete - Save System |
+| **Playtime** | ~5-6 hours (first playthrough) |
 
 ---
 
-## 🌟 Vision
+## Project Structure
 
-This game showcases what's possible when AI automation meets game development:
-- **Procedural content** via Claude AI
-- **Living world** via n8n workflows
-- **Dynamic storytelling** with unique playthroughs
-- **Discovery-based progression** inspired by Age of Wushu & King of Kings 3
-
-**Part of the Genkaw automation showcase portfolio.**
-
----
-
-## 📚 Documentation
-
-### Story (docs/story/)
-- **[STORY_STRUCTURE.md](docs/story/STORY_STRUCTURE.md)** - Non-linear narrative design, 3 paths, 3 endings
-- **[PROLOGUE.md](docs/story/PROLOGUE.md)** - Tutorial and awakening (~20-25 min)
-- **[CHAPTER_1.md](docs/story/CHAPTER_1.md)** - Streets of the Forgotten (~90-120 min)
-- **[CHAPTER_2.md](docs/story/CHAPTER_2.md)** - The Law's Long Reach (~120-150 min)
-- **[CHAPTER_3.md](docs/story/CHAPTER_3.md)** - The Hollow at the Summit (~90-120 min)
-
-### Systems (docs/systems/)
-- **[COMBAT_SYSTEM.md](docs/systems/COMBAT_SYSTEM.md)** - ATB combat, stances, chi
-- **[TECHNIQUES.md](docs/systems/TECHNIQUES.md)** - 15 techniques with full stats
-- **[ENEMIES.md](docs/systems/ENEMIES.md)** - 8 enemies + 3 bosses
-
-### Design (docs/design/)
-- **[GAME_DESIGN.md](docs/design/GAME_DESIGN.md)** - Vision and overview
-- **[TECH_DESIGN.md](docs/design/TECH_DESIGN.md)** - Implementation architecture
-
-### Lore (docs/lore/)
-- **[WORLDBUILDING.md](docs/lore/WORLDBUILDING.md)** - Universe bible
-- **[CHI_SYSTEM.md](docs/lore/CHI_SYSTEM.md)** - Eight aspects, inverse chi
-- **[SECTS.md](docs/lore/SECTS.md)** - 12 sects of the Martial Arts Haven
-- **[HISTORY.md](docs/lore/HISTORY.md)** - Full timeline
-
----
-
-## 🎯 Core Features
-
-### Story
-- **Zero to Hero:** Li Wei's transformation from lost stranger to martial master
-- **Non-Linear Narrative:** 3 paths (Blade, Stream, Shadow) with meaningful choices
-- **Three Endings:** Destroyer, Reformer, or Wanderer - earned through gameplay
-- **Mystery & Discovery:** Uncover the secrets of Martial Arts Haven
-- **Cliffhanger Ending:** Sets up the sequel - Li Wei's wandering journey
-
-### Combat
-- **Turn-Based Strategy:** Inspired by FFX, Pokemon, Digimon
-- **Technique Discovery:** Find skills through exploration, not leveling
-- **Master Multiple Styles:** Learn various palm techniques from different elders
-- **AI-Enhanced Enemies:** Unique encounters every playthrough
-
-### Progression
-- **No Traditional Levels:** Grow through mastery and discovery
-- **Cultivation System:** Age of Wushu inspired growth
-- **Skill Discovery:** King of Kings 3 style exploration rewards
-- **Multiple Paths:** Different techniques lead to different playstyles
-
-### Automation Magic
-- **Procedural Content:** Claude AI generates unique variations
-- **Living World:** n8n workflows create dynamic events
-- **Smart Opponents:** AI-powered enemy behavior
-- **Community Integration:** Shared world influenced by all players
+```
+the-beggars-sect/
+│
+├── src/                        # Source code (~6,800 lines)
+│   ├── index.tsx               # Entry point
+│   ├── game/                   # Game logic
+│   │   ├── combat/             # ATB combat engine, AI, techniques
+│   │   ├── state/              # GameStore, SaveManager
+│   │   ├── story/              # StoryEngine, chapters
+│   │   └── factories/          # Character/enemy creation
+│   ├── types/                  # TypeScript definitions
+│   ├── ui/                     # Ink/React components
+│   │   ├── combat/             # Combat UI (8 components)
+│   │   └── story/              # Story UI (4 components)
+│   ├── data/                   # Data files (scaffold)
+│   ├── automation/             # AI integration (scaffold)
+│   └── utils/                  # Utilities (scaffold)
+│
+├── docs/                       # Documentation (~15,000 lines)
+│   ├── README.md               # Documentation index
+│   ├── design/                 # Game & tech design
+│   ├── systems/                # Combat, techniques, enemies
+│   ├── story/                  # Narrative scripts
+│   ├── lore/                   # World building (11 files)
+│   ├── planning/               # TODO, changelog, roadmap
+│   ├── reference/              # Formulas
+│   └── dev/                    # Code review, guidelines
+│
+├── assets/                     # Game assets (placeholder)
+├── release/                    # Release packaging
+│
+├── package.json                # Project config
+├── tsconfig.json               # TypeScript config
+└── sea-config.json             # Node SEA config
+```
 
 ---
 
-## 🏗️ Tech Stack
+## Features
 
-**Core:**
-- Node.js + TypeScript
-- Ink (React for CLIs)
+### Implemented (v0.2.0)
 
-**Automation:**
-- Claude AI API (content generation)
-- n8n workflows (living world)
+- **ATB Combat System** - DEX-based turn order, 7-turn preview
+- **3 Stances** - Flowing, Weathered, Hungry with stat modifiers
+- **Combo System** - Starter → Followup → Finisher chains
+- **8 Player Techniques** - Palm strikes, guards, counters
+- **12 Enemy Types** - 9 regular + 3 bosses with phases
+- **AI Controller** - Pattern-based enemy behavior
+- **Non-Linear Story** - 3 paths (Blade/Stream/Shadow), 3 endings
+- **Prologue Chapter** - 7 scenes, ~25 minutes
+- **Save System** - 3 slots + auto-save, file persistence
+- **Full UI** - Combat screen, story renderer, menus
 
-**Libraries:**
-- `ink` - Beautiful TUI framework
+### Planned
+
+- Chapter 1-3 implementation
+- Item system
+- Location exploration
+- Claude AI content generation
+- n8n workflow integration
+
+---
+
+## Tech Stack
+
+| Category | Technology |
+|----------|------------|
+| Runtime | Node.js 18+ |
+| Language | TypeScript 5.3 |
+| UI Framework | Ink 3.2 (React for CLI) |
+| State | Custom singleton store |
+| Build | tsc, esbuild, pkg |
+
+### Dependencies
+
+- `ink` - React for command line
+- `react` - UI framework
+- `ink-select-input` - Selection menus
 - `chalk` - Terminal colors
-- `boxen` - Boxes and borders
-- Various CLI utilities
+- `boxen` - Box drawing
+- `figlet` - ASCII art
 
 ---
 
-## 🎨 Aesthetic
+## Documentation
 
-**Wuxia Epic meets Urban Fantasy:**
-- Traditional Chinese beggar aesthetic
-- Modern/futuristic city setting
-- Ancient martial arts in urban landscape
-- Inspirational zero-to-hero tone
+| Need to... | Go to |
+|------------|-------|
+| Understand the codebase | [docs/dev/CODE_REVIEW.md](docs/dev/CODE_REVIEW.md) |
+| See implementation tasks | [docs/planning/TODO.md](docs/planning/TODO.md) |
+| Read game design | [docs/design/GAME_DESIGN.md](docs/design/GAME_DESIGN.md) |
+| Understand combat | [docs/systems/COMBAT_SYSTEM.md](docs/systems/COMBAT_SYSTEM.md) |
+| Look up techniques | [docs/systems/TECHNIQUES.md](docs/systems/TECHNIQUES.md) |
+| Read story scripts | [docs/story/](docs/story/) |
+| Explore world lore | [docs/lore/](docs/lore/) |
 
-**Visual Style:**
-- ASCII art for key moments
-- Beautiful TUI components
-- Clean, readable combat displays
-- Atmospheric text descriptions
+See [docs/README.md](docs/README.md) for full documentation index.
 
 ---
 
-## 🗺️ The Martial Arts Haven Universe
+## Development
 
-**Universal Law:** Individuals with combat aptitude are recognized by the universe itself. Those with low aptitude spawn in other realities.
+### Scripts
+
+```bash
+npm run dev      # Hot-reload development
+npm run build    # TypeScript compilation
+npm start        # Run compiled game
+npm run lint     # ESLint check
+npm run package  # Build standalone executables
+```
+
+### Build Targets
+
+| Platform | Output |
+|----------|--------|
+| Windows | `beggars-sect-win.exe` |
+| macOS | `beggars-sect-macos` |
+| Linux | `beggars-sect-linux` |
+
+---
+
+## Roadmap
+
+| Phase | Status | Details |
+|-------|--------|---------|
+| Week 1: Foundation | Complete | TypeScript, Ink, project structure |
+| Week 2: Combat | Complete | ATB engine, techniques, AI |
+| Week 3: Story | Complete | Non-linear narrative, 3 paths |
+| Week 4: Polish | Complete | Save system, v0.2.0 |
+| Week 5+: Content | Planned | Chapters, items, locations |
+
+---
+
+## The Martial Arts Haven
+
+**Universal Law:** Individuals with combat aptitude are recognized by the universe itself.
 
 **The Beggars Sect:** Mysterious, vague, spread out. Looked down upon by most, but the wise know better - you never know if you're facing a hidden master.
 
-**Factions:**
-- The Beggars Sect (protagonist's home)
-- Urban Thugs (street-level fighters)
-- Hypermodern Spartans (futuristic authority)
-- Lone Wolves (independent masters)
-- Many more to discover...
-
-**This is just the beginning.** Future games will explore other realms, other characters, other stories in the Martial Arts Haven multiverse.
+**Three Paths:**
+- **Blade** - Direct confrontation → Destroyer ending
+- **Stream** - Adaptation, flow → Reformer ending
+- **Shadow** - Cunning, indirect → Wanderer ending
 
 ---
 
-## 📅 Development Status
-
-### Current Phase: Week 1 Foundation COMPLETE
-
-**Design Phase:**
-- ✅ Core vision established
-- ✅ Non-linear story with 3 paths and 3 endings
-- ✅ Combat system fully designed (ATB, stances, combos)
-- ✅ 15 techniques with full stats
-- ✅ 11 enemies with AI patterns (8 regular + 3 bosses)
-- ✅ 15,000+ lines of design documentation
-
-**Week 1 Implementation:**
-- ✅ TypeScript interfaces (all types)
-- ✅ GameStore singleton (save/load)
-- ✅ CharacterFactory (player + enemies + bosses)
-- ✅ CLI shell with Ink (title, menu, stats)
-- ✅ Standalone executables (Windows, macOS, Linux)
-- ✅ GitHub Release v0.1.0
-- ✅ Download page live
-
-**Next:** Week 2 - ATB Combat Engine
-
-### Roadmap
-
-**Phase 1:** Foundation & Design (Weeks 1-2) ✅ COMPLETE
-**Phase 2:** Core Systems (Weeks 3-4) ⏳ IN PROGRESS
-**Phase 3:** Content Creation (Weeks 5-6)
-**Phase 4:** Automation Integration (Weeks 7-8)
-**Phase 5:** Polish & Expand (Weeks 9-10)
-**Phase 6:** Showcase & Release (Weeks 11-12)
-
----
-
-## 🎮 Future Plans
-
-- Web version (port to browser)
-- Embed on genkaw.com
-- Multiple difficulty modes
-- Speedrun mode
-- New Game+ features
-- **Sequel:** Li Wei's wandering journey (Dog Beating Staff quest)
-
----
-
-## 🤝 Part of Genkaw
-
-This game is a showcase project demonstrating automation + AI capabilities.
+## Credits
 
 **Creator:** Mito (Mitchell Grebe)
-**Brand:** Genkaw
+**AI Assistance:** Claude (Anthropic)
 **Website:** [genkaw.com](https://genkaw.com)
-**Universe:** Martial Arts Haven (Original IP)
+**Game Site:** [beggars-sect.genkaw.com](https://beggars-sect.genkaw.com)
 
 ---
 
-## 📜 License
+## License
 
-TBD - Original IP owned by Mitchell Grebe
+UNLICENSED - Original IP owned by Mitchell Grebe
 
 ---
 
 **The journey from beggar to legend begins...**
-
-🥋 **THE BEGGARS SECT** 🥋
