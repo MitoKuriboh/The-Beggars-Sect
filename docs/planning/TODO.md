@@ -1,21 +1,24 @@
 # The Beggars Sect - TODO & Roadmap
 
 **Last Updated:** 2025-12-06
-**Current Phase:** IMPLEMENTATION - Week 1 Foundation COMPLETE
+**Current Phase:** PHASE 2 COMPLETE - Moving to Phase 3 Content & AI
 **Design Status:** COMPLETE - See `DESIGN_STATUS.md`
 
 ---
 
-## Current State: WEEK 1 FOUNDATION COMPLETE
+## Current State: PHASE 2 CORE ENGINE COMPLETE
 
 ### What's Done
 - ✅ TypeScript interfaces (all types defined)
-- ✅ GameStore singleton (save/load, state management)
+- ✅ GameStore singleton (save/load, state management, story sync)
 - ✅ CharacterFactory (player + 11 enemies + 3 bosses)
 - ✅ CLI shell with Ink (title screen, menus, navigation)
 - ✅ Standalone executables (Windows, macOS, Linux)
 - ✅ Download page on beggars-sect.genkaw.com
-- ✅ GitHub Release v0.1.0 published
+- ✅ GitHub Release v0.1.0 (Week 1) + v0.2.0 (Week 4)
+- ✅ ATB Combat Engine (15+ techniques, AI, full UI)
+- ✅ Story Integration (7-scene Prologue, story UI)
+- ✅ File-based save system with auto-save
 
 ### What's Built
 Design phase complete with 15,000+ lines of documentation:
@@ -32,7 +35,7 @@ Design phase complete with 15,000+ lines of documentation:
 
 ---
 
-## Phase 2: Core Systems
+## Phase 2: Core Systems ✅ COMPLETE
 
 ### Week 1: Foundation ✅ COMPLETE
 - [x] Set up TypeScript + Ink project
@@ -41,27 +44,31 @@ Design phase complete with 15,000+ lines of documentation:
 - [x] CharacterFactory with all templates
 - [x] Basic CLI shell (title, menu, new game, stats, credits)
 - [x] Standalone executable builds (pkg)
-- [x] GitHub Release + download page
+- [x] GitHub Release v0.1.0 + download page
 
-### Week 2: Combat Engine (NEXT)
-- [ ] ATB turn order system
-- [ ] Action system (7 actions: attack, technique, defend, chi-focus, item, stance, flee)
-- [ ] Damage calculator with formulas
-- [ ] Chi management (generation, consumption, inverse chi)
+### Week 2: Combat Engine ✅ COMPLETE
+- [x] ATB turn order system (CombatEngine.ts)
+- [x] Action system (7 actions: attack, technique, defend, chi-focus, item, stance, flee)
+- [x] Damage calculator with formulas
+- [x] Chi management (generation, consumption)
+- [x] TechniqueRegistry (15+ techniques with combos)
+- [x] AIController (pattern-based AI, boss phases)
+- [x] Full combat UI (menus, turn queue, health bars)
 
-### Week 3: Techniques & Stances
-- [ ] Technique database (all 15 techniques)
-- [ ] Stance system (3 stances with modifiers)
-- [ ] Mastery tracking
-- [ ] Combo system (basic)
+### Week 3: Story Integration ✅ COMPLETE
+- [x] StoryEngine (progression, state, choices)
+- [x] Full Prologue (7 scenes, ~1000 lines)
+- [x] Story UI (content, choices, exploration)
+- [x] Story ↔ Combat integration
 
-### Week 4: Integration
-- [ ] Combat UI (Ink components)
-- [ ] Enemy AI (basic patterns)
-- [ ] Test combat loop
-- [ ] Balance pass
+### Week 4: Save System ✅ COMPLETE
+- [x] SaveManager (file persistence)
+- [x] Story state sync with GameStore
+- [x] Save/Load UI (3 slots + auto-save)
+- [x] Auto-save triggers
+- [x] GitHub Release v0.2.0
 
-**Exit Criteria:** Playable combat prototype that feels good
+**Exit Criteria:** Playable game with save/load ✅ ACHIEVED
 
 ---
 

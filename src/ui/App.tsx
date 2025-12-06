@@ -7,13 +7,14 @@ import { GameStore } from '../game/state/GameStore';
 import { createPlayer, createEnemy } from '../game/factories/CharacterFactory';
 import { CombatScreen } from './combat/CombatScreen';
 import { StoryScreen } from './story/StoryScreen';
+import { SaveLoadScreen } from './SaveLoadScreen';
 import type { Character, Enemy, StoryState } from '../types/index';
 
 // =============================================================================
 // TYPES
 // =============================================================================
 
-type Screen = 'title' | 'menu' | 'newgame' | 'stats' | 'story' | 'combat' | 'credits';
+type Screen = 'title' | 'menu' | 'newgame' | 'stats' | 'story' | 'combat' | 'credits' | 'save' | 'load';
 
 interface MenuItem {
   label: string;
@@ -66,19 +67,19 @@ const TitleScreen: React.FC<{ onContinue: () => void }> = ({ onContinue }) => {
 const MainMenu: React.FC<{ onSelect: (screen: Screen) => void }> = ({ onSelect }) => {
   const { exit } = useApp();
   const isGameActive = GameStore.isInitialized();
+  const hasSaves = GameStore.getSaveSlots().length > 0;
 
-  const menuItems: MenuItem[] = isGameActive
-    ? [
-        { label: 'Continue', value: 'stats' },
-        { label: 'New Game', value: 'newgame' },
-        { label: 'Credits', value: 'credits' },
-        { label: 'Quit', value: 'quit' },
-      ]
-    : [
-        { label: 'New Game', value: 'newgame' },
-        { label: 'Credits', value: 'credits' },
-        { label: 'Quit', value: 'quit' },
-      ];
+  const menuItems: MenuItem[] = [];
+
+  if (isGameActive) {
+    menuItems.push({ label: 'Continue', value: 'stats' });
+  }
+  menuItems.push({ label: 'New Game', value: 'newgame' });
+  if (hasSaves) {
+    menuItems.push({ label: 'Load Game', value: 'load' });
+  }
+  menuItems.push({ label: 'Credits', value: 'credits' });
+  menuItems.push({ label: 'Quit', value: 'quit' });
 
   const handleSelect = useCallback(
     (item: MenuItem) => {
@@ -175,14 +176,17 @@ const StatsScreen: React.FC<{
   onBack: () => void;
   onCombat: () => void;
   onStory: () => void;
+  onSave: () => void;
 }> = ({
   onBack,
   onCombat,
   onStory,
+  onSave,
 }) => {
   const menuItems: MenuItem[] = [
     { label: '📖 Play Story (Prologue)', value: 'story' },
     { label: '⚔️  Test Combat', value: 'combat' },
+    { label: '💾 Save Game', value: 'save' },
     { label: 'Back to Menu', value: 'back' },
   ];
 
@@ -194,9 +198,11 @@ const StatsScreen: React.FC<{
         onCombat();
       } else if (item.value === 'story') {
         onStory();
+      } else if (item.value === 'save') {
+        onSave();
       }
     },
-    [onBack, onCombat, onStory]
+    [onBack, onCombat, onStory, onSave]
   );
 
   if (!GameStore.isInitialized()) {
@@ -319,6 +325,8 @@ export const App: React.FC = () => {
   const goToMenu = useCallback(() => setScreen('menu'), []);
   const goToStats = useCallback(() => setScreen('stats'), []);
   const goToStory = useCallback(() => setScreen('story'), []);
+  const goToSave = useCallback(() => setScreen('save'), []);
+  const goToLoad = useCallback(() => setScreen('load'), []);
 
   const startCombat = useCallback(() => {
     // Create a test enemy
@@ -388,7 +396,7 @@ export const App: React.FC = () => {
         <NewGameScreen onComplete={goToStats} onBack={goToMenu} />
       )}
       {screen === 'stats' && (
-        <StatsScreen onBack={goToMenu} onCombat={startCombat} onStory={goToStory} />
+        <StatsScreen onBack={goToMenu} onCombat={startCombat} onStory={goToStory} onSave={goToSave} />
       )}
       {screen === 'story' && GameStore.isInitialized() && (
         <StoryScreen
@@ -405,6 +413,12 @@ export const App: React.FC = () => {
         />
       )}
       {screen === 'credits' && <CreditsScreen onBack={goToMenu} />}
+      {screen === 'save' && (
+        <SaveLoadScreen mode="save" onComplete={goToStats} onBack={goToStats} />
+      )}
+      {screen === 'load' && (
+        <SaveLoadScreen mode="load" onComplete={goToStats} onBack={goToMenu} />
+      )}
     </Box>
   );
 };

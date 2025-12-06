@@ -15,6 +15,7 @@ import type {
   ExplorationArea,
 } from '../../types/index';
 import { StoryEngine, PROLOGUE } from '../../game/story';
+import { GameStore } from '../../game/state/GameStore';
 import { createEnemy } from '../../game/factories/CharacterFactory';
 
 import { ContentBlock } from './ContentRenderer';
@@ -64,13 +65,25 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
 
   // Initialize story engine
   useEffect(() => {
-    const engine = new StoryEngine();
+    const engine = new StoryEngine((newState) => {
+      // Sync state changes to GameStore
+      GameStore.setStoryState(newState);
+    });
     engine.registerChapter(PROLOGUE);
     engineRef.current = engine;
 
-    // Start the story
-    const result = engine.startStory();
-    handleResult(result);
+    // Check for saved story state
+    const savedState = GameStore.getStoryState();
+    if (savedState) {
+      // Restore from saved state
+      engine.setState(savedState);
+      const result = engine.advance();
+      handleResult(result);
+    } else {
+      // Start fresh
+      const result = engine.startStory();
+      handleResult(result);
+    }
   }, []);
 
   // Handle story result
@@ -94,6 +107,8 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
         setContentIndex((result.content?.length || 1) - 1);
         setChoices(result.choices || []);
         setChoicePrompt('');
+        // Auto-save before important choices
+        GameStore.autoSave();
         break;
 
       case 'exploration':
@@ -103,6 +118,8 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
 
       case 'combat':
         setPhase('combat');
+        // Auto-save before combat
+        GameStore.autoSave();
         // Create enemy instances
         const enemies = (result.enemies || []).map((id) => createEnemy(id));
         onCombatStart(enemies);
@@ -115,10 +132,14 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
           { type: 'instruction', text: 'Press [SPACE] to continue to the next chapter' },
         ]);
         setContentIndex(1);
+        // Auto-save at chapter end
+        GameStore.autoSave();
         break;
 
       case 'game-end':
         setPhase('game-end');
+        // Final auto-save
+        GameStore.autoSave();
         onGameEnd(result.state);
         break;
     }

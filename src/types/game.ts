@@ -5,6 +5,7 @@
 
 import type { Character } from './character';
 import type { Inventory } from './item';
+import type { StoryState } from './story';
 
 // =============================================================================
 // STORY PROGRESS
@@ -152,6 +153,7 @@ export interface GameState {
 
   // Progression
   storyProgress: StoryProgress;
+  storyState?: StoryState;    // Full story engine state (for save/load)
   currentLocation: string;    // Location ID
 
   // Unlocks

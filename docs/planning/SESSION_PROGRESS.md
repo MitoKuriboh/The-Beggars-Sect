@@ -1,9 +1,12 @@
-# Session Progress - December 5, 2025
+# Session Progress - December 6, 2025
 
-## Implementation Phase: IN PROGRESS
+## Implementation Phase: PHASE 2 COMPLETE
 
-Week 1 Foundation complete. Core engine infrastructure built.
-Design documentation complete. Moving to combat system implementation.
+All 4 weeks of Core Engine phase complete!
+- Week 1: Foundation (types, state, factories, CLI shell)
+- Week 2: ATB Combat Engine (15+ techniques, AI, full UI)
+- Week 3: Story Integration (7-scene Prologue, story UI)
+- Week 4: Save System (file persistence, auto-save, UI)
 
 ---
 
@@ -129,12 +132,46 @@ Design documentation complete. Moving to combat system implementation.
 
 ---
 
-## Next Phase: Week 2 Combat Engine
+## Week 2 Combat Engine: COMPLETE ✓
+
+### Code Created (Session 14)
+- **CombatEngine.ts** - ATB turn system, damage calculation, combo tracking
+- **TechniqueRegistry.ts** - 15+ techniques with combo roles
+- **AIController.ts** - Pattern-based enemy AI with boss phases
+- **Combat UI** - CombatScreen, ActionMenu, TechniqueMenu, StanceMenu, TargetMenu, TurnQueue, CombatLog, HealthBar
+
+---
+
+## Week 3 Story Integration: COMPLETE ✓
+
+### Code Created (Session 15)
+- **StoryEngine.ts** - Scene progression, state management, choice handling
+- **story.ts** - Type definitions for content, scenes, choices
+- **chapters/prologue.ts** - Full 7-scene Prologue (~1000 lines)
+- **Story UI** - StoryScreen, ContentRenderer, ChoiceMenu, ExplorationMenu
+
+---
+
+## Week 4 Save System: COMPLETE ✓
+
+### Code Created (Session 16)
+- **SaveManager.ts** - File persistence to ~/.beggars-sect/saves/
+- **SaveLoadScreen.tsx** - UI for save slot management
+- **GameStore updates** - Story state sync, file-based save/load
+- **Auto-save** - Triggers at choices, combat, chapter ends
+
+### Releases
+- **v0.1.0** - Initial playable build (Week 1)
+- **v0.2.0** - Save system + story integration (Week 4)
+
+---
+
+## Next Phase: Phase 3 Content & AI
 
 Continue implementation with:
-1. Build ATB turn order system (`TurnOrderManager.ts`)
-2. Implement action execution (`ActionExecutor.ts`)
-3. Add damage calculation with formulas from FORMULAS.md
-4. Build combo chain tracking
+1. Implement Chapter 1 scenes (using CHAPTER_1.md)
+2. Add remaining Chapter 1 enemies
+3. Claude API integration for enemy dialogue variation
+4. Path branching system (Blade/Stream/Shadow)
 
-See **TODO.md** and **CORE_ENGINE_PLAN.md** for full implementation roadmap.
+See **TODO.md** for full implementation roadmap.

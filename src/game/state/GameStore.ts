@@ -6,6 +6,7 @@
 import type {
   GameState,
   StoryProgress,
+  StoryState,
   GameFlags,
   GameStats,
   SaveData,
@@ -22,6 +23,7 @@ import {
 } from '../../types/game';
 
 import { createInventory } from '../../types/item';
+import { SaveManager, SaveSlot } from './SaveManager';
 
 // =============================================================================
 // GAME STORE
@@ -358,7 +360,37 @@ class GameStoreClass {
   }
 
   // ---------------------------------------------------------------------------
-  // PERSISTENCE
+  // STORY STATE SYNC
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Get story state (for StoryEngine)
+   */
+  getStoryState(): StoryState | undefined {
+    return this.state?.storyState;
+  }
+
+  /**
+   * Set story state (from StoryEngine)
+   */
+  setStoryState(storyState: StoryState): void {
+    const state = this.getState();
+    state.storyState = storyState;
+
+    // Also update simplified storyProgress for UI display
+    state.storyProgress.scene = storyState.currentScene;
+    state.storyProgress.completedScenes = storyState.completedScenes;
+    state.storyProgress.choices = storyState.choiceHistory.reduce((acc, ch) => {
+      acc[ch.sceneId] = ch.choiceId;
+      return acc;
+    }, {} as Record<string, string>);
+
+    state.updatedAt = Date.now();
+    this.notifyListeners();
+  }
+
+  // ---------------------------------------------------------------------------
+  // PERSISTENCE (In-Memory)
   // ---------------------------------------------------------------------------
 
   /**
@@ -400,6 +432,94 @@ class GameStoreClass {
   reset(): void {
     this.state = null;
     this.notifyListeners();
+  }
+
+  // ---------------------------------------------------------------------------
+  // FILE-BASED PERSISTENCE
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Save game to a file slot
+   */
+  saveToSlot(slot: number, name?: string): { success: boolean; error?: string } {
+    if (!this.state) {
+      return { success: false, error: 'No game in progress' };
+    }
+
+    const data = this.save();
+    const meta: Omit<SaveSlot, 'slot'> = {
+      name: name || `Save ${slot}`,
+      chapter: `Chapter ${this.state.storyProgress.chapter}`,
+      scene: this.state.storyProgress.scene,
+      playtime: this.state.stats.playTime,
+      savedAt: Date.now(),
+    };
+
+    return SaveManager.save(slot, data, meta);
+  }
+
+  /**
+   * Load game from a file slot
+   */
+  loadFromSlot(slot: number): { success: boolean; error?: string } {
+    const result = SaveManager.load(slot);
+    if (!result.success || !result.data) {
+      return { success: false, error: result.error || 'Failed to load' };
+    }
+
+    return this.load(result.data);
+  }
+
+  /**
+   * Auto-save current game
+   */
+  autoSave(): { success: boolean; error?: string } {
+    if (!this.state) {
+      return { success: false, error: 'No game in progress' };
+    }
+
+    const data = this.save();
+    const meta: Omit<SaveSlot, 'slot' | 'name'> = {
+      chapter: `Chapter ${this.state.storyProgress.chapter}`,
+      scene: this.state.storyProgress.scene,
+      playtime: this.state.stats.playTime,
+      savedAt: Date.now(),
+    };
+
+    return SaveManager.autoSave(data, meta);
+  }
+
+  /**
+   * Load from auto-save
+   */
+  loadAutoSave(): { success: boolean; error?: string } {
+    const result = SaveManager.loadAutoSave();
+    if (!result.success || !result.data) {
+      return { success: false, error: result.error || 'No auto-save found' };
+    }
+
+    return this.load(result.data);
+  }
+
+  /**
+   * Get all save slots
+   */
+  getSaveSlots(): SaveSlot[] {
+    return SaveManager.listSlots();
+  }
+
+  /**
+   * Check if auto-save exists
+   */
+  hasAutoSave(): boolean {
+    return SaveManager.hasAutoSave();
+  }
+
+  /**
+   * Delete a save slot
+   */
+  deleteSlot(slot: number): { success: boolean; error?: string } {
+    return SaveManager.delete(slot);
   }
 
   // ---------------------------------------------------------------------------
