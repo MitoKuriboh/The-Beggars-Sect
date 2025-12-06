@@ -1,6 +1,6 @@
 {
   "name": "the-beggars-sect",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A CLI RPG set in the Martial Arts Haven universe",
   "main": "dist/index.js",
   "bin": "dist/index.js",

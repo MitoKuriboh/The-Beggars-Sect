@@ -7,6 +7,17 @@ All notable changes to The Beggars Sect project.
 
 ---
 
+## [0.3.1] - 2025-12-06
+
+### Fixed
+- **Story flow: Auto-skip effect lines**
+  - Effect lines (fade, flash, shake) no longer require SPACE to skip
+  - Added useEffect to auto-advance through effect lines on load
+  - Added effect handling in SPACE input handler
+  - Prologue now starts immediately with first dialogue (no 5x SPACE needed)
+
+---
+
 ## [0.3.0] - 2025-12-06
 
 ### Fixed - Phase 1 Critical Fixes

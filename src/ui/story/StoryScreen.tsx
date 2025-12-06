@@ -257,6 +257,18 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
       return;
     }
 
+    // Auto-skip effect lines (they don't render content)
+    if (currentLine?.type === 'effect') {
+      if (contentIndex < content.length - 1) {
+        setContentIndex((i) => i + 1);
+      } else {
+        // End of content block, advance story
+        const result = engineRef.current?.advance();
+        if (result) handleResult(result);
+      }
+      return;
+    }
+
     // Advance to next line
     if (contentIndex < content.length - 1) {
       setContentIndex((i) => i + 1);
@@ -264,6 +276,20 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
       // End of content block, advance story
       const result = engineRef.current?.advance();
       if (result) handleResult(result);
+    }
+  }, [content, contentIndex, isPaused, handleResult]);
+
+  // Auto-skip effect lines when content changes
+  useEffect(() => {
+    const currentLine = content[contentIndex];
+    if (currentLine?.type === 'effect' && !isPaused) {
+      // Auto-advance through effect lines
+      if (contentIndex < content.length - 1) {
+        setContentIndex((i) => i + 1);
+      } else {
+        const result = engineRef.current?.advance();
+        if (result) handleResult(result);
+      }
     }
   }, [content, contentIndex, isPaused, handleResult]);
 
@@ -353,6 +379,19 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
               if (result) handleResult(result);
             }
           }, currentLine.duration || 1000);
+          return;
+        }
+
+        // Auto-skip effect lines (they don't display content)
+        if (currentLine?.type === 'effect') {
+          if (idx < lines.length - 1) {
+            setContentIndex(idx + 1);
+            setIsTyping(true);
+            setTypewriterComplete(false);
+          } else {
+            const result = engineRef.current?.advance();
+            if (result) handleResult(result);
+          }
           return;
         }
 
