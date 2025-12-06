@@ -53,15 +53,15 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
   const engineRef = useRef<StoryEngine | null>(null);
 
   // State
-  const [phase, setPhase] = useState<StoryPhase>('content');
-  const [content, setContent] = useState<ContentLine[]>([]);
-  const [contentIndex, setContentIndex] = useState(0);
+  const [phase, _setPhase] = useState<StoryPhase>('content');
+  const [content, _setContent] = useState<ContentLine[]>([]);
+  const [contentIndex, _setContentIndex] = useState(0);
   const [choices, setChoices] = useState<Choice[]>([]);
   const [choicePrompt, setChoicePrompt] = useState<string>('');
   const [areas, setAreas] = useState<ExplorationArea[]>([]);
   const [sceneTitle, setSceneTitle] = useState('');
   const [location, setLocation] = useState('');
-  const [isPaused, setIsPaused] = useState(false);
+  const [isPaused, _setIsPaused] = useState(false);
 
   // Refs for input handling (avoid stale closures)
   const phaseRef = useRef(phase);
@@ -69,11 +69,32 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
   const contentIndexRef = useRef(contentIndex);
   const isPausedRef = useRef(isPaused);
 
-  // Keep refs in sync
-  useEffect(() => { phaseRef.current = phase; }, [phase]);
-  useEffect(() => { contentRef.current = content; }, [content]);
-  useEffect(() => { contentIndexRef.current = contentIndex; }, [contentIndex]);
-  useEffect(() => { isPausedRef.current = isPaused; }, [isPaused]);
+  // Sync state setters - update ref immediately, then state
+  const setPhase = useCallback((value: StoryPhase) => {
+    phaseRef.current = value;
+    _setPhase(value);
+  }, []);
+
+  const setContent = useCallback((value: ContentLine[]) => {
+    contentRef.current = value;
+    _setContent(value);
+  }, []);
+
+  const setContentIndex = useCallback((value: number | ((prev: number) => number)) => {
+    if (typeof value === 'function') {
+      const newValue = value(contentIndexRef.current);
+      contentIndexRef.current = newValue;
+      _setContentIndex(newValue);
+    } else {
+      contentIndexRef.current = value;
+      _setContentIndex(value);
+    }
+  }, []);
+
+  const setIsPaused = useCallback((value: boolean) => {
+    isPausedRef.current = value;
+    _setIsPaused(value);
+  }, []);
 
   // Initialize story engine
   useEffect(() => {
