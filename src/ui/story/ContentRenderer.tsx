@@ -66,7 +66,7 @@ export const ContentRenderer: React.FC<ContentRendererProps> = ({ line }) => {
       return (
         <Box marginY={2} flexDirection="column" alignItems="center">
           <Text color="gray">{'═'.repeat(40)}</Text>
-          {label && (
+          {label.length > 0 && (
             <Text color="white" bold>
               {' '.repeat(padding)}{label}
             </Text>

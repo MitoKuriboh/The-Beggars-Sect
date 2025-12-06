@@ -42,7 +42,7 @@ export const ChoiceMenu: React.FC<ChoiceMenuProps> = ({
 
   return (
     <Box flexDirection="column" marginTop={1}>
-      {prompt && (
+      {prompt && prompt.length > 0 && (
         <Box marginBottom={1}>
           <Text color="yellow" bold>
             {prompt}

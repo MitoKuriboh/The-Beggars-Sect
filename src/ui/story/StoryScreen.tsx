@@ -213,7 +213,7 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
         <Text bold color="magenta">
           ═══ {sceneTitle.toUpperCase()} ═══
         </Text>
-        {location && (
+        {location.length > 0 && (
           <Text dimColor>
             📍 {location}
           </Text>

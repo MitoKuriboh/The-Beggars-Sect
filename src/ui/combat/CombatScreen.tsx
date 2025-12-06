@@ -337,7 +337,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
       </Box>
 
       {/* Message */}
-      {message && (
+      {message && message.length > 0 && (
         <Box marginTop={1}>
           <Text color="white">{message}</Text>
         </Box>
