@@ -1,7 +1,7 @@
 # The Beggars Sect - Documentation
 
 **A CLI RPG set in the Martial Arts Haven**
-**Version:** 0.2.0 | **Last Updated:** 2025-12-06 | **Status:** Playable Build
+**Version:** 0.2.1 | **Last Updated:** 2025-12-06 | **Status:** Playable Build + CI/CD Active
 
 ---
 
@@ -10,6 +10,7 @@
 | I want to... | Go to |
 |--------------|-------|
 | **Understand the codebase** | [dev/CODE_REVIEW.md](dev/CODE_REVIEW.md) |
+| **Build and deploy** | [dev/BUILD_AND_DEPLOY.md](dev/BUILD_AND_DEPLOY.md) |
 | **See what's implemented** | [planning/SESSION_PROGRESS.md](planning/SESSION_PROGRESS.md) |
 | **Find the TODO list** | [planning/TODO.md](planning/TODO.md) |
 | **Read the game design** | [design/GAME_DESIGN.md](design/GAME_DESIGN.md) |
@@ -73,6 +74,8 @@ docs/
 │
 └── dev/                         # Development Documentation
     ├── CODE_REVIEW.md           # Full codebase analysis (1500+ lines)
+    ├── BUILD_AND_DEPLOY.md      # Build system, CI/CD, installers
+    ├── CHANGELOG.md             # Version history
     └── GUIDELINES.md            # Documentation standards
 ```
 
@@ -84,7 +87,9 @@ docs/
 
 | Document | Purpose | Lines |
 |----------|---------|-------|
-| [dev/CODE_REVIEW.md](dev/CODE_REVIEW.md) | Complete codebase analysis | 1,532 |
+| [dev/CODE_REVIEW.md](dev/CODE_REVIEW.md) | Complete codebase analysis | 1,534 |
+| [dev/BUILD_AND_DEPLOY.md](dev/BUILD_AND_DEPLOY.md) | Build system, CI/CD, installers | 845 |
+| [dev/CHANGELOG.md](dev/CHANGELOG.md) | Version history | 220+ |
 | [dev/GUIDELINES.md](dev/GUIDELINES.md) | Doc writing standards | 300+ |
 | [design/TECH_DESIGN.md](design/TECH_DESIGN.md) | Architecture guide | 600+ |
 | [reference/FORMULAS.md](reference/FORMULAS.md) | All game math | 350+ |
@@ -134,11 +139,12 @@ docs/
 
 | Phase | Status | Details |
 |-------|--------|---------|
-| Week 1: Foundation | Complete | TypeScript, Ink, project structure |
-| Week 2: Combat | Complete | ATB engine, techniques, AI |
-| Week 3: Story | Complete | Non-linear narrative, 3 paths |
-| Week 4: Polish | Complete | Save system, v0.2.0 release |
-| Week 5+: Content | Planned | More chapters, techniques |
+| Week 1: Foundation | ✅ Complete | TypeScript, Ink, project structure |
+| Week 2: Combat | ✅ Complete | ATB engine, techniques, AI |
+| Week 3: Story | ✅ Complete | Non-linear narrative, 3 paths |
+| Week 4: Polish | ✅ Complete | Save system, v0.2.0 release |
+| Week 5: Build System | ✅ Complete | CI/CD, installers, v0.2.1 release |
+| Week 6+: Content | Planned | More chapters, techniques |
 
 ### Codebase Stats
 
@@ -158,9 +164,12 @@ docs/
 | 55+ techniques defined | ✅ Fixed |
 | Effect processing | ✅ Implemented |
 | Save system | ✅ Implemented |
+| CI/CD pipeline | ✅ Implemented |
+| Cross-platform installers | ✅ Implemented |
 | Item/location registries | 🔄 Planned |
 
-See [dev/CODE_REVIEW.md](dev/CODE_REVIEW.md) for full analysis.
+See [dev/CODE_REVIEW.md](dev/CODE_REVIEW.md) for codebase analysis.
+See [dev/BUILD_AND_DEPLOY.md](dev/BUILD_AND_DEPLOY.md) for build/deploy docs.
 
 ---
 
@@ -201,11 +210,13 @@ See [dev/CODE_REVIEW.md](dev/CODE_REVIEW.md) for full analysis.
 
 | Metric | Value |
 |--------|-------|
-| Total Documents | 33 |
-| Total Lines | 15,000+ |
+| Total Documents | 35 |
+| Total Lines | 16,000+ |
 | Directories | 7 |
 | Story Scenes | 40+ |
 | Techniques Implemented | 55+ (8 player, 48 enemy) |
 | Enemies Implemented | 11 + 3 bosses |
 | NPCs Documented | 9 |
 | Locations Documented | 20+ |
+| Build Scripts | 3 (Windows, Linux, macOS) |
+| CI/CD Workflows | 1 (GitHub Actions) |

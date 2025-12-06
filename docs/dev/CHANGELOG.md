@@ -7,6 +7,36 @@ All notable changes to The Beggars Sect project.
 
 ---
 
+## [0.2.1] - 2025-12-06
+
+### Added
+- **Cross-Platform Build System**
+  - `scripts/setup.iss` - Windows Inno Setup installer script
+  - `scripts/build-deb.sh` - Linux DEB package build script
+  - `scripts/build-dmg.sh` - macOS DMG installer build script
+
+- **GitHub Actions CI/CD**
+  - `.github/workflows/build-release.yml` - Automated multi-platform builds
+  - Triggers: push to main (build only), push tag v* (build + release)
+  - Creates GitHub Release with all platform installers
+
+- **Installer Packages**
+  - Windows: Inno Setup installer with Start Menu, Desktop shortcuts, PATH option
+  - Linux: DEB package for Debian/Ubuntu with desktop entry
+  - macOS: DMG disk image with README and ad-hoc code signing
+
+### Fixed
+- Added `package-lock.json` for CI npm caching (was in .gitignore)
+- Fixed pkg targets (node18 instead of node20 - pkg doesn't support node20)
+- Added GitHub Actions write permissions for release creation
+- Fixed Debian control file formatting (long description indentation)
+
+### Changed
+- Updated BUILD_AND_DEPLOY.md with implementation status and lessons learned
+- Added `installers/`, `build-deb/`, `build-dmg/` to .gitignore
+
+---
+
 ## [0.2.0] - 2025-12-06
 
 ### Added
@@ -123,6 +153,14 @@ All notable changes to The Beggars Sect project.
 ---
 
 ## Development Sessions
+
+### Session 18 (2025-12-06)
+- Implement complete build and deployment system
+- Create installer scripts (setup.iss, build-deb.sh, build-dmg.sh)
+- Set up GitHub Actions CI/CD workflow
+- Debug and fix CI issues (pkg node18, package-lock.json, permissions)
+- Successfully release v0.2.1 with all platform installers
+- Update BUILD_AND_DEPLOY.md with implementation notes
 
 ### Session 17 (2025-12-06)
 - Complete combat system fixes from code review

@@ -1150,8 +1150,8 @@ const SelectInputComponent = (SelectInput as any).default || SelectInput;
 ## Entry Points & Configuration
 
 **Path:** `src/` root + project root
-**Total Lines:** ~164 lines across 6 files
-**Purpose:** Application bootstrap and build configuration
+**Total Lines:** ~700 lines across 10 files
+**Purpose:** Application bootstrap, build configuration, and CI/CD
 
 ### Overview
 
@@ -1165,6 +1165,14 @@ project root/
 ├── tsconfig.json     (28 lines)  - TypeScript config
 ├── sea-config.json   (10 lines)  - Node SEA config
 └── .gitignore        (42 lines)  - Git ignore rules
+
+scripts/
+├── setup.iss         (92 lines)  - Windows installer
+├── build-deb.sh      (190 lines) - Linux DEB builder
+└── build-dmg.sh      (147 lines) - macOS DMG builder
+
+.github/workflows/
+└── build-release.yml (310 lines) - CI/CD pipeline
 ```
 
 ---
@@ -1204,7 +1212,7 @@ Required because:
 
 ### 3. package.json
 
-**Version:** 0.2.0
+**Version:** 0.2.1
 **License:** UNLICENSED (private)
 
 #### Scripts
@@ -1291,6 +1299,22 @@ Standard patterns for:
 - IDE files (`.vscode/`, `.idea/`)
 - OS files (`.DS_Store`)
 - Save files (`saves/`, `*.save`)
+- Installer output (`installers/`, `build-deb/`, `build-dmg/`)
+
+---
+
+### 7. Build Scripts & CI/CD
+
+**Added in v0.2.1:**
+
+| File | Purpose |
+|------|---------|
+| `scripts/setup.iss` | Windows Inno Setup installer |
+| `scripts/build-deb.sh` | Linux DEB package builder |
+| `scripts/build-dmg.sh` | macOS DMG builder |
+| `.github/workflows/build-release.yml` | GitHub Actions CI/CD |
+
+See [BUILD_AND_DEPLOY.md](BUILD_AND_DEPLOY.md) for full documentation.
 
 ---
 
@@ -1531,3 +1555,4 @@ The game demonstrates excellent architecture across all three layers:
 
 *Review completed 2025-12-06*
 *Full src/ analysis complete: game, types, ui, entry points, configuration*
+*Updated 2025-12-06: Added build scripts and CI/CD documentation (v0.2.1)*

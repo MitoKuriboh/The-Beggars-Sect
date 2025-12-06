@@ -1,21 +1,104 @@
 # Build and Deployment Guide
 
 **Project:** The Beggars Sect
-**Version:** 0.2.0
+**Version:** 0.2.1
 **Last Updated:** 2025-12-06
-**Status:** Research Complete - Ready for Implementation
+**Status:** ✅ Implementation Complete - CI/CD Active
 
 ---
 
 ## Table of Contents
 
-1. [Current State Analysis](#current-state-analysis)
-2. [Build Options](#build-options)
-3. [Recommended Approach](#recommended-approach)
-4. [Platform-Specific Installers](#platform-specific-installers)
-5. [GitHub Actions CI/CD](#github-actions-cicd)
-6. [Execution Plan](#execution-plan)
-7. [Resources](#resources)
+1. [Implementation Status](#implementation-status)
+2. [Quick Start](#quick-start)
+3. [Current State Analysis](#current-state-analysis)
+4. [Build Options](#build-options)
+5. [Recommended Approach](#recommended-approach)
+6. [Platform-Specific Installers](#platform-specific-installers)
+7. [GitHub Actions CI/CD](#github-actions-cicd)
+8. [Execution Plan](#execution-plan)
+9. [Implementation Notes](#implementation-notes)
+10. [Resources](#resources)
+
+---
+
+## Implementation Status
+
+**All phases complete as of 2025-12-06:**
+
+| Phase | Status | Files Created |
+|-------|--------|---------------|
+| Phase 1: Local Build | ✅ Complete | `installers/` directory |
+| Phase 2: Windows Installer | ✅ Complete | `scripts/setup.iss` |
+| Phase 3: Linux DEB Package | ✅ Complete | `scripts/build-deb.sh` |
+| Phase 4: macOS DMG | ✅ Complete | `scripts/build-dmg.sh` |
+| Phase 5: GitHub Actions | ✅ Complete | `.github/workflows/build-release.yml` |
+| Phase 6: Release | ✅ Complete | v0.2.1 released |
+
+**GitHub Release v0.2.1 includes:**
+- `beggars-sect-win.exe` - Windows executable
+- `beggars-sect-macos` - macOS executable
+- `beggars-sect-linux` - Linux executable
+- `beggars-sect_0.2.0_amd64.deb` - Debian/Ubuntu package
+- `BeggarssSect-0.2.0-macOS.dmg` - macOS disk image
+
+---
+
+## Quick Start
+
+### Create a New Release
+
+```bash
+# 1. Update version in package.json
+# 2. Commit changes
+git add -A && git commit -m "Release v0.3.0"
+
+# 3. Create and push tag
+git tag v0.3.0
+git push origin v0.3.0
+
+# GitHub Actions will automatically:
+# - Build executables for all platforms
+# - Create DEB and DMG installers
+# - Publish GitHub Release with all assets
+```
+
+### Build Locally
+
+```bash
+# Build executables
+npm run build
+npm run package
+
+# Create Linux DEB (Linux only)
+./scripts/build-deb.sh
+
+# Create macOS DMG (macOS only)
+./scripts/build-dmg.sh
+
+# Create Windows installer (Windows + Inno Setup)
+iscc scripts/setup.iss
+```
+
+### Install from GitHub Release
+
+```bash
+# Linux (Debian/Ubuntu)
+wget https://github.com/MitoKuriboh/The-Beggars-Sect/releases/latest/download/beggars-sect_0.2.0_amd64.deb
+sudo dpkg -i beggars-sect_0.2.0_amd64.deb
+beggars-sect
+
+# Linux (Other)
+wget https://github.com/MitoKuriboh/The-Beggars-Sect/releases/latest/download/beggars-sect-linux
+chmod +x beggars-sect-linux
+./beggars-sect-linux
+
+# macOS
+# Download DMG from releases page, mount, and run
+
+# Windows
+# Download .exe from releases page and run
+```
 
 ---
 
@@ -640,6 +723,81 @@ ls -lh installers/
 
 ---
 
+## Implementation Notes
+
+### Lessons Learned
+
+During implementation, several issues were encountered and resolved:
+
+#### 1. pkg Does Not Support Node 20
+
+**Problem:** `pkg` targets like `node20-linux-x64` fail with "No available node version satisfies 'node20'"
+
+**Solution:** Use Node 18 targets instead:
+```yaml
+# Wrong
+target: node20-linux-x64
+
+# Correct
+target: node18-linux-x64
+```
+
+#### 2. package-lock.json Required for CI
+
+**Problem:** GitHub Actions fails with "Dependencies lock file is not found"
+
+**Solution:** Remove `package-lock.json` from `.gitignore` and commit it:
+```bash
+# Remove from .gitignore
+# Then:
+npm install --package-lock-only
+git add package-lock.json
+git commit -m "Add package-lock.json for CI caching"
+```
+
+#### 3. GitHub Actions Needs Write Permissions
+
+**Problem:** Release creation fails with 403 error
+
+**Solution:** Add permissions block to workflow:
+```yaml
+permissions:
+  contents: write
+```
+
+#### 4. Debian Control File Formatting
+
+**Problem:** DEB build fails with "field name must be followed by colon"
+
+**Solution:** Long descriptions must start with a single space on each line:
+```bash
+# Wrong
+LONG_DESCRIPTION="The Beggars Sect is..."
+
+# Correct
+LONG_DESCRIPTION=" The Beggars Sect is..."
+```
+
+### File Locations
+
+| File | Purpose |
+|------|---------|
+| `scripts/setup.iss` | Windows Inno Setup installer script |
+| `scripts/build-deb.sh` | Linux DEB package build script |
+| `scripts/build-dmg.sh` | macOS DMG build script |
+| `.github/workflows/build-release.yml` | CI/CD workflow |
+| `installers/` | Local build output (gitignored) |
+
+### CI/CD Triggers
+
+| Trigger | Action |
+|---------|--------|
+| Push to `main` | Build executables only |
+| Push tag `v*` | Build + create GitHub Release |
+| Manual dispatch | Optional release creation |
+
+---
+
 ## Resources
 
 ### Official Documentation
@@ -681,5 +839,6 @@ ls -lh installers/
 
 ---
 
-*Document Version: 1.0*
+*Document Version: 2.0*
 *Last Updated: 2025-12-06*
+*Implementation Complete: Session 18*
