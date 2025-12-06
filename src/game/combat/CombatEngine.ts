@@ -26,6 +26,7 @@ import {
 } from '../../types/combat';
 
 import { getEffectiveStat, STANCE_MODIFIERS, STATUS_EFFECTS } from '../../types/character';
+import { AIController } from './AIController';
 
 // =============================================================================
 // COMBAT ENGINE
@@ -649,13 +650,8 @@ export class CombatEngine {
   // ---------------------------------------------------------------------------
 
   private getAIAction(enemy: Enemy): CombatAction {
-    // Simple AI for now - will be expanded in AIController
-    // Just use basic attack targeting the player
-    return {
-      type: 'attack',
-      actor: enemy,
-      target: this.state.player,
-    };
+    // Use AIController to select action based on enemy's AI pattern
+    return AIController.selectAction(enemy, this.state.player, this.state);
   }
 
   // ---------------------------------------------------------------------------
