@@ -34,7 +34,7 @@ function evaluateCondition(condition: string, ctx: EvalContext): boolean {
 
   // HP conditions
   const hpMatch = condition.match(/hp\s*([<>]=?)\s*(\d+)%/);
-  if (hpMatch) {
+  if (hpMatch && hpMatch[1] && hpMatch[2]) {
     const operator = hpMatch[1];
     const threshold = parseInt(hpMatch[2]) / 100;
     const hpPercent = ctx.enemy.hp / ctx.enemy.maxHp;
@@ -49,12 +49,12 @@ function evaluateCondition(condition: string, ctx: EvalContext): boolean {
 
   // Turn-based conditions
   const turnMatch = condition.match(/turn\s*===?\s*(\d+)/);
-  if (turnMatch) {
+  if (turnMatch && turnMatch[1]) {
     return ctx.turn === parseInt(turnMatch[1]);
   }
 
   const turnModMatch = condition.match(/turn\s*%\s*(\d+)\s*===?\s*(\d+)/);
-  if (turnModMatch) {
+  if (turnModMatch && turnModMatch[1] && turnModMatch[2]) {
     return ctx.turn % parseInt(turnModMatch[1]) === parseInt(turnModMatch[2]);
   }
 
@@ -75,6 +75,7 @@ function evaluateCondition(condition: string, ctx: EvalContext): boolean {
     // Find most recent player action
     for (let i = log.length - 1; i >= 0; i--) {
       const entry = log[i];
+      if (!entry) continue;
       if (entry.actorName === ctx.player.name && entry.type === 'action') {
         // Check if the message contains a technique name that implies heavy attack
         // Heavy techniques typically have "heavy", "crushing", "finishing" in name
@@ -93,6 +94,7 @@ function evaluateCondition(condition: string, ctx: EvalContext): boolean {
     // Find most recent player action in current or previous round
     for (let i = log.length - 1; i >= 0; i--) {
       const entry = log[i];
+      if (!entry) continue;
       if (entry.round < ctx.round - 1) break; // Too old
       if (entry.actorName === ctx.player.name && entry.type === 'action') {
         // Check if it was a technique (not basic attack or defend)
@@ -104,7 +106,7 @@ function evaluateCondition(condition: string, ctx: EvalContext): boolean {
 
   // Player HP conditions
   const playerHpMatch = condition.match(/player\.hp\s*([<>]=?)\s*(\d+)%/);
-  if (playerHpMatch) {
+  if (playerHpMatch && playerHpMatch[1] && playerHpMatch[2]) {
     const operator = playerHpMatch[1];
     const threshold = parseInt(playerHpMatch[2]) / 100;
     const hpPercent = ctx.player.hp / ctx.player.maxHp;
@@ -119,7 +121,7 @@ function evaluateCondition(condition: string, ctx: EvalContext): boolean {
 
   // Chi conditions
   const chiMatch = condition.match(/chi\s*([<>]=?)\s*(\d+)/);
-  if (chiMatch) {
+  if (chiMatch && chiMatch[1] && chiMatch[2]) {
     const operator = chiMatch[1];
     const threshold = parseInt(chiMatch[2]);
 
@@ -208,7 +210,7 @@ function parseAction(actionStr: string, enemy: Enemy, player: Character): Combat
 
   // Technique action: "use:technique-id"
   const useMatch = actionStr.match(/use:(.+)/);
-  if (useMatch) {
+  if (useMatch && useMatch[1]) {
     const techniqueId = useMatch[1];
     const technique = getTechnique(techniqueId);
 
@@ -313,6 +315,7 @@ export class AIController {
     // Check each threshold
     for (let i = 0; i < enemy.phaseThresholds.length; i++) {
       const threshold = enemy.phaseThresholds[i];
+      if (threshold === undefined) continue;
       const targetPhase = i + 2; // Phases are 1-indexed, thresholds start at phase 2
 
       if (hpPercent <= threshold && currentPhase < targetPhase) {

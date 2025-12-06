@@ -3,7 +3,7 @@
  * Shows recent combat messages with colored damage/heal numbers
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import { Box, Text } from 'ink';
 import type { LogEntry } from '../../types/index';
 
@@ -50,7 +50,7 @@ const renderMessage = (message: string, type: LogEntry['type']): React.ReactNode
   });
 };
 
-export const CombatLog: React.FC<CombatLogProps> = ({ entries, maxEntries = 5 }) => {
+export const CombatLog = memo<CombatLogProps>(({ entries, maxEntries = 5 }) => {
   const recentEntries = entries.slice(-maxEntries);
 
   const getColor = (type: LogEntry['type']): string => {
@@ -84,4 +84,6 @@ export const CombatLog: React.FC<CombatLogProps> = ({ entries, maxEntries = 5 })
       </Box>
     </Box>
   );
-};
+});
+
+CombatLog.displayName = 'CombatLog';

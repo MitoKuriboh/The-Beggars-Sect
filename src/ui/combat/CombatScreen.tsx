@@ -68,7 +68,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
 
     // Show intro dialogue
     const firstEnemy = enemies[0];
-    if (firstEnemy.dialogue.intro?.[0]) {
+    if (firstEnemy && firstEnemy.dialogue.intro?.[0]) {
       setMessage(`${firstEnemy.name}: "${firstEnemy.dialogue.intro[0]}"`);
     }
   }, [player, enemies]);
@@ -80,7 +80,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
     if (combatState.combatResult === 'victory') {
       setPhase('victory');
       const enemy = combatState.enemies[0];
-      if (enemy.dialogue.defeat?.[0]) {
+      if (enemy && enemy.dialogue.defeat?.[0]) {
         setMessage(`${enemy.name}: "${enemy.dialogue.defeat[0]}"`);
       }
     } else if (combatState.combatResult === 'defeat') {

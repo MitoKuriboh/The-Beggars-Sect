@@ -109,8 +109,9 @@ export interface Technique {
  */
 export function getMasteryLevel(uses: number): number {
   for (let i = MASTERY_THRESHOLDS.length - 1; i >= 0; i--) {
-    if (uses >= MASTERY_THRESHOLDS[i].usesRequired) {
-      return MASTERY_THRESHOLDS[i].level;
+    const threshold = MASTERY_THRESHOLDS[i];
+    if (threshold && uses >= threshold.usesRequired) {
+      return threshold.level;
     }
   }
   return 1;
@@ -121,7 +122,7 @@ export function getMasteryLevel(uses: number): number {
  */
 export function getMasteryBonus(uses: number): MasteryBonus {
   const level = getMasteryLevel(uses);
-  return MASTERY_THRESHOLDS[level - 1];
+  return MASTERY_THRESHOLDS[level - 1] ?? MASTERY_THRESHOLDS[0] ?? { level: 1, usesRequired: 0, powerBonus: 0 };
 }
 
 /**

@@ -3,7 +3,7 @@
  * Visual HP/Chi display
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import { Box, Text } from 'ink';
 
 interface HealthBarProps {
@@ -14,7 +14,7 @@ interface HealthBarProps {
   width?: number;
 }
 
-export const HealthBar: React.FC<HealthBarProps> = ({
+export const HealthBar = memo<HealthBarProps>(({
   current,
   max,
   label,
@@ -49,6 +49,19 @@ export const HealthBar: React.FC<HealthBarProps> = ({
       </Text>
     </Box>
   );
+});
+
+HealthBar.displayName = 'HealthBar';
+
+// Get descriptive health state based on HP percentage
+const getHealthDescription = (current: number, max: number): { text: string; color: string } => {
+  const percent = current / max;
+  if (percent >= 0.9) return { text: 'Uninjured', color: 'green' };
+  if (percent >= 0.7) return { text: 'Lightly Wounded', color: 'green' };
+  if (percent >= 0.5) return { text: 'Wounded', color: 'yellow' };
+  if (percent >= 0.3) return { text: 'Badly Wounded', color: 'yellow' };
+  if (percent >= 0.1) return { text: 'Near Death', color: 'red' };
+  return { text: 'Critical', color: 'red' };
 };
 
 interface CharacterStatusProps {
@@ -63,7 +76,7 @@ interface CharacterStatusProps {
   maxInverseChi?: number;
 }
 
-export const CharacterStatus: React.FC<CharacterStatusProps> = ({
+export const CharacterStatus = memo<CharacterStatusProps>(({
   name,
   hp,
   maxHp,
@@ -74,10 +87,15 @@ export const CharacterStatus: React.FC<CharacterStatusProps> = ({
   inverseChi = 0,
   maxInverseChi = 0,
 }) => {
+  const healthState = getHealthDescription(hp, maxHp);
+
   return (
     <Box flexDirection="column">
       <Text bold color={isPlayer ? 'cyan' : 'red'}>
         {name}
+        {!isPlayer && (
+          <Text color={healthState.color} dimColor> — {healthState.text}</Text>
+        )}
       </Text>
       <Box paddingLeft={1} flexDirection="column">
         <HealthBar current={hp} max={maxHp} label="HP" color="green" />
@@ -97,4 +115,6 @@ export const CharacterStatus: React.FC<CharacterStatusProps> = ({
       </Box>
     </Box>
   );
-};
+});
+
+CharacterStatus.displayName = 'CharacterStatus';

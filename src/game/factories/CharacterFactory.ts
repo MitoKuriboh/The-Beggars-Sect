@@ -655,7 +655,11 @@ export function getRandomEnemyByTier(tier: EnemyTier): Enemy {
   }
 
   const randomIndex = Math.floor(Math.random() * templateIds.length);
-  return createEnemy(templateIds[randomIndex]);
+  const templateId = templateIds[randomIndex];
+  if (!templateId) {
+    throw new Error(`Invalid template index for tier: ${tier}`);
+  }
+  return createEnemy(templateId);
 }
 
 // =============================================================================
@@ -677,7 +681,7 @@ const CHAPTER_SCALING: Record<number, ScalingConfig> = {
  * Apply chapter-based scaling to an enemy
  */
 export function scaleEnemyForChapter(enemy: Enemy, chapter: number): void {
-  const scaling = CHAPTER_SCALING[chapter] ?? CHAPTER_SCALING[1];
+  const scaling = CHAPTER_SCALING[chapter] ?? CHAPTER_SCALING[1] ?? { hpMultiplier: 1.0, damageMultiplier: 1.0 };
 
   enemy.maxHp = Math.floor(enemy.maxHp * scaling.hpMultiplier);
   enemy.hp = enemy.maxHp;

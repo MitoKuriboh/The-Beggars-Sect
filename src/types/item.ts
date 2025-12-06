@@ -149,6 +149,9 @@ export function removeItemFromInventory(
   }
 
   const slot = inventory.slots[slotIndex];
+  if (!slot) {
+    return { success: false, reason: 'Item not found' };
+  }
 
   if (slot.quantity < quantity) {
     return { success: false, reason: 'Not enough items' };

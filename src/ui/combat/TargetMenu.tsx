@@ -56,8 +56,9 @@ export const TargetMenu: React.FC<TargetMenuProps> = ({
   );
 
   // If only one enemy, auto-select
-  if (livingEnemies.length === 1) {
-    onSelect(livingEnemies[0]);
+  const singleEnemy = livingEnemies[0];
+  if (livingEnemies.length === 1 && singleEnemy) {
+    onSelect(singleEnemy);
     return null;
   }
 

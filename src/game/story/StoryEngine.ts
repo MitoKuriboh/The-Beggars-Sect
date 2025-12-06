@@ -197,11 +197,11 @@ export class StoryEngine {
 
     // Find the choice block and the selected choice
     const block = scene.content[this.state.contentIndex];
-    if (block.type !== 'choice') {
+    if (!block || block.type !== 'choice') {
       throw new Error('Not at a choice block');
     }
 
-    const choice = block.choices.find((c) => c.id === choiceId);
+    const choice = block.choices.find((c: { id: string }) => c.id === choiceId);
     if (!choice) {
       throw new Error(`Choice not found: ${choiceId}`);
     }
@@ -254,7 +254,7 @@ export class StoryEngine {
     }
 
     const block = scene.content[this.state.contentIndex];
-    if (block.type !== 'combat') {
+    if (!block || block.type !== 'combat') {
       throw new Error('Not at a combat block');
     }
 
@@ -296,6 +296,9 @@ export class StoryEngine {
     }
 
     const block = scene.content[this.state.contentIndex];
+    if (!block) {
+      return this.completeScene(scene);
+    }
 
     switch (block.type) {
       case 'content':
@@ -409,6 +412,9 @@ export class StoryEngine {
     }
 
     const nextChapterId = chapterIds[currentIndex + 1];
+    if (!nextChapterId) {
+      throw new Error('No next chapter available');
+    }
     const nextChapter = this.chapters.get(nextChapterId);
 
     if (!nextChapter) {

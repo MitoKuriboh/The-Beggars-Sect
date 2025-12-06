@@ -8,6 +8,7 @@ dist/
 build/
 *.js
 *.d.ts
+.tsbuildinfo
 !src/**/*.tsx
 !src/**/*.ts
 

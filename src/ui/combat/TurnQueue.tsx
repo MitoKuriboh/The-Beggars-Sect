@@ -3,7 +3,7 @@
  * Shows upcoming turn order (ATB preview)
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import { Box, Text } from 'ink';
 import type { Character } from '../../types/index';
 
@@ -12,7 +12,7 @@ interface TurnQueueProps {
   currentActorId: string;
 }
 
-export const TurnQueue: React.FC<TurnQueueProps> = ({ turnOrder, currentActorId }) => {
+export const TurnQueue = memo<TurnQueueProps>(({ turnOrder, currentActorId }) => {
   return (
     <Box flexDirection="column">
       <Text bold dimColor>
@@ -43,4 +43,6 @@ export const TurnQueue: React.FC<TurnQueueProps> = ({ turnOrder, currentActorId 
       </Box>
     </Box>
   );
-};
+});
+
+TurnQueue.displayName = 'TurnQueue';

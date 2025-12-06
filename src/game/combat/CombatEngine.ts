@@ -493,7 +493,7 @@ export class CombatEngine {
       // Check condition if specified
       if (effect.condition && effectTarget) {
         const hpMatch = effect.condition.match(/hp\s*([<>]=?)\s*(\d+)%/);
-        if (hpMatch) {
+        if (hpMatch && hpMatch[1] && hpMatch[2]) {
           const operator = hpMatch[1];
           const threshold = parseInt(hpMatch[2]) / 100;
           const hpPercent = effectTarget.hp / effectTarget.maxHp;
