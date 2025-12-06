@@ -68,6 +68,7 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
   const contentRef = useRef(content);
   const contentIndexRef = useRef(contentIndex);
   const isPausedRef = useRef(isPaused);
+  const pauseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Sync state setters - update ref immediately, then state
   const setPhase = useCallback((value: StoryPhase) => {
@@ -229,24 +230,49 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
     if (result) handleResult(result);
   }, [handleResult]);
 
+  // Skip pause and advance to next content
+  const skipPauseAndAdvance = useCallback(() => {
+    // Clear any pending timeout
+    if (pauseTimeoutRef.current) {
+      clearTimeout(pauseTimeoutRef.current);
+      pauseTimeoutRef.current = null;
+    }
+    setIsPaused(false);
+
+    const idx = contentIndexRef.current;
+    const lines = contentRef.current;
+
+    if (idx < lines.length - 1) {
+      setContentIndex(idx + 1);
+    } else {
+      const result = engineRef.current?.advance();
+      if (result) handleResult(result);
+    }
+  }, [handleResult, setIsPaused, setContentIndex]);
+
   // Input handling - use refs to avoid stale closures
   useInput((input, key) => {
     const currentPhase = phaseRef.current;
     const paused = isPausedRef.current;
 
-    if (paused) return;
-
     if ((key.return || input === ' ')) {
+      // If paused, skip the pause
+      if (paused) {
+        skipPauseAndAdvance();
+        return;
+      }
+
       if (currentPhase === 'content') {
         // Direct advancement using refs
         const idx = contentIndexRef.current;
         const lines = contentRef.current;
         const currentLine = lines[idx];
 
-        // Handle pause type
+        // Handle pause type - start pause but allow skip
         if (currentLine?.type === 'pause') {
           setIsPaused(true);
-          setTimeout(() => {
+          pauseTimeoutRef.current = setTimeout(() => {
+            pauseTimeoutRef.current = null;
             setIsPaused(false);
             if (idx < lines.length - 1) {
               setContentIndex(idx + 1);
