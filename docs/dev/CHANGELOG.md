@@ -7,6 +7,25 @@ All notable changes to The Beggars Sect project.
 
 ---
 
+## [0.3.3] - 2025-12-06
+
+### Changed - Improved Story Pacing
+- **Re-enabled typewriter effect by default**
+  - Typewriter provides natural reading pacing
+  - Text appears smoothly character-by-character
+- **Reduced pause durations in prologue**
+  - Long pauses (3000ms) → Short pauses (500ms)
+  - Medium pauses (1500ms) → Quick pauses (300ms)
+  - Short pauses (1000ms) → Brief pauses (200ms)
+- **Result:** Smooth, cinematic flow without long waits
+  - Typewriter types text naturally
+  - SPACE completes typing instantly
+  - SPACE again advances to next line
+  - Brief pauses between lines (200-500ms) for pacing
+  - No more 3-second dead air
+
+---
+
 ## [0.3.2] - 2025-12-06
 
 ### Fixed
