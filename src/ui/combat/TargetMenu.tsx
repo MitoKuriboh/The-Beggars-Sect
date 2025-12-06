@@ -3,7 +3,7 @@
  * Choose which enemy to target
  */
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Box, Text, useInput } from 'ink';
 import SelectInput from 'ink-select-input';
 import type { Enemy } from '../../types/index';
@@ -35,6 +35,14 @@ export const TargetMenu: React.FC<TargetMenuProps> = ({
 
   const livingEnemies = enemies.filter((e) => e.hp > 0);
 
+  // Auto-select if only one enemy (use effect to avoid setState during render)
+  useEffect(() => {
+    const singleEnemy = livingEnemies[0];
+    if (livingEnemies.length === 1 && singleEnemy) {
+      onSelect(singleEnemy);
+    }
+  }, [livingEnemies, onSelect]);
+
   const items: TargetMenuItem[] = livingEnemies.map((enemy) => {
     const hpPercent = Math.floor((enemy.hp / enemy.maxHp) * 100);
     let hpColor = 'green';
@@ -55,10 +63,8 @@ export const TargetMenu: React.FC<TargetMenuProps> = ({
     [onSelect]
   );
 
-  // If only one enemy, auto-select
-  const singleEnemy = livingEnemies[0];
-  if (livingEnemies.length === 1 && singleEnemy) {
-    onSelect(singleEnemy);
+  // If only one enemy, don't render menu (auto-select will fire via useEffect)
+  if (livingEnemies.length === 1) {
     return null;
   }
 
