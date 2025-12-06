@@ -6,7 +6,7 @@ set -e
 
 # Configuration
 APP_NAME="beggars-sect"
-APP_VERSION="0.2.0"
+APP_VERSION="0.3.6"
 MAINTAINER="Mito <mito@genkaw.com>"
 DESCRIPTION="A CLI RPG set in the Martial Arts Haven"
 LONG_DESCRIPTION=" The Beggars Sect is a CLI-based Wuxia RPG following Li Wei,

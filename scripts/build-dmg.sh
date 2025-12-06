@@ -7,7 +7,7 @@ set -e
 
 # Configuration
 APP_NAME="The Beggars Sect"
-APP_VERSION="0.2.0"
+APP_VERSION="0.3.6"
 VOLUME_NAME="The Beggars Sect"
 DMG_NAME="BeggarssSect-${APP_VERSION}-macOS"
 EXECUTABLE_NAME="beggars-sect"
