@@ -68,14 +68,38 @@ function evaluateCondition(condition: string, ctx: EvalContext): boolean {
   }
 
   if (condition === 'player.usedHeavyTechnique') {
-    // Check if player's last action was a slow technique
-    // For now, just return false - would need combat log analysis
+    // Check if player's last action was a slow technique (negative speed)
+    const log = ctx.state.combatLog;
+    if (log.length === 0) return false;
+
+    // Find most recent player action
+    for (let i = log.length - 1; i >= 0; i--) {
+      const entry = log[i];
+      if (entry.actorName === ctx.player.name && entry.type === 'action') {
+        // Check if the message contains a technique name that implies heavy attack
+        // Heavy techniques typically have "heavy", "crushing", "finishing" in name
+        const heavyKeywords = ['heavy', 'crushing', 'finishing', 'desperate', 'execute', 'final'];
+        return heavyKeywords.some(kw => entry.message.toLowerCase().includes(kw));
+      }
+    }
     return false;
   }
 
   if (condition === 'player.usedTechnique') {
     // Check if player used a technique last turn
-    return false; // Would need combat log
+    const log = ctx.state.combatLog;
+    if (log.length === 0) return false;
+
+    // Find most recent player action in current or previous round
+    for (let i = log.length - 1; i >= 0; i--) {
+      const entry = log[i];
+      if (entry.round < ctx.round - 1) break; // Too old
+      if (entry.actorName === ctx.player.name && entry.type === 'action') {
+        // Check if it was a technique (not basic attack or defend)
+        return entry.message.includes('uses') && !entry.message.includes('attacks');
+      }
+    }
+    return false;
   }
 
   // Player HP conditions
@@ -117,24 +141,53 @@ function evaluateCondition(condition: string, ctx: EvalContext): boolean {
   }
 
   if (condition.includes('!healed')) {
-    // Track if enemy has used a heal - would need state tracking
-    return true;
+    // Check if enemy has used a heal this combat by searching combat log
+    const log = ctx.state.combatLog;
+    const healKeywords = ['heals', 'second-wind', 'rally-cry', 'heal'];
+    for (const entry of log) {
+      if (entry.actorName === ctx.enemy.name && entry.type === 'action') {
+        if (healKeywords.some(kw => entry.message.toLowerCase().includes(kw))) {
+          return false; // Already healed
+        }
+      }
+    }
+    return true; // Has not healed yet
   }
 
   if (condition.includes('!shielded')) {
-    return !ctx.enemy.statusEffects.some((e) => e.id === 'shielded');
+    // Check status effects for shield-related buffs
+    return !ctx.enemy.statusEffects.some((e) =>
+      e.id === 'shielded' ||
+      e.description?.toLowerCase().includes('shield') ||
+      e.name?.toLowerCase().includes('shield')
+    );
   }
 
   if (condition.includes('!prideBuff')) {
-    return !ctx.enemy.statusEffects.some((e) => e.id === 'pride');
+    return !ctx.enemy.statusEffects.some((e) =>
+      e.id === 'pride' ||
+      e.description?.toLowerCase().includes('pride')
+    );
   }
 
   if (condition.includes('!meditated')) {
-    return true; // Would need state tracking
+    // Check if enemy has used meditation this combat
+    const log = ctx.state.combatLog;
+    for (const entry of log) {
+      if (entry.actorName === ctx.enemy.name && entry.type === 'action') {
+        if (entry.message.toLowerCase().includes('meditate')) {
+          return false; // Already meditated
+        }
+      }
+    }
+    return true; // Has not meditated yet
   }
 
   if (condition.includes('!enlightened')) {
-    return !ctx.enemy.statusEffects.some((e) => e.id === 'enlightened');
+    return !ctx.enemy.statusEffects.some((e) =>
+      e.id === 'enlightened' ||
+      e.description?.toLowerCase().includes('enlightened')
+    );
   }
 
   // Unknown condition - don't match

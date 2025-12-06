@@ -14,6 +14,8 @@ import type {
   CombatResult,
   ComboChain,
   LogEntry,
+  TechniqueEffect,
+  StatusEffect,
 } from '../../types/index';
 
 import {
@@ -433,6 +435,24 @@ export class CombatEngine {
       }
     }
 
+    // Apply technique effects (buffs, debuffs, heals, multi-hit, etc.)
+    let effectMessages: string[] = [];
+    if (technique.effects && technique.effects.length > 0) {
+      const effectResult = this.applyEffects(technique.effects, actor, target, damage.total);
+      damage.total = effectResult.totalDamage;
+      effectMessages = effectResult.effectMessages;
+
+      // Log effect messages
+      for (const msg of effectMessages) {
+        this.addLog('System', msg, 'status');
+      }
+
+      // Check if target defeated after multi-hit
+      if (target && target.hp <= 0) {
+        // Already defeated
+      }
+    }
+
     // Track mastery
     if (actor.isPlayer) {
       actor.masteryLevels[technique.id] = (actor.masteryLevels[technique.id] || 0) + 1;
@@ -452,6 +472,169 @@ export class CombatEngine {
       targetHpAfter: target?.hp,
       targetDefeated: target ? target.hp <= 0 : false,
     };
+  }
+
+  /**
+   * Apply technique effects (buffs, debuffs, heals, multi-hit, etc.)
+   */
+  private applyEffects(
+    effects: TechniqueEffect[],
+    actor: Character | Enemy,
+    target: Character | Enemy | undefined,
+    baseDamage: number
+  ): { totalDamage: number; effectMessages: string[] } {
+    let totalDamage = baseDamage;
+    const effectMessages: string[] = [];
+
+    for (const effect of effects) {
+      const effectTarget = effect.target === 'self' ? actor : target;
+      if (!effectTarget && effect.target !== 'self') continue;
+
+      // Check condition if specified
+      if (effect.condition && effectTarget) {
+        const hpMatch = effect.condition.match(/hp\s*([<>]=?)\s*(\d+)%/);
+        if (hpMatch) {
+          const operator = hpMatch[1];
+          const threshold = parseInt(hpMatch[2]) / 100;
+          const hpPercent = effectTarget.hp / effectTarget.maxHp;
+
+          let conditionMet = false;
+          switch (operator) {
+            case '<': conditionMet = hpPercent < threshold; break;
+            case '<=': conditionMet = hpPercent <= threshold; break;
+            case '>': conditionMet = hpPercent > threshold; break;
+            case '>=': conditionMet = hpPercent >= threshold; break;
+          }
+          if (!conditionMet) continue;
+        }
+      }
+
+      switch (effect.type) {
+        case 'damage': {
+          // Self-damage (recoil) - percentage of max HP
+          const selfDamage = Math.floor((actor.maxHp * effect.value) / 100);
+          actor.hp = Math.max(1, actor.hp - selfDamage); // Don't kill self
+          effectMessages.push(`${actor.name} takes ${selfDamage} recoil damage!`);
+          break;
+        }
+
+        case 'heal': {
+          if (effectTarget) {
+            // Percentage-based healing
+            const healAmount = Math.floor((effectTarget.maxHp * effect.value) / 100);
+            const actualHeal = Math.min(healAmount, effectTarget.maxHp - effectTarget.hp);
+            effectTarget.hp += actualHeal;
+            if (actualHeal > 0) {
+              effectMessages.push(`${effectTarget.name} heals for ${actualHeal} HP!`);
+            }
+          }
+          break;
+        }
+
+        case 'chi-restore': {
+          if (effectTarget) {
+            const restoreAmount = Math.min(effect.value, effectTarget.maxChi - effectTarget.chi);
+            effectTarget.chi += restoreAmount;
+            if (restoreAmount > 0) {
+              effectMessages.push(`${effectTarget.name} restores ${restoreAmount} chi!`);
+            }
+          }
+          break;
+        }
+
+        case 'buff': {
+          if (effectTarget) {
+            const buffEffect: StatusEffect = {
+              id: `buff-${Date.now()}`,
+              name: effect.description,
+              type: 'buff',
+              modifier: effect.value,
+              duration: effect.duration || 3,
+              stackable: false,
+              description: effect.description,
+            };
+            effectTarget.statusEffects.push(buffEffect);
+            effectMessages.push(`${effectTarget.name} gains ${effect.description}!`);
+          }
+          break;
+        }
+
+        case 'debuff': {
+          if (effectTarget) {
+            const debuffEffect: StatusEffect = {
+              id: `debuff-${Date.now()}`,
+              name: effect.description,
+              type: 'debuff',
+              modifier: effect.value,
+              duration: effect.duration || 3,
+              stackable: false,
+              description: effect.description,
+            };
+            effectTarget.statusEffects.push(debuffEffect);
+            effectMessages.push(`${effectTarget.name} suffers ${effect.description}!`);
+          }
+          break;
+        }
+
+        case 'stun': {
+          if (effectTarget) {
+            // Stun has a chance based on effect value (or fixed 30% if not specified differently)
+            const stunChance = effect.value > 1 ? effect.value / 100 : 0.3;
+            if (Math.random() < stunChance) {
+              effectTarget.statusEffects.push({ ...STATUS_EFFECTS.STUNNED });
+              effectMessages.push(`${effectTarget.name} is stunned!`);
+            }
+          }
+          break;
+        }
+
+        case 'armor-break': {
+          if (effectTarget) {
+            effectTarget.statusEffects.push({
+              ...STATUS_EFFECTS.ARMOR_BROKEN,
+              duration: effect.duration || 2,
+              modifier: -effect.value,
+            });
+            effectMessages.push(`${effectTarget.name}'s armor is broken!`);
+          }
+          break;
+        }
+
+        case 'counter-setup': {
+          if (effectTarget) {
+            const counterEffect: StatusEffect = {
+              id: 'counter',
+              name: 'Counter Stance',
+              type: 'buff',
+              modifier: 0,
+              duration: effect.duration || 1,
+              stackable: false,
+              description: 'Will counter next attack',
+            };
+            effectTarget.statusEffects.push(counterEffect);
+            effectMessages.push(`${effectTarget.name} prepares to counter!`);
+          }
+          break;
+        }
+
+        case 'multi-hit': {
+          // Multi-hit multiplies damage (effect.value = number of hits)
+          // First hit already calculated, add extra hits
+          if (target && baseDamage > 0) {
+            const extraHits = effect.value - 1;
+            for (let i = 0; i < extraHits; i++) {
+              const hitDamage = Math.floor(baseDamage * 0.8); // Subsequent hits do 80%
+              target.hp = Math.max(0, target.hp - hitDamage);
+              totalDamage += hitDamage;
+            }
+            effectMessages.push(`${effect.value} hits!`);
+          }
+          break;
+        }
+      }
+    }
+
+    return { totalDamage, effectMessages };
   }
 
   private executeDefend(action: CombatAction): ActionResult {

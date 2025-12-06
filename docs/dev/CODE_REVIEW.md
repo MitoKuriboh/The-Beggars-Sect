@@ -1347,22 +1347,23 @@ Move existing data from game code into these directories:
 1. ~~**AIController Not Integrated**~~ **FIXED 2025-12-06**
    - Now calls `AIController.selectAction()` at line 654
 
-2. **Missing Technique Definitions**
-   - Location: `TechniqueRegistry.ts`
-   - Impact: ~30+ techniques return `undefined`
-   - Fix: Add all boss/enemy technique definitions
+2. ~~**Missing Technique Definitions**~~ **FIXED 2025-12-06**
+   - Added 41 missing techniques to `TechniqueRegistry.ts`
+   - Includes: all boss techniques (Razor, Vex, Hollow One), spartan techniques, lone wolf techniques, gang techniques
 
 ### 🟡 Medium (Should Fix)
 
-3. **Effect Processing Not Implemented**
-   - Location: `CombatEngine.executeTechnique()`
-   - Impact: Multi-hit, buffs, debuffs don't work
-   - Fix: Add effect processing loop
+3. ~~**Effect Processing Not Implemented**~~ **FIXED 2025-12-06**
+   - Added `applyEffects()` method to `CombatEngine.ts`
+   - Now processes: damage, heal, chi-restore, buff, debuff, stun, armor-break, counter-setup, multi-hit
+   - Supports conditional effects (e.g., "hp < 50%")
 
-4. **Hardcoded AI Conditions**
-   - Location: `AIController.ts:72-78, 121-134`
-   - Impact: Some conditions always return same value
-   - Fix: Implement proper state tracking
+4. ~~**Hardcoded AI Conditions**~~ **FIXED 2025-12-06**
+   - `player.usedHeavyTechnique`: Now checks combat log for heavy technique keywords
+   - `player.usedTechnique`: Now checks combat log for technique usage
+   - `!healed`: Now checks combat log for heal actions
+   - `!meditated`: Now checks combat log for meditation actions
+   - `!shielded`, `!prideBuff`, `!enlightened`: Now check status effect descriptions
 
 ### 🟢 Minor (Nice to Have)
 
@@ -1413,11 +1414,11 @@ Move existing data from game code into these directories:
 | Metric | Value |
 |--------|-------|
 | Total Files | 10 |
-| Total Lines | ~3,343 |
-| Avg Lines/File | 334 |
+| Total Lines | ~4,200 |
+| Avg Lines/File | 420 |
 | Player Techniques | 8 |
-| Enemy Techniques | 7 |
-| Missing Techniques | ~30+ |
+| Enemy Techniques | 48 |
+| Missing Techniques | 0 ✅ |
 | Enemy Templates | 12 |
 | Boss Templates | 3 |
 | Prologue Scenes | 7 |
@@ -1502,8 +1503,9 @@ The game demonstrates excellent architecture across all three layers:
 | Priority | Issue | Impact |
 |----------|-------|--------|
 | ~~1~~ | ~~AIController not connected~~ | **FIXED** |
-| 1 | ~30+ techniques undefined | Boss/enemy abilities fail |
-| 2 | Effect processing missing | Buffs/debuffs don't work |
+| ~~1~~ | ~~30+ techniques undefined~~ | **FIXED** - 41 techniques added |
+| ~~2~~ | ~~Effect processing missing~~ | **FIXED** - Full effect system |
+| ~~3~~ | ~~Hardcoded AI conditions~~ | **FIXED** - Proper log analysis |
 | 3 | No item registry | Item system incomplete |
 | 4 | No location registry | Exploration incomplete |
 | 5 | Sound/visual effects | CLI effects not implemented |
@@ -1515,12 +1517,13 @@ The game demonstrates excellent architecture across all three layers:
 - **UI/UX:** ★★★★☆ - Polished CLI experience
 - **Save System:** ★★★★★ - Robust persistence
 - **Story Engine:** ★★★★★ - Supports complex branching
+- **Combat System:** ★★★★★ - Full technique effects now working
 
 ### Next Steps
 
-1. Connect AIController to CombatEngine
-2. Add all missing technique definitions
-3. Implement technique effect processing
+1. ~~Connect AIController to CombatEngine~~ ✅
+2. ~~Add all missing technique definitions~~ ✅
+3. ~~Implement technique effect processing~~ ✅
 4. Create item and location registries
 5. Add Chapter 1+ content
 
