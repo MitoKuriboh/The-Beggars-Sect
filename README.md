@@ -34,8 +34,8 @@ Follow Li Wei's journey from a confused stranger spawned into an unknown world, 
 |---|---|
 | **Genre** | Wuxia Turn-Based RPG |
 | **Platform** | CLI (Terminal) |
-| **Version** | 0.3.5 (Demo) |
-| **Status** | Prologue Complete - Demo Release |
+| **Version** | 0.3.6 (Demo) |
+| **Status** | Prologue Complete - Polished Demo |
 | **Playtime** | ~25 min (demo) / ~5-6 hours (full game) |
 
 ---
@@ -192,7 +192,7 @@ npm run package  # Build standalone executables
 | Week 3: Story | ✅ Complete | Non-linear narrative, 3 paths |
 | Week 4: Polish | ✅ Complete | Save system, v0.2.0 |
 | **Phase 1: Balance** | ✅ **Complete** | **Combat balance, mastery, scaling (v0.3.0)** |
-| **Phase 2: UX Polish** | ✅ **Complete** | **Story flow optimization (v0.3.1-0.3.5)** |
+| **Phase 2: Demo Polish** | ✅ **Complete** | **UX flow + combat + save system (v0.3.1-0.3.6)** |
 | Phase 3: Content | Planned | Chapters 1-3, items, locations |
 
 ---
