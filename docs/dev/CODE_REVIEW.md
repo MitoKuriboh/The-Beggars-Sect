@@ -1344,10 +1344,8 @@ Move existing data from game code into these directories:
 
 ### 🔴 Critical (Must Fix)
 
-1. **AIController Not Integrated**
-   - Location: `CombatEngine.ts:651-659`
-   - Impact: All enemy AI logic ignored, enemies only basic attack
-   - Fix: Replace stub with `AIController.selectAction()` call
+1. ~~**AIController Not Integrated**~~ **FIXED 2025-12-06**
+   - Now calls `AIController.selectAction()` at line 654
 
 2. **Missing Technique Definitions**
    - Location: `TechniqueRegistry.ts`
@@ -1503,12 +1501,12 @@ The game demonstrates excellent architecture across all three layers:
 
 | Priority | Issue | Impact |
 |----------|-------|--------|
-| 1 | AIController not connected | Enemies only basic attack |
-| 2 | ~30+ techniques undefined | Boss/enemy abilities fail |
-| 3 | Effect processing missing | Buffs/debuffs don't work |
-| 4 | No item registry | Item system incomplete |
-| 5 | No location registry | Exploration incomplete |
-| 6 | Sound/visual effects | CLI effects not implemented |
+| ~~1~~ | ~~AIController not connected~~ | **FIXED** |
+| 1 | ~30+ techniques undefined | Boss/enemy abilities fail |
+| 2 | Effect processing missing | Buffs/debuffs don't work |
+| 3 | No item registry | Item system incomplete |
+| 4 | No location registry | Exploration incomplete |
+| 5 | Sound/visual effects | CLI effects not implemented |
 
 ### Strengths
 
