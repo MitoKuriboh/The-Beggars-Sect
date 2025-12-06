@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { Box, Text, useApp, useInput } from 'ink';
 import SelectInput from 'ink-select-input';
 const SelectInputComponent = (SelectInput as any).default || SelectInput;
@@ -6,13 +6,14 @@ const SelectInputComponent = (SelectInput as any).default || SelectInput;
 import { GameStore } from '../game/state/GameStore';
 import { createPlayer, createEnemy } from '../game/factories/CharacterFactory';
 import { CombatScreen } from './combat/CombatScreen';
-import type { Character, Enemy } from '../types/index';
+import { StoryScreen } from './story/StoryScreen';
+import type { Character, Enemy, StoryState } from '../types/index';
 
 // =============================================================================
 // TYPES
 // =============================================================================
 
-type Screen = 'title' | 'menu' | 'newgame' | 'stats' | 'combat' | 'credits';
+type Screen = 'title' | 'menu' | 'newgame' | 'stats' | 'story' | 'combat' | 'credits';
 
 interface MenuItem {
   label: string;
@@ -170,12 +171,18 @@ const NewGameScreen: React.FC<{ onComplete: () => void; onBack: () => void }> = 
 /**
  * Player Stats Screen - Show current character status
  */
-const StatsScreen: React.FC<{ onBack: () => void; onCombat: () => void }> = ({
+const StatsScreen: React.FC<{
+  onBack: () => void;
+  onCombat: () => void;
+  onStory: () => void;
+}> = ({
   onBack,
   onCombat,
+  onStory,
 }) => {
   const menuItems: MenuItem[] = [
-    { label: '⚔️  Fight (Test Combat)', value: 'combat' },
+    { label: '📖 Play Story (Prologue)', value: 'story' },
+    { label: '⚔️  Test Combat', value: 'combat' },
     { label: 'Back to Menu', value: 'back' },
   ];
 
@@ -185,9 +192,11 @@ const StatsScreen: React.FC<{ onBack: () => void; onCombat: () => void }> = ({
         onBack();
       } else if (item.value === 'combat') {
         onCombat();
+      } else if (item.value === 'story') {
+        onStory();
       }
     },
-    [onBack, onCombat]
+    [onBack, onCombat, onStory]
   );
 
   if (!GameStore.isInitialized()) {
@@ -305,16 +314,32 @@ const CreditsScreen: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 export const App: React.FC = () => {
   const [screen, setScreen] = useState<Screen>('title');
   const [combatEnemies, setCombatEnemies] = useState<Enemy[]>([]);
+  const [returnToStory, setReturnToStory] = useState(false);
 
   const goToMenu = useCallback(() => setScreen('menu'), []);
   const goToStats = useCallback(() => setScreen('stats'), []);
+  const goToStory = useCallback(() => setScreen('story'), []);
 
   const startCombat = useCallback(() => {
     // Create a test enemy
     const enemy = createEnemy('street-punk');
     setCombatEnemies([enemy]);
+    setReturnToStory(false);
     setScreen('combat');
   }, []);
+
+  // Handle combat starting from story
+  const handleStoryCombat = useCallback((enemies: Enemy[]) => {
+    setCombatEnemies(enemies);
+    setReturnToStory(true);
+    setScreen('combat');
+  }, []);
+
+  // Handle story completion
+  const handleStoryEnd = useCallback((state: StoryState) => {
+    // Story ended - could save state here
+    goToStats();
+  }, [goToStats]);
 
   const handleCombatEnd = useCallback(
     (result: 'victory' | 'defeat' | 'fled', updatedPlayer: Character) => {
@@ -344,10 +369,15 @@ export const App: React.FC = () => {
           statusEffects: [],
         });
       }
-      // Return to stats screen
-      goToStats();
+
+      // Return to story or stats depending on where combat started
+      if (returnToStory) {
+        goToStory();
+      } else {
+        goToStats();
+      }
     },
-    [goToStats]
+    [goToStats, goToStory, returnToStory]
   );
 
   return (
@@ -358,7 +388,14 @@ export const App: React.FC = () => {
         <NewGameScreen onComplete={goToStats} onBack={goToMenu} />
       )}
       {screen === 'stats' && (
-        <StatsScreen onBack={goToMenu} onCombat={startCombat} />
+        <StatsScreen onBack={goToMenu} onCombat={startCombat} onStory={goToStory} />
+      )}
+      {screen === 'story' && GameStore.isInitialized() && (
+        <StoryScreen
+          player={GameStore.getPlayer()}
+          onCombatStart={handleStoryCombat}
+          onGameEnd={handleStoryEnd}
+        />
       )}
       {screen === 'combat' && GameStore.isInitialized() && (
         <CombatScreen

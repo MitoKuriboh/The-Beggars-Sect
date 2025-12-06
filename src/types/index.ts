@@ -17,3 +17,6 @@ export * from './item';
 
 // Game state types
 export * from './game';
+
+// Story types
+export * from './story';
