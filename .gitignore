@@ -22,6 +22,9 @@ beggars-sect-*
 
 # Release builds (distributed separately)
 release/dist/
+installers/
+build-deb/
+build-dmg/
 
 # Environment
 .env
