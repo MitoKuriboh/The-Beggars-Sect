@@ -4,13 +4,15 @@ import SelectInput from 'ink-select-input';
 const SelectInputComponent = (SelectInput as any).default || SelectInput;
 
 import { GameStore } from '../game/state/GameStore';
-import { createPlayer } from '../game/factories/CharacterFactory';
+import { createPlayer, createEnemy } from '../game/factories/CharacterFactory';
+import { CombatScreen } from './combat/CombatScreen';
+import type { Character, Enemy } from '../types/index';
 
 // =============================================================================
 // TYPES
 // =============================================================================
 
-type Screen = 'title' | 'menu' | 'newgame' | 'stats' | 'combat-test' | 'credits';
+type Screen = 'title' | 'menu' | 'newgame' | 'stats' | 'combat' | 'credits';
 
 interface MenuItem {
   label: string;
@@ -168,12 +170,12 @@ const NewGameScreen: React.FC<{ onComplete: () => void; onBack: () => void }> = 
 /**
  * Player Stats Screen - Show current character status
  */
-const StatsScreen: React.FC<{ onBack: () => void; onCombatTest: () => void }> = ({
+const StatsScreen: React.FC<{ onBack: () => void; onCombat: () => void }> = ({
   onBack,
-  onCombatTest,
+  onCombat,
 }) => {
   const menuItems: MenuItem[] = [
-    { label: 'Combat Test (Dev)', value: 'combat-test' },
+    { label: '⚔️  Fight (Test Combat)', value: 'combat' },
     { label: 'Back to Menu', value: 'back' },
   ];
 
@@ -181,11 +183,11 @@ const StatsScreen: React.FC<{ onBack: () => void; onCombatTest: () => void }> = 
     (item: MenuItem) => {
       if (item.value === 'back') {
         onBack();
-      } else if (item.value === 'combat-test') {
-        onCombatTest();
+      } else if (item.value === 'combat') {
+        onCombat();
       }
     },
-    [onBack, onCombatTest]
+    [onBack, onCombat]
   );
 
   if (!GameStore.isInitialized()) {
@@ -254,43 +256,6 @@ const StatsScreen: React.FC<{ onBack: () => void; onCombatTest: () => void }> = 
   );
 };
 
-/**
- * Combat Test Screen - Dev feature to test combat creation
- */
-const CombatTestScreen: React.FC<{ onBack: () => void }> = ({ onBack }) => {
-  useInput((_input, key) => {
-    if (key.escape || key.return) {
-      onBack();
-    }
-  });
-
-  return (
-    <Box flexDirection="column" padding={1}>
-      <Text bold color="red">
-        COMBAT TEST (Dev)
-      </Text>
-      <Box marginTop={1}>
-        <Text dimColor>
-          Combat system is planned for Week 2.
-        </Text>
-      </Box>
-      <Box marginTop={1}>
-        <Text dimColor>
-          Week 1 Foundation:
-        </Text>
-      </Box>
-      <Box paddingLeft={2} flexDirection="column">
-        <Text color="green">✓ Type definitions created</Text>
-        <Text color="green">✓ GameStore implemented</Text>
-        <Text color="green">✓ CharacterFactory implemented</Text>
-        <Text color="green">✓ Basic CLI shell working</Text>
-      </Box>
-      <Box marginTop={2}>
-        <Text color="gray">Press Enter to go back...</Text>
-      </Box>
-    </Box>
-  );
-};
 
 /**
  * Credits Screen
@@ -339,9 +304,51 @@ const CreditsScreen: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
 export const App: React.FC = () => {
   const [screen, setScreen] = useState<Screen>('title');
+  const [combatEnemies, setCombatEnemies] = useState<Enemy[]>([]);
 
   const goToMenu = useCallback(() => setScreen('menu'), []);
   const goToStats = useCallback(() => setScreen('stats'), []);
+
+  const startCombat = useCallback(() => {
+    // Create a test enemy
+    const enemy = createEnemy('street-punk');
+    setCombatEnemies([enemy]);
+    setScreen('combat');
+  }, []);
+
+  const handleCombatEnd = useCallback(
+    (result: 'victory' | 'defeat' | 'fled', updatedPlayer: Character) => {
+      // Update player state in GameStore
+      if (result === 'victory') {
+        // Sync player state from combat
+        GameStore.updatePlayer({
+          hp: updatedPlayer.hp,
+          chi: updatedPlayer.chi,
+          inverseChi: updatedPlayer.inverseChi,
+          masteryLevels: updatedPlayer.masteryLevels,
+          statusEffects: [],
+        });
+      } else if (result === 'defeat') {
+        // Restore some HP on defeat
+        const player = GameStore.getPlayer();
+        GameStore.updatePlayer({
+          hp: Math.floor(player.maxHp * 0.3),
+          chi: player.maxChi,
+          statusEffects: [],
+        });
+      } else {
+        // Fled - keep current state but clear status effects
+        GameStore.updatePlayer({
+          hp: updatedPlayer.hp,
+          chi: updatedPlayer.chi,
+          statusEffects: [],
+        });
+      }
+      // Return to stats screen
+      goToStats();
+    },
+    [goToStats]
+  );
 
   return (
     <Box flexDirection="column">
@@ -351,9 +358,15 @@ export const App: React.FC = () => {
         <NewGameScreen onComplete={goToStats} onBack={goToMenu} />
       )}
       {screen === 'stats' && (
-        <StatsScreen onBack={goToMenu} onCombatTest={() => setScreen('combat-test')} />
+        <StatsScreen onBack={goToMenu} onCombat={startCombat} />
       )}
-      {screen === 'combat-test' && <CombatTestScreen onBack={goToStats} />}
+      {screen === 'combat' && GameStore.isInitialized() && (
+        <CombatScreen
+          player={GameStore.getPlayer()}
+          enemies={combatEnemies}
+          onCombatEnd={handleCombatEnd}
+        />
+      )}
       {screen === 'credits' && <CreditsScreen onBack={goToMenu} />}
     </Box>
   );
