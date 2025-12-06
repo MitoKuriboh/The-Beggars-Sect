@@ -34,9 +34,9 @@ Follow Li Wei's journey from a confused stranger spawned into an unknown world, 
 |---|---|
 | **Genre** | Wuxia Turn-Based RPG |
 | **Platform** | CLI (Terminal) |
-| **Version** | 0.2.0 |
-| **Status** | Week 4 Complete - Save System |
-| **Playtime** | ~5-6 hours (first playthrough) |
+| **Version** | 0.2.1 (Demo) |
+| **Status** | Prologue Complete - Demo Release |
+| **Playtime** | ~25 min (demo) / ~5-6 hours (full game) |
 
 ---
 
@@ -80,9 +80,22 @@ the-beggars-sect/
 
 ---
 
+## Demo
+
+The current release is a **playable demo** featuring the complete Prologue chapter:
+
+- **7 story scenes** (~25 minutes of gameplay)
+- **Full ATB combat** with stances and techniques
+- **Save/Load system** with 3 slots + auto-save
+- **Tutorial integration** teaching core mechanics
+
+The demo showcases all core systems. Full chapters (1-3) coming in future releases.
+
+---
+
 ## Features
 
-### Implemented (v0.2.0)
+### Implemented (v0.2.1 Demo)
 
 - **ATB Combat System** - DEX-based turn order, 7-turn preview
 - **3 Stances** - Flowing, Weathered, Hungry with stat modifiers
@@ -91,7 +104,7 @@ the-beggars-sect/
 - **12 Enemy Types** - 9 regular + 3 bosses with phases
 - **AI Controller** - Pattern-based enemy behavior
 - **Non-Linear Story** - 3 paths (Blade/Stream/Shadow), 3 endings
-- **Prologue Chapter** - 7 scenes, ~25 minutes
+- **Prologue Chapter** - 7 scenes, ~25 minutes (serves as demo)
 - **Save System** - 3 slots + auto-save, file persistence
 - **Full UI** - Combat screen, story renderer, menus
 
