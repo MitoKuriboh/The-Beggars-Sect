@@ -63,6 +63,18 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
   const [location, setLocation] = useState('');
   const [isPaused, setIsPaused] = useState(false);
 
+  // Refs for input handling (avoid stale closures)
+  const phaseRef = useRef(phase);
+  const contentRef = useRef(content);
+  const contentIndexRef = useRef(contentIndex);
+  const isPausedRef = useRef(isPaused);
+
+  // Keep refs in sync
+  useEffect(() => { phaseRef.current = phase; }, [phase]);
+  useEffect(() => { contentRef.current = content; }, [content]);
+  useEffect(() => { contentIndexRef.current = contentIndex; }, [contentIndex]);
+  useEffect(() => { isPausedRef.current = isPaused; }, [isPaused]);
+
   // Initialize story engine
   useEffect(() => {
     const engine = new StoryEngine((newState) => {
@@ -196,12 +208,45 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
     if (result) handleResult(result);
   }, [handleResult]);
 
-  // Input handling
+  // Input handling - use refs to avoid stale closures
   useInput((input, key) => {
-    if (phase === 'content' && (key.return || input === ' ')) {
-      advanceContent();
-    } else if (phase === 'chapter-end' && (key.return || input === ' ')) {
-      handleChapterContinue();
+    const currentPhase = phaseRef.current;
+    const paused = isPausedRef.current;
+
+    if (paused) return;
+
+    if ((key.return || input === ' ')) {
+      if (currentPhase === 'content') {
+        // Direct advancement using refs
+        const idx = contentIndexRef.current;
+        const lines = contentRef.current;
+        const currentLine = lines[idx];
+
+        // Handle pause type
+        if (currentLine?.type === 'pause') {
+          setIsPaused(true);
+          setTimeout(() => {
+            setIsPaused(false);
+            if (idx < lines.length - 1) {
+              setContentIndex(idx + 1);
+            } else {
+              const result = engineRef.current?.advance();
+              if (result) handleResult(result);
+            }
+          }, currentLine.duration || 1000);
+          return;
+        }
+
+        // Normal advancement
+        if (idx < lines.length - 1) {
+          setContentIndex(idx + 1);
+        } else {
+          const result = engineRef.current?.advance();
+          if (result) handleResult(result);
+        }
+      } else if (currentPhase === 'chapter-end') {
+        handleChapterContinue();
+      }
     }
   });
 
