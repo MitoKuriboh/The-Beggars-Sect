@@ -390,10 +390,21 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
         }
 
         // NOW check typewriter (only for text content)
-        // If typewriter is still typing and enabled, skip to show full text
+        // If typewriter is still typing and enabled, complete it and auto-advance
         if (typing && !typeComplete && GameStore.isTypewriterEnabled()) {
           setIsTyping(false);
           setTypewriterComplete(true);
+          // Auto-advance after brief delay so user sees completed text
+          setTimeout(() => {
+            if (idx < lines.length - 1) {
+              setContentIndex(idx + 1);
+              setIsTyping(true);
+              setTypewriterComplete(false);
+            } else {
+              const result = engineRef.current?.advance();
+              if (result) handleResult(result);
+            }
+          }, 200); // 200ms to see the completed line
           return;
         }
 

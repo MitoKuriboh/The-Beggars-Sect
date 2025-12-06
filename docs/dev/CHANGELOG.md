@@ -7,6 +7,20 @@ All notable changes to The Beggars Sect project.
 
 ---
 
+## [0.3.5] - 2025-12-06
+
+### Changed - Single SPACE Advancement
+- **Typewriter auto-advances after completion**
+  - SPACE completes typing → shows full text
+  - Auto-advances after 200ms delay (time to read)
+  - **No second SPACE needed!**
+- **Result:** 1 SPACE per line throughout entire story
+  - Line types, SPACE completes → auto-advance
+  - Smooth, fast reading flow
+  - Brief pause (200ms) to see completed text before next line
+
+---
+
 ## [0.3.4] - 2025-12-06
 
 ### Fixed
