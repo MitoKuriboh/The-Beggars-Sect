@@ -4,7 +4,7 @@ import SelectInput from 'ink-select-input';
 const SelectInputComponent = (SelectInput as any).default || SelectInput;
 
 import { GameStore } from '../game/state/GameStore';
-import { createPlayer, createEnemy } from '../game/factories/CharacterFactory';
+import { createPlayer, createEnemy, scaleEnemyForChapter } from '../game/factories/CharacterFactory';
 import { CombatScreen } from './combat/CombatScreen';
 import { StoryScreen } from './story/StoryScreen';
 import { SaveLoadScreen } from './SaveLoadScreen';
@@ -406,8 +406,13 @@ export const App: React.FC = () => {
             chi: player.maxChi,
             statusEffects: [],
           });
-          // Recreate enemies and restart combat (screen stays on combat)
-          const newEnemies = combatEnemies.map(e => createEnemy(e.templateId));
+          // Recreate enemies with chapter scaling and restart combat
+          const currentChapter = GameStore.getState().storyProgress.chapter;
+          const newEnemies = combatEnemies.map(e => {
+            const enemy = createEnemy(e.templateId);
+            scaleEnemyForChapter(enemy, currentChapter);
+            return enemy;
+          });
           setCombatEnemies(newEnemies);
           // Force re-render by briefly changing screen
           setScreen('story');

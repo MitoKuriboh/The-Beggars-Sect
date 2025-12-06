@@ -110,6 +110,7 @@ export interface LogEntry {
   actorName: string;
   message: string;
   type: 'action' | 'damage' | 'heal' | 'status' | 'system';
+  techniqueId?: string;        // Technique used (if action is technique)
   timestamp: number;
 }
 

@@ -76,11 +76,10 @@ function evaluateCondition(condition: string, ctx: EvalContext): boolean {
     for (let i = log.length - 1; i >= 0; i--) {
       const entry = log[i];
       if (!entry) continue;
-      if (entry.actorName === ctx.player.name && entry.type === 'action') {
-        // Check if the message contains a technique name that implies heavy attack
-        // Heavy techniques typically have "heavy", "crushing", "finishing" in name
-        const heavyKeywords = ['heavy', 'crushing', 'finishing', 'desperate', 'execute', 'final'];
-        return heavyKeywords.some(kw => entry.message.toLowerCase().includes(kw));
+      if (entry.actorName === ctx.player.name && entry.type === 'action' && entry.techniqueId) {
+        // Check if the technique has isHeavy flag
+        const technique = getTechnique(entry.techniqueId);
+        return technique?.isHeavy === true;
       }
     }
     return false;

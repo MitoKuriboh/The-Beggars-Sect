@@ -17,7 +17,7 @@ import type {
 } from '../../types/index';
 import { StoryEngine, PROLOGUE } from '../../game/story';
 import { GameStore } from '../../game/state/GameStore';
-import { createEnemy } from '../../game/factories/CharacterFactory';
+import { createEnemy, scaleEnemyForChapter } from '../../game/factories/CharacterFactory';
 
 import { ContentBlock } from './ContentRenderer';
 import { ChoiceMenu } from './ChoiceMenu';
@@ -204,8 +204,13 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
           setPhase('combat');
           // Auto-save before combat
           GameStore.autoSave();
-          // Create enemy instances
-          const enemies = (result.enemies || []).map((id) => createEnemy(id));
+          // Create enemy instances with chapter scaling
+          const currentChapter = GameStore.getState().storyProgress.chapter;
+          const enemies = (result.enemies || []).map((id) => {
+            const enemy = createEnemy(id);
+            scaleEnemyForChapter(enemy, currentChapter);
+            return enemy;
+          });
           onCombatStart(enemies, result.canLose !== false);
           break;
 

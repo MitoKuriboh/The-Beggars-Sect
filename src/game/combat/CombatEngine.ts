@@ -319,8 +319,9 @@ export class CombatEngine {
         };
     }
 
-    // Log the action
-    this.addLog(action.actor.name, result.message, 'action');
+    // Log the action (include techniqueId if using technique)
+    const techniqueId = action.type === 'technique' ? action.technique?.id : undefined;
+    this.addLog(action.actor.name, result.message, 'action', techniqueId);
 
     // Complete turn if action was successful
     if (result.success) {
@@ -370,7 +371,8 @@ export class CombatEngine {
         });
     }
 
-    this.addLog(enemy.name, result.message, 'action');
+    const techniqueId = action.type === 'technique' ? action.technique?.id : undefined;
+    this.addLog(enemy.name, result.message, 'action', techniqueId);
     this.completeTurn();
 
     return result;
@@ -784,7 +786,7 @@ export class CombatEngine {
 
     // Apply defense
     const defense = defenseStat * defenderStanceMod * defendMod;
-    damage = Math.max(this.config.minDamage, damage - defense * 0.3);
+    damage = Math.max(this.config.minDamage, damage - defense * 0.5);
 
     return {
       total: Math.floor(damage),
@@ -810,11 +812,11 @@ export class CombatEngine {
     } else if (role === 'followup' || role === 'any') {
       // Continue combo
       combo.techniques.push(techniqueId);
-      combo.damageMultiplier = Math.min(1.3, 1.0 + combo.techniques.length * 0.1);
+      combo.damageMultiplier = Math.min(1.6, 1.0 + combo.techniques.length * 0.15);
     } else if (role === 'finisher') {
       // Complete combo
       combo.techniques.push(techniqueId);
-      combo.damageMultiplier = 1.3;
+      combo.damageMultiplier = Math.min(1.6, 1.0 + combo.techniques.length * 0.15);
 
       // Chi refund on successful finisher
       const chiRefund = Math.floor(combo.techniques.length * 3);
@@ -848,13 +850,14 @@ export class CombatEngine {
   // LOGGING
   // ---------------------------------------------------------------------------
 
-  private addLog(actorName: string, message: string, type: LogEntry['type']): void {
+  private addLog(actorName: string, message: string, type: LogEntry['type'], techniqueId?: string): void {
     this.state.combatLog.push({
       round: this.state.round,
       turn: this.state.currentTurn,
       actorName,
       message,
       type,
+      techniqueId,
       timestamp: Date.now(),
     });
 

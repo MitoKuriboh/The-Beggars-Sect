@@ -77,6 +77,7 @@ export interface Technique {
   power: number;               // Base damage (0 for non-damage)
   chiCost: number;             // Chi required (0 = generates chi)
   speed: number;               // Turn delay modifier (-3 slow to +2 fast)
+  isHeavy?: boolean;           // Heavy technique (high power, slow, telegraphed)
 
   // Chi aspect alignment
   aspect: ChiAspect;

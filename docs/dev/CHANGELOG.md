@@ -7,6 +7,49 @@ All notable changes to The Beggars Sect project.
 
 ---
 
+## [0.3.0] - 2025-12-06
+
+### Fixed - Phase 1 Critical Fixes
+
+**Combat Balance Improvements:**
+- **Combo damage bonus increased** from 30% max to 60% max
+  - Scaling: 15% per technique (was 10%)
+  - Makes combo system feel rewarding and impactful
+- **Defense formula strengthened** from ×0.3 to ×0.5
+  - Defense now blocks 40-60% more damage
+  - END stat and Weathered stance are viable strategies
+- **Heavy technique detection fixed**
+  - Added `isHeavy` field to Technique type
+  - AI now checks technique data instead of parsing message text
+  - Marked 4 heavy techniques: finishing-palm, crushing-blow, execute, perfect-strike
+  - System is maintainable and extensible
+
+**Progression Systems:**
+- **Mastery bonuses populated** for all 8 player techniques
+  - 5 levels per technique (10/25/50/100 uses)
+  - Power bonuses scale appropriately by technique tier
+  - Effect bonuses describe gameplay improvements
+  - Mastery system now visible and rewarding
+- **Chapter scaling enabled** for enemy difficulty
+  - Chapter 2: +30% HP, +15% damage
+  - Chapter 3: +60% HP, +30% damage
+  - Applied automatically when combat starts
+  - Proper difficulty curve across chapters
+
+### Technical
+- Added `techniqueId` field to combat log entries
+- Added `isHeavy` field to Technique interface
+- Updated `scaleEnemyForChapter()` integration in StoryScreen and App
+- Build successful, all TypeScript errors resolved
+
+### Impact
+- **Combat feels more strategic** - Defense and combos are rewarding
+- **Progression is visible** - Mastery bonuses show clear growth
+- **Difficulty scales properly** - Chapter progression works
+- **Code is maintainable** - AI detection uses data, not text parsing
+
+---
+
 ## [0.2.9] - 2025-12-06
 
 ### Added
