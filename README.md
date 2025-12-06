@@ -34,7 +34,7 @@ Follow Li Wei's journey from a confused stranger spawned into an unknown world, 
 |---|---|
 | **Genre** | Wuxia Turn-Based RPG |
 | **Platform** | CLI (Terminal) |
-| **Version** | 0.2.3 (Demo) |
+| **Version** | 0.2.4 (Demo) |
 | **Status** | Prologue Complete - Demo Release |
 | **Playtime** | ~25 min (demo) / ~5-6 hours (full game) |
 
@@ -95,7 +95,7 @@ The demo showcases all core systems. Full chapters (1-3) coming in future releas
 
 ## Features
 
-### Implemented (v0.2.3 Demo)
+### Implemented (v0.2.4 Demo)
 
 - **ATB Combat System** - DEX-based turn order, 7-turn preview
 - **3 Stances** - Flowing, Weathered, Hungry with stat modifiers

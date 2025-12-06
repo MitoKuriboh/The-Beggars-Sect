@@ -7,6 +7,52 @@ All notable changes to The Beggars Sect project.
 
 ---
 
+## [0.2.4] - 2025-12-06
+
+### Added
+- **Descriptive Health States (R11)**
+  - Enemies now show health condition: Uninjured, Lightly Wounded, Wounded, Badly Wounded, Near Death, Critical
+  - Color-coded severity: green (healthy), yellow (wounded), red (critical)
+  - Displays next to enemy name in combat UI
+
+- **Component Memoization (R17)**
+  - `HealthBar` wrapped with `React.memo` for performance
+  - `CharacterStatus` wrapped with `React.memo`
+  - `TurnQueue` wrapped with `React.memo`
+  - `CombatLog` wrapped with `React.memo`
+  - Added `displayName` to all memoized components
+
+- **TypeScript Strictness (R19)**
+  - Added `noUncheckedIndexedAccess` - catches unsafe array/object access
+  - Added `noImplicitReturns` - requires explicit return statements
+  - Added `noFallthroughCasesInSwitch` - prevents switch fallthrough bugs
+  - Added `incremental: true` with `.tsbuildinfo` for faster rebuilds
+
+- **Research Documentation**
+  - `IMPROVEMENT_ROADMAP.md` - 2,140 lines, 46 implementation routes with gameplay research
+  - `CLI_GAME_RESEARCH.md` - 1,535 lines, terminal UI and ASCII art techniques
+  - `CLI_RPG_MECHANICS.md` - 1,534 lines, combat systems and wuxia mechanics
+
+### Fixed
+- **Type Safety** - Fixed 30+ potential undefined access bugs across codebase:
+  - `AIController.ts` - Null checks for regex matches and array access
+  - `CombatEngine.ts` - Null check for condition matching
+  - `CharacterFactory.ts` - Null checks for template and scaling access
+  - `StoryEngine.ts` - Null checks for scene block access
+  - `item.ts` - Null check for inventory slot access
+  - `technique.ts` - Null checks for mastery threshold access
+  - `CombatScreen.tsx` - Null checks for enemy array access
+  - `TargetMenu.tsx` - Null check for single enemy auto-select
+
+### Technical
+- `tsconfig.json` - Stricter compiler options, incremental builds
+- `.gitignore` - Added `.tsbuildinfo` to ignore list
+- `HealthBar.tsx` - Added `getHealthDescription()` helper, memoization
+- `TurnQueue.tsx` - Memoization with displayName
+- `CombatLog.tsx` - Memoization with displayName
+
+---
+
 ## [0.2.3] - 2025-12-06
 
 ### Added
@@ -223,6 +269,17 @@ All notable changes to The Beggars Sect project.
 ---
 
 ## Development Sessions
+
+### Session 20 (2025-12-06)
+- Conduct comprehensive gameplay loop research
+- Create IMPROVEMENT_ROADMAP.md with 46 implementation routes
+- Add CLI_GAME_RESEARCH.md and CLI_RPG_MECHANICS.md documentation
+- Implement Quick Wins bundle (R11, R17, R19)
+- Add descriptive health states for enemies in combat
+- Wrap combat components with React.memo for performance
+- Enable stricter TypeScript options (noUncheckedIndexedAccess)
+- Fix 30+ type safety issues caught by stricter config
+- Update version to 0.2.4
 
 ### Session 19 (2025-12-06)
 - Add tutorial combat retry (canLose flag)
