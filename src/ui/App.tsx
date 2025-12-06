@@ -147,6 +147,16 @@ const NewGameScreen: React.FC<{ onComplete: () => void; onBack: () => void }> = 
   onBack,
 }) => {
   const [stage, setStage] = useState<'confirm' | 'creating' | 'done'>('confirm');
+  const completionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timeout on unmount
+  React.useEffect(() => {
+    return () => {
+      if (completionTimeoutRef.current) {
+        clearTimeout(completionTimeoutRef.current);
+      }
+    };
+  }, []);
 
   useInput((input, key) => {
     if (stage === 'confirm') {
@@ -156,7 +166,10 @@ const NewGameScreen: React.FC<{ onComplete: () => void; onBack: () => void }> = 
         const player = createPlayer();
         GameStore.initializeNewGame(player);
         setStage('done');
-        setTimeout(onComplete, 1000);
+        completionTimeoutRef.current = setTimeout(() => {
+          completionTimeoutRef.current = null;
+          onComplete();
+        }, 1000);
       } else if (input === 'n' || key.escape) {
         onBack();
       }
@@ -356,6 +369,18 @@ export const App: React.FC = () => {
   const [storyCombatResult, setStoryCombatResult] = useState<'victory' | 'defeat' | 'fled' | null>(null);
   const [combatCanLose, setCombatCanLose] = useState(true);
 
+  // Timeout ref for combat retry screen transition
+  const combatRetryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timeout on unmount
+  React.useEffect(() => {
+    return () => {
+      if (combatRetryTimeoutRef.current) {
+        clearTimeout(combatRetryTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const goToMenu = useCallback(() => setScreen('menu'), []);
   const goToStats = useCallback(() => setScreen('stats'), []);
   const goToStory = useCallback(() => setScreen('story'), []);
@@ -416,7 +441,10 @@ export const App: React.FC = () => {
           setCombatEnemies(newEnemies);
           // Force re-render by briefly changing screen
           setScreen('story');
-          setTimeout(() => setScreen('combat'), 0);
+          combatRetryTimeoutRef.current = setTimeout(() => {
+            combatRetryTimeoutRef.current = null;
+            setScreen('combat');
+          }, 0);
           return;
         }
         // Normal defeat - restore some HP

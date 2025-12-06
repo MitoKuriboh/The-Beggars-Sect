@@ -53,10 +53,27 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
 }) => {
   // Combat engine
   const engineRef = useRef<CombatEngine | null>(null);
+
+  // Timeout refs for cleanup
+  const enemyActionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const enemyTurnDelayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const [combatState, setCombatState] = useState<CombatState | null>(null);
   const [phase, setPhase] = useState<CombatPhase>('action-select');
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
   const [message, setMessage] = useState<string>('');
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (enemyActionTimeoutRef.current) {
+        clearTimeout(enemyActionTimeoutRef.current);
+      }
+      if (enemyTurnDelayRef.current) {
+        clearTimeout(enemyTurnDelayRef.current);
+      }
+    };
+  }, []);
 
   // Initialize combat engine
   useEffect(() => {
@@ -112,9 +129,21 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
 
     const enemy = readyEntry.character as Enemy;
 
+    // Clear any existing timeouts before starting new turn
+    if (enemyActionTimeoutRef.current) {
+      clearTimeout(enemyActionTimeoutRef.current);
+      enemyActionTimeoutRef.current = null;
+    }
+    if (enemyTurnDelayRef.current) {
+      clearTimeout(enemyTurnDelayRef.current);
+      enemyTurnDelayRef.current = null;
+    }
+
     // Brief delay for readability
     setPhase('animating');
-    setTimeout(() => {
+    enemyActionTimeoutRef.current = setTimeout(() => {
+      enemyActionTimeoutRef.current = null;
+
       const result = engine.executeEnemyTurn(enemy);
       setMessage(result.message);
 
@@ -129,7 +158,9 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
       }
 
       // Small delay before next turn
-      setTimeout(() => {
+      enemyTurnDelayRef.current = setTimeout(() => {
+        enemyTurnDelayRef.current = null;
+
         if (engine.getCombatResult() === 'ongoing') {
           if (engine.isPlayerTurn()) {
             setPhase('action-select');
