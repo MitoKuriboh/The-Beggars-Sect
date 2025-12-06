@@ -19,7 +19,7 @@ const TECHNIQUES: Record<string, Technique> = {
     name: 'Palm Strike',
     chinese: '掌击',
     stance: 'any',
-    power: 12,
+    power: 10,  // Reduced from 12 to encourage chi technique usage
     chiCost: 0,
     speed: 0,
     aspect: 'force',

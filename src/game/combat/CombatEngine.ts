@@ -125,8 +125,8 @@ export class CombatEngine {
    */
   private getInitialTurnValue(char: Character): number {
     const dex = getEffectiveStat(char, 'dex');
-    // Random variance + DEX bonus
-    return Math.floor(Math.random() * 20) + dex;
+    // Random variance (reduced to 0-5 for more consistent DEX impact) + DEX bonus
+    return Math.floor(Math.random() * 5) + dex;
   }
 
   /**
@@ -136,6 +136,28 @@ export class CombatEngine {
     const dex = getEffectiveStat(char, 'dex');
     // Base 10 + DEX modifier
     return this.config.baseTickRate + Math.floor(dex / 5);
+  }
+
+  /**
+   * Apply status effect to character, respecting stackable flag
+   */
+  private applyStatusEffect(target: Character, effect: StatusEffect): boolean {
+    // Check if effect is stackable
+    if (!effect.stackable) {
+      // Check if target already has this effect
+      const existing = target.statusEffects.find(e => e.name === effect.name);
+      if (existing) {
+        // Refresh duration if new effect has longer duration
+        if (effect.duration > existing.duration) {
+          existing.duration = effect.duration;
+        }
+        return false; // Effect not added (already exists)
+      }
+    }
+
+    // Add the effect
+    target.statusEffects.push(effect);
+    return true; // Effect added successfully
   }
 
   /**
@@ -562,8 +584,9 @@ export class CombatEngine {
               stackable: false,
               description: effect.description,
             };
-            effectTarget.statusEffects.push(buffEffect);
-            effectMessages.push(`${effectTarget.name} gains ${effect.description}!`);
+            if (this.applyStatusEffect(effectTarget, buffEffect)) {
+              effectMessages.push(`${effectTarget.name} gains ${effect.description}!`);
+            }
           }
           break;
         }
@@ -579,8 +602,9 @@ export class CombatEngine {
               stackable: false,
               description: effect.description,
             };
-            effectTarget.statusEffects.push(debuffEffect);
-            effectMessages.push(`${effectTarget.name} suffers ${effect.description}!`);
+            if (this.applyStatusEffect(effectTarget, debuffEffect)) {
+              effectMessages.push(`${effectTarget.name} suffers ${effect.description}!`);
+            }
           }
           break;
         }
@@ -590,8 +614,9 @@ export class CombatEngine {
             // Stun has a chance based on effect value (or fixed 30% if not specified differently)
             const stunChance = effect.value > 1 ? effect.value / 100 : 0.3;
             if (Math.random() < stunChance) {
-              effectTarget.statusEffects.push({ ...STATUS_EFFECTS.STUNNED });
-              effectMessages.push(`${effectTarget.name} is stunned!`);
+              if (this.applyStatusEffect(effectTarget, { ...STATUS_EFFECTS.STUNNED })) {
+                effectMessages.push(`${effectTarget.name} is stunned!`);
+              }
             }
           }
           break;
@@ -599,12 +624,14 @@ export class CombatEngine {
 
         case 'armor-break': {
           if (effectTarget) {
-            effectTarget.statusEffects.push({
+            const armorBreakEffect = {
               ...STATUS_EFFECTS.ARMOR_BROKEN,
               duration: effect.duration || 2,
               modifier: -effect.value,
-            });
-            effectMessages.push(`${effectTarget.name}'s armor is broken!`);
+            };
+            if (this.applyStatusEffect(effectTarget, armorBreakEffect)) {
+              effectMessages.push(`${effectTarget.name}'s armor is broken!`);
+            }
           }
           break;
         }
@@ -620,8 +647,9 @@ export class CombatEngine {
               stackable: false,
               description: 'Will counter next attack',
             };
-            effectTarget.statusEffects.push(counterEffect);
-            effectMessages.push(`${effectTarget.name} prepares to counter!`);
+            if (this.applyStatusEffect(effectTarget, counterEffect)) {
+              effectMessages.push(`${effectTarget.name} prepares to counter!`);
+            }
           }
           break;
         }
@@ -649,8 +677,8 @@ export class CombatEngine {
   private executeDefend(action: CombatAction): ActionResult {
     const { actor } = action;
 
-    // Apply defending status
-    actor.statusEffects.push({ ...STATUS_EFFECTS.DEFENDING });
+    // Apply defending status (using helper to prevent stacking)
+    this.applyStatusEffect(actor, { ...STATUS_EFFECTS.DEFENDING });
 
     // Small chi recovery
     const chiRecovered = Math.min(5, actor.maxChi - actor.chi);
