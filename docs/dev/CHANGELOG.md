@@ -7,6 +7,37 @@ All notable changes to The Beggars Sect project.
 
 ---
 
+## [0.2.3] - 2025-12-06
+
+### Added
+- **Tutorial Combat Retry**
+  - Combats with `canLose: false` now auto-restart on defeat
+  - Player HP/Chi fully restored before retry
+  - Enemies recreated from templates for fresh fight
+
+- **Combat Result Flow**
+  - Story screen now properly receives combat result (victory/defeat/fled)
+  - `completeCombat()` called with correct outcome to advance story
+  - Combat phase shows "⚔️ Entering Combat..." transition message
+
+### Fixed
+- **Unique Enemy IDs** - Added counter + timestamp + random for guaranteed uniqueness
+- **Enemy Recreation** - Added `templateId` to Enemy interface for spawning fresh copies
+- **React State Batching** - Story screen uses `unstable_batchedUpdates` to prevent flicker
+- **Combat Log Fragments** - Fixed React key warnings in number highlighting
+- **Choice Menu Rendering** - Changed from `&&` to ternary for consistent React rendering
+- **State Notifications** - Added missing `notifyStateChange()` calls in StoryEngine
+
+### Technical
+- `App.tsx` - Combat retry logic, result propagation, canLose tracking
+- `StoryScreen.tsx` - Combat result handling, batchedUpdates, phase indicator
+- `CharacterFactory.ts` - Enemy ID counter, templateId field
+- `StoryEngine.ts` - Added notifyStateChange() to all advancement paths
+- `CombatLog.tsx` - React.Fragment for text parts
+- `ChoiceMenu.tsx` - Ternary conditional rendering
+
+---
+
 ## [0.2.2] - 2025-12-06
 
 ### Added
@@ -192,6 +223,16 @@ All notable changes to The Beggars Sect project.
 ---
 
 ## Development Sessions
+
+### Session 19 (2025-12-06)
+- Add tutorial combat retry (canLose flag)
+- Fix combat result flow between App and StoryScreen
+- Add unique enemy IDs with counter + templateId for recreation
+- Add React state batching for smooth transitions
+- Fix React key warnings in CombatLog
+- Fix conditional rendering in ChoiceMenu
+- Add missing state notifications in StoryEngine
+- Update documentation for v0.2.3
 
 ### Session 18 (2025-12-06)
 - Implement complete build and deployment system

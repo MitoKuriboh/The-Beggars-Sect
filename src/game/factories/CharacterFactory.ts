@@ -559,6 +559,9 @@ const ENEMY_TEMPLATES: Record<string, EnemyTemplate> = {
 /**
  * Create an enemy from a template ID
  */
+// Counter for unique enemy IDs
+let enemyIdCounter = 0;
+
 export function createEnemy(templateId: string): Enemy {
   const template = ENEMY_TEMPLATES[templateId];
 
@@ -569,9 +572,13 @@ export function createEnemy(templateId: string): Enemy {
   const hp = calculateMaxHp(template.stats.end);
   const chi = calculateMaxChi(template.stats.wis);
 
+  // Generate unique ID using counter + timestamp + random
+  const uniqueId = `${template.id}-${Date.now()}-${++enemyIdCounter}`;
+
   return {
     // Character base
-    id: `${template.id}-${Date.now()}`,
+    id: uniqueId,
+    templateId: template.id,
     name: template.name,
     hp,
     maxHp: hp,

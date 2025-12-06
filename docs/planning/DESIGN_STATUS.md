@@ -1,8 +1,8 @@
 # The Beggars Sect - Design Status & System Breakdown
 
-**Last Updated:** 2025-12-05
+**Last Updated:** 2025-12-06
 **Current Phase:** IMPLEMENTATION (Phase 2 of 6)
-**Status:** Design complete, ready for implementation
+**Status:** v0.2.3 - Combat/story improvements, tutorial retry
 
 ---
 
@@ -836,5 +836,5 @@ See `TECH_DESIGN.md` for implementation architecture.
 
 ---
 
-**Last Updated:** 2025-12-05
-**Status:** Design complete, ready for implementation
+**Last Updated:** 2025-12-06
+**Status:** v0.2.3 - Combat/story integration improvements

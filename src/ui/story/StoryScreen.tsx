@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Box, Text, useInput } from 'ink';
+import { unstable_batchedUpdates } from 'react-dom';
 import type {
   Character,
   Enemy,
@@ -36,8 +37,10 @@ type StoryPhase =
 
 interface StoryScreenProps {
   player: Character;
-  onCombatStart: (enemies: Enemy[]) => void;
+  onCombatStart: (enemies: Enemy[], canLose: boolean) => void;
   onGameEnd: (state: StoryState) => void;
+  combatResult?: 'victory' | 'defeat' | 'fled' | null;
+  onCombatResultHandled?: () => void;
 }
 
 // =============================================================================
@@ -48,6 +51,8 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
   player,
   onCombatStart,
   onGameEnd,
+  combatResult,
+  onCombatResultHandled,
 }) => {
   // Story engine
   const engineRef = useRef<StoryEngine | null>(null);
@@ -112,8 +117,23 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
     if (savedState) {
       // Restore from saved state
       engine.setState(savedState);
-      const result = engine.advance();
-      handleResult(result);
+
+      // If returning from combat, complete it properly
+      if (combatResult) {
+        try {
+          const result = engine.completeCombat(combatResult === 'victory');
+          handleResult(result);
+        } catch (e) {
+          // If not at a combat block (e.g., save state mismatch), just advance normally
+          console.warn('Could not complete combat, advancing story:', e);
+          const result = engine.advance();
+          handleResult(result);
+        }
+        onCombatResultHandled?.();
+      } else {
+        const result = engine.advance();
+        handleResult(result);
+      }
     } else {
       // Start fresh
       const result = engine.startStory();
@@ -123,72 +143,75 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
 
   // Handle story result
   const handleResult = useCallback((result: StoryResult) => {
-    const engine = engineRef.current;
-    const scene = engine?.getScene(result.state.currentScene);
-    if (scene) {
-      setSceneTitle(scene.title);
-      setLocation(scene.location || '');
+    // Batch all state updates to prevent intermediate renders
+    unstable_batchedUpdates(() => {
+      const engine = engineRef.current;
+      const scene = engine?.getScene(result.state.currentScene);
+      if (scene) {
+        setSceneTitle(scene.title);
+        setLocation(scene.location || '');
 
-      // Update scene progress
-      const chapter = engine?.getChapter(result.state.currentChapter);
-      if (chapter) {
-        const sceneIndex = chapter.scenes.findIndex((s) => s.id === scene.id);
-        setSceneProgress({
-          current: sceneIndex + 1,
-          total: chapter.scenes.length,
-        });
+        // Update scene progress
+        const chapter = engine?.getChapter(result.state.currentChapter);
+        if (chapter) {
+          const sceneIndex = chapter.scenes.findIndex((s) => s.id === scene.id);
+          setSceneProgress({
+            current: sceneIndex + 1,
+            total: chapter.scenes.length,
+          });
+        }
       }
-    }
 
-    switch (result.action) {
-      case 'continue':
-        setPhase('content');
-        setContent(result.content || []);
-        setContentIndex(0);
-        break;
+      switch (result.action) {
+        case 'continue':
+          setPhase('content');
+          setContent(result.content || []);
+          setContentIndex(0);
+          break;
 
-      case 'choice':
-        setPhase('choice');
-        setContent(result.content || []);
-        setContentIndex((result.content?.length || 1) - 1);
-        setChoices(result.choices || []);
-        setChoicePrompt('');
-        // Auto-save before important choices
-        GameStore.autoSave();
-        break;
+        case 'choice':
+          setPhase('choice');
+          setContent(result.content || []);
+          setContentIndex((result.content?.length || 1) - 1);
+          setChoices(result.choices || []);
+          setChoicePrompt('');
+          // Auto-save before important choices
+          GameStore.autoSave();
+          break;
 
-      case 'exploration':
-        setPhase('exploration');
-        setAreas(result.areas || []);
-        break;
+        case 'exploration':
+          setPhase('exploration');
+          setAreas(result.areas || []);
+          break;
 
-      case 'combat':
-        setPhase('combat');
-        // Auto-save before combat
-        GameStore.autoSave();
-        // Create enemy instances
-        const enemies = (result.enemies || []).map((id) => createEnemy(id));
-        onCombatStart(enemies);
-        break;
+        case 'combat':
+          setPhase('combat');
+          // Auto-save before combat
+          GameStore.autoSave();
+          // Create enemy instances
+          const enemies = (result.enemies || []).map((id) => createEnemy(id));
+          onCombatStart(enemies, result.canLose !== false);
+          break;
 
-      case 'chapter-end':
-        setPhase('chapter-end');
-        setContent([
-          { type: 'system', text: 'Chapter Complete' },
-          { type: 'instruction', text: 'Press [SPACE] to continue to the next chapter' },
-        ]);
-        setContentIndex(1);
-        // Auto-save at chapter end
-        GameStore.autoSave();
-        break;
+        case 'chapter-end':
+          setPhase('chapter-end');
+          setContent([
+            { type: 'system', text: 'Chapter Complete' },
+            { type: 'instruction', text: 'Press [SPACE] to continue to the next chapter' },
+          ]);
+          setContentIndex(1);
+          // Auto-save at chapter end
+          GameStore.autoSave();
+          break;
 
-      case 'game-end':
-        setPhase('game-end');
-        // Final auto-save
-        GameStore.autoSave();
-        onGameEnd(result.state);
-        break;
-    }
+        case 'game-end':
+          setPhase('game-end');
+          // Final auto-save
+          GameStore.autoSave();
+          onGameEnd(result.state);
+          break;
+      }
+    });
   }, [onCombatStart, onGameEnd]);
 
   // Handle content advancement
@@ -357,9 +380,9 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
           </>
         )}
 
-        {phase === 'choice' && (
+        {phase === 'choice' && choices.length > 0 && (
           <>
-            <ContentBlock lines={content} showAll />
+            {content.length > 0 && <ContentBlock lines={content} showAll />}
             <ChoiceMenu
               choices={choices}
               onSelect={handleChoice}
@@ -385,6 +408,14 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
               ═══ THE END ═══
             </Text>
             <Text>Thank you for playing.</Text>
+          </Box>
+        )}
+
+        {phase === 'combat' && (
+          <Box flexDirection="column" alignItems="center">
+            <Text color="red" bold>
+              ⚔️ Entering Combat...
+            </Text>
           </Box>
         )}
       </Box>

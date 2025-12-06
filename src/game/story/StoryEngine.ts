@@ -177,10 +177,12 @@ export class StoryEngine {
         return this.jumpToScene(nextScene);
       }
 
+      this.notifyStateChange();
       return this.processCurrentPosition();
     }
 
     this.state.contentIndex++;
+    this.notifyStateChange();
     return this.processCurrentPosition();
   }
 
@@ -210,7 +212,7 @@ export class StoryEngine {
       choiceId,
     });
 
-    // Apply effects
+    // Apply effects (this calls notifyStateChange internally)
     if (choice.effects) {
       this.applyChoiceEffects(choice.effects);
     }
@@ -221,6 +223,7 @@ export class StoryEngine {
       this.pendingContent = choice.response;
       this.pendingNextScene = choice.nextScene || null;
 
+      this.notifyStateChange();
       // Return the response content to display
       return {
         action: 'continue',
@@ -231,6 +234,7 @@ export class StoryEngine {
 
     // No response content - advance immediately
     this.state.contentIndex++;
+    this.notifyStateChange();
 
     // If choice branches to a different scene
     if (choice.nextScene) {
@@ -260,6 +264,7 @@ export class StoryEngine {
 
     // Advance past combat
     this.state.contentIndex++;
+    this.notifyStateChange();
     return this.processCurrentPosition();
   }
 
@@ -268,6 +273,7 @@ export class StoryEngine {
    */
   completeExploration(): StoryResult {
     this.state.contentIndex++;
+    this.notifyStateChange();
     return this.processCurrentPosition();
   }
 
@@ -318,6 +324,7 @@ export class StoryEngine {
           action: 'combat',
           state: this.getState(),
           enemies: block.enemies,
+          canLose: block.canLose !== false, // Default to true if not specified
         };
 
       case 'exploration':

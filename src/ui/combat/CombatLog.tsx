@@ -18,11 +18,14 @@ const renderMessage = (message: string, type: LogEntry['type']): React.ReactNode
   const parts = message.split(/(\d+)/);
 
   if (parts.length === 1) {
-    // No numbers, return plain text
+    // No numbers, return plain text (already wrapped by parent Text)
     return message;
   }
 
   return parts.map((part, i) => {
+    // Skip empty strings (can happen with split on capturing groups)
+    if (part === '') return null;
+
     if (/^\d+$/.test(part)) {
       // This is a number - color it based on type
       let color: string;
@@ -42,7 +45,8 @@ const renderMessage = (message: string, type: LogEntry['type']): React.ReactNode
         </Text>
       );
     }
-    return part;
+    // Text parts - return as-is (parent Text wraps them)
+    return <React.Fragment key={i}>{part}</React.Fragment>;
   });
 };
 

@@ -193,6 +193,7 @@ export interface LootDrop {
 }
 
 export interface Enemy extends Character {
+  templateId: string;    // Original template ID for recreation
   faction: EnemyFaction;
   tier: EnemyTier;
   chiAspect: ChiAspect;

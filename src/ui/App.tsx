@@ -351,6 +351,8 @@ export const App: React.FC = () => {
   const [screen, setScreen] = useState<Screen>('title');
   const [combatEnemies, setCombatEnemies] = useState<Enemy[]>([]);
   const [returnToStory, setReturnToStory] = useState(false);
+  const [storyCombatResult, setStoryCombatResult] = useState<'victory' | 'defeat' | 'fled' | null>(null);
+  const [combatCanLose, setCombatCanLose] = useState(true);
 
   const goToMenu = useCallback(() => setScreen('menu'), []);
   const goToStats = useCallback(() => setScreen('stats'), []);
@@ -367,9 +369,10 @@ export const App: React.FC = () => {
   }, []);
 
   // Handle combat starting from story
-  const handleStoryCombat = useCallback((enemies: Enemy[]) => {
+  const handleStoryCombat = useCallback((enemies: Enemy[], canLose: boolean) => {
     setCombatEnemies(enemies);
     setReturnToStory(true);
+    setCombatCanLose(canLose);
     setScreen('combat');
   }, []);
 
@@ -392,7 +395,24 @@ export const App: React.FC = () => {
           statusEffects: [],
         });
       } else if (result === 'defeat') {
-        // Restore some HP on defeat
+        // If this combat can't be lost (tutorial), restart it
+        if (returnToStory && !combatCanLose) {
+          // Restore HP and restart combat
+          const player = GameStore.getPlayer();
+          GameStore.updatePlayer({
+            hp: player.maxHp,
+            chi: player.maxChi,
+            statusEffects: [],
+          });
+          // Recreate enemies and restart combat (screen stays on combat)
+          const newEnemies = combatEnemies.map(e => createEnemy(e.templateId));
+          setCombatEnemies(newEnemies);
+          // Force re-render by briefly changing screen
+          setScreen('story');
+          setTimeout(() => setScreen('combat'), 0);
+          return;
+        }
+        // Normal defeat - restore some HP
         const player = GameStore.getPlayer();
         GameStore.updatePlayer({
           hp: Math.floor(player.maxHp * 0.3),
@@ -410,13 +430,18 @@ export const App: React.FC = () => {
 
       // Return to story or stats depending on where combat started
       if (returnToStory) {
+        setStoryCombatResult(result);
         goToStory();
       } else {
         goToStats();
       }
     },
-    [goToStats, goToStory, returnToStory]
+    [goToStats, goToStory, returnToStory, combatCanLose, combatEnemies]
   );
+
+  const handleCombatResultHandled = useCallback(() => {
+    setStoryCombatResult(null);
+  }, []);
 
   return (
     <Box flexDirection="column">
@@ -433,6 +458,8 @@ export const App: React.FC = () => {
           player={GameStore.getPlayer()}
           onCombatStart={handleStoryCombat}
           onGameEnd={handleStoryEnd}
+          combatResult={storyCombatResult}
+          onCombatResultHandled={handleCombatResultHandled}
         />
       )}
       {screen === 'combat' && GameStore.isInitialized() && (

@@ -235,6 +235,8 @@ export interface StoryResult {
   choices?: Choice[];
   /** Enemy IDs for combat (if action is 'combat') */
   enemies?: string[];
+  /** Can the player lose this combat? If false, must retry on defeat */
+  canLose?: boolean;
   /** Areas for exploration (if action is 'exploration') */
   areas?: ExplorationArea[];
   /** Next chapter ID (if action is 'chapter-end') */
