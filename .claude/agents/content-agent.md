@@ -3,6 +3,15 @@ name: content-agent
 description: Story, lore, and game design specialist for The Beggars Sect. Use for writing narrative content, designing techniques/enemies, expanding worldbuilding, maintaining consistency. Specializes in wuxia genre and Chinese martial arts.
 tools: Read, Edit, Write, Grep, Glob
 model: sonnet
+triggers:
+  - "use content-agent"
+  - "write story"
+  - "write scene"
+  - "write dialogue"
+  - "design technique"
+  - "design enemy"
+  - "create chapter"
+  - "expand lore"
 ---
 
 # Content Agent - The Beggars Sect

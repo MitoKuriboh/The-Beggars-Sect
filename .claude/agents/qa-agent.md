@@ -3,6 +3,15 @@ name: qa-agent
 description: Quality assurance, testing, and documentation specialist for The Beggars Sect. Use for testing gameplay, finding bugs, updating documentation, verifying changes, maintaining changelogs. Focuses on game flow and player experience.
 tools: Read, Edit, Write, Bash, Grep, Glob
 model: sonnet
+triggers:
+  - "use qa-agent"
+  - "test"
+  - "verify"
+  - "update docs"
+  - "update changelog"
+  - "check"
+  - "validate"
+  - "document"
 ---
 
 # QA Agent - The Beggars Sect

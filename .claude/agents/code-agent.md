@@ -3,6 +3,14 @@ name: code-agent
 description: TypeScript/Ink implementation specialist for The Beggars Sect. Use for writing game code, fixing bugs, implementing features, connecting systems. Specializes in React/Ink CLI, game state, combat engine.
 tools: Read, Edit, Write, Bash, Grep, Glob
 model: sonnet
+triggers:
+  - "use code-agent"
+  - "fix bug"
+  - "implement"
+  - "add feature"
+  - "connect"
+  - "integrate"
+  - "refactor"
 ---
 
 # Code Agent - The Beggars Sect
