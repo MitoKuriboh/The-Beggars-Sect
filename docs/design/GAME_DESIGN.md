@@ -5,8 +5,8 @@
 **Protagonist:** Li Wei
 **Genre:** Wuxia Turn-Based RPG
 **Platform:** CLI (Terminal/Command Line)
-**Version:** 1.0 (MVP Scope)
-**Last Updated:** 2025-12-05
+**Version:** 0.2.0 (Playable Build)
+**Last Updated:** 2025-12-06
 
 ---
 
@@ -17,11 +17,11 @@
 **Core Experience:**
 - 3-chapter story arc with cliffhanger ending
 - Turn-based ATB combat (FFX-inspired)
-- 3 martial stances with 15+ techniques
-- AI-powered enemy variations (Claude API)
+- 3 martial stances with 55+ techniques (8 player, 48 enemy)
+- Non-linear narrative with 3 paths and 3 endings
 - Discovery-based progression (no grinding)
 
-**Scope:** MVP releasing in 12 weeks. Sequel hook: Dog Beating Staff.
+**Current Status:** v0.2.0 playable build with complete combat system, save system, and full story.
 
 ---
 
@@ -52,8 +52,8 @@ This is the **overview document**. Detailed specifications live in dedicated doc
 | Document | Location | Content |
 |----------|----------|---------|
 | COMBAT_SYSTEM.md | `systems/` | ATB, stances, combos, chi |
-| TECHNIQUES.md | `systems/` | 15 techniques with full stats |
-| ENEMIES.md | `systems/` | 8 enemies + 3 bosses |
+| TECHNIQUES.md | `systems/` | 55+ techniques with full stats |
+| ENEMIES.md | `systems/` | 11 enemies + 3 bosses |
 | FORMULAS.md | `reference/` | All combat math |
 
 ### Technical
@@ -320,14 +320,20 @@ Chain techniques within 2 turns for bonus damage:
 - **Starter → Follow-up:** +10% damage
 - **Starter → Follow-up → Finisher:** +30% damage
 
-### Techniques (15 for v1.0)
+### Techniques (55+ implemented)
 
 *Full stats in `systems/TECHNIQUES.md`*
 
-**Universal:** Palm Strike, Beggar's Feint, Rising Dragon, Chi Surge, Elder's Teaching, Wanderer's Path
-**Flowing:** Flowing Strike, Stream Palm, Ripple Guard
-**Weathered:** Weathered Palm, Iron Palm, Steadfast Guard
-**Hungry:** Ravenous Palm, Desperate Strike, Feral Combo
+**Player Techniques (8):** Palm Strike, Flowing Strike, Double Palm, Finishing Palm, Weathered Guard, Hungry Fang, Desperate Claw, Deflecting Palm
+
+**Enemy Techniques (48):** All enemies and bosses have unique technique sets:
+- **Basic Enemies:** punch, wild-swing, headbutt, heavy-punch, crushing-blow, intimidate, desperate-flurry, block
+- **Gang Lieutenant:** iron-fist, gang-tactics, takedown, last-stand
+- **Spartan Units:** precision-strike, formation-guard, disciplined-thrust, lance-strike, shield-bash, phalanx-stance, execute
+- **Lone Wolves:** swift-palm, flowing-counter, chi-burst, second-wind, shadowless-palm, void-step, killing-intent, perfect-strike, meditate
+- **Boss Razor:** razor-slash, street-kings-authority, brutal-combo, desperate-fury, last-resort
+- **Boss Vex:** commanders-strike, analyze-opponent, shield-formation, disciplined-assault, rally-cry, final-command, spartans-pride
+- **Boss Hollow One:** empty-palm, mirror-stance, hollow-guard, formless-strike, chi-disruption, perfect-form, hollow-resonance, enlightenment
 
 ---
 
@@ -374,25 +380,25 @@ Chain techniques within 2 turns for bonus damage:
 
 **Urban Thugs** - Street-level brawlers (Chapter 1-2)
 - Street Punk, Alley Brawler, Scarred Enforcer, Gang Lieutenant
-- Boss: **Razor** (200 HP, 3 phases)
+- Boss: **Razor** (200 HP, 3 phases) - 5 unique techniques
 
 **Hypermodern Spartans** - Disciplined authority (Chapter 2-3)
-- Spartan Recruit, Spartan Warrior
-- Boss: **Commander Vex** (300 HP, 3 phases)
+- Spartan Recruit (3 techniques), Spartan Warrior (4 techniques)
+- Boss: **Commander Vex** (300 HP, 3 phases) - 7 unique techniques
 
 **Lone Wolves** - Independent masters (Chapter 2-3)
-- Wandering Fighter, Silent Master
-- Boss: **The Hollow One** (400 HP, 3 phases)
+- Wandering Fighter (4 techniques), Silent Master (5 techniques)
+- Boss: **The Hollow One** (400 HP, 3 phases) - 8 unique techniques
 
-### AI Variation (Claude)
+### AI System (Implemented)
 
-Each enemy has base stats and a variation template. Claude generates unique instances:
-- Stat variance (±10%)
-- Unique names and dialogue
-- Personality traits
-- Tactical adjustments
+The AIController uses pattern-based decision making with:
+- Priority-weighted action selection
+- Phase transitions for bosses (HP thresholds)
+- Condition-based logic (player state, chi levels, combat log analysis)
+- Combat log analysis for tactical decisions
 
-No two playthroughs are identical.
+Each enemy has AI patterns defining aggressive, defensive, and tactical behaviors.
 
 ---
 
@@ -441,52 +447,60 @@ No two playthroughs are identical.
 
 *Full details in `planning/MVP_PLAN.md`*
 
-### 12-Week Timeline
+### Implementation Progress
 
-| Phase | Weeks | Focus |
-|-------|-------|-------|
-| **Design** | 1-2 | Documentation (COMPLETE) |
-| **Core Systems** | 3-4 | Combat, stats, UI framework |
-| **Chapter 1** | 5-6 | Story, enemies, tutorial |
-| **AI Integration** | 7-8 | Claude API, enemy variation |
-| **Chapters 2-3** | 9-10 | Full story implementation |
-| **Polish & Launch** | 11-12 | Balance, testing, release |
+| Phase | Status | Details |
+|-------|--------|---------|
+| **Week 1: Foundation** | ✅ Complete | TypeScript, Ink 3.x, project structure |
+| **Week 2: Combat Engine** | ✅ Complete | ATB system, 2500+ lines of combat code |
+| **Week 3: Story Engine** | ✅ Complete | Non-linear narrative, 3 paths, 3 endings |
+| **Week 4: Save System** | ✅ Complete | SaveManager, auto-save, v0.2.0 release |
+| **Week 5+: Content** | 🔄 In Progress | Additional chapters and techniques |
 
 ### Current Status
 
-**Phase 1: Design - COMPLETE**
+**v0.2.0 Playable Build - COMPLETE**
 
-12 documents elaborated:
-- All 3 chapters scripted
-- 15 techniques with full stats
-- 11 enemies with AI patterns
-- 9 NPCs with characterization
-- Complete combat formulas
-- Full worldbuilding and lore
+Implementation complete:
+- ✅ Full ATB combat engine with DEX-based speed
+- ✅ 55+ techniques (8 player, 48 enemy) with full effect processing
+- ✅ AI controller with pattern-based decision making
+- ✅ 11 enemy templates + 3 bosses with phase transitions
+- ✅ Non-linear story with 3 paths and 3 endings
+- ✅ Save system with file persistence
+- ✅ 15,000+ lines of lore documentation
 
-**Next:** Phase 2 - Core Systems Implementation
+**Codebase Stats:**
+- Game Logic: ~4,200 lines (10 files)
+- Type Definitions: ~1,457 lines (7 files)
+- UI Components: ~1,866 lines (16 files)
+- Total: ~7,500+ lines of TypeScript
+
+**Next:** Week 5+ content expansion
 
 ---
 
-## Scope Boundaries (v1.0 MVP)
+## Scope Boundaries (v0.2.0 Current)
 
-### Included
+### Implemented ✅
 
-- 3 chapters with full story
+- 3 chapters with full non-linear story
 - 3 stances (Flowing, Weathered, Hungry)
-- 15+ techniques
-- 11 enemy types + 3 bosses
-- Claude-powered enemy variation
-- Turn-based ATB combat
-- Mastery progression
-- Save/load system
+- 55+ techniques (8 player, 48 enemy)
+- 11 enemy types + 3 bosses with unique techniques
+- Pattern-based AI with phase transitions
+- Turn-based ATB combat with full effect processing
+- Mastery progression system
+- Save/load system with auto-save
+- CLI packaging for Windows, macOS, Linux
 
-### Deferred to v1.5+
+### Deferred to v1.0+
 
 - 4th stance (Deceptive)
 - Environmental combat
 - Chapters 4-5
 - Staff techniques
+- Claude AI enemy variation (using pattern-based AI instead)
 - Web version
 
 ### Sequel (Book 2)
@@ -511,9 +525,9 @@ From nothing, to legend.
 
 ---
 
-**Document Version:** 2.0 (MVP Scope)
-**Last Updated:** 2025-12-05
-**Status:** Design complete, ready for implementation
+**Document Version:** 3.0 (v0.2.0 Build)
+**Last Updated:** 2025-12-06
+**Status:** Design complete, implementation v0.2.0 released
 
 *This document provides overview and navigation. See linked documents for detailed specifications.*
 

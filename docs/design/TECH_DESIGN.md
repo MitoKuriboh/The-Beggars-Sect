@@ -1,96 +1,90 @@
 # Technical Design Document
 
 **Project:** The Beggars Sect: Li Wei's Ascension
-**Version:** 1.0
-**Last Updated:** 2025-12-05
-**Status:** ELABORATED - Ready for implementation
+**Version:** 2.0
+**Last Updated:** 2025-12-06
+**Status:** IMPLEMENTED - v0.2.0 playable build released
 
 ---
 
 ## Overview
 
-This document defines the technical architecture for implementing The Beggars Sect CLI RPG. It bridges the gap between game design documents and actual code.
+This document defines the technical architecture for The Beggars Sect CLI RPG. It reflects the actual implemented codebase (v0.2.0).
 
-**Tech Stack:**
-- Node.js >=18.0.0
-- TypeScript 5.3+
-- Ink 4.4 (React for CLI)
-- Claude API (enemy variation)
+**Tech Stack (Implemented):**
+- Node.js >=20.0.0
+- TypeScript 5.x
+- Ink 3.x (React for CLI) - using Ink 3 for better stability
+- React 18.x
+- pkg (for standalone executables)
+
+**Build Outputs:**
+- Windows: 79 MB executable
+- macOS: 92 MB executable
+- Linux: 87 MB executable
 
 ---
 
-## Project Structure
+## Project Structure (Actual)
 
 ```
 the-beggars-sect/
-├── docs/                    # Design documentation (you are here)
+├── docs/                           # Design documentation
+│   ├── design/                     # GAME_DESIGN.md, TECH_DESIGN.md
+│   ├── systems/                    # COMBAT_SYSTEM.md, TECHNIQUES.md, ENEMIES.md
+│   ├── story/                      # Chapter scripts
+│   ├── lore/                       # Worldbuilding documents
+│   ├── planning/                   # TODO, progress tracking
+│   ├── reference/                  # FORMULAS.md
+│   └── dev/                        # CODE_REVIEW.md, GUIDELINES.md
+│
 ├── src/
-│   ├── index.tsx            # Entry point
-│   ├── App.tsx              # Root component, game state routing
+│   ├── index.tsx                   # Entry point, renders App
+│   ├── App.tsx                     # Root component, screen routing
 │   │
-│   ├── game/                # Core game logic (no UI)
+│   ├── game/                       # Core game logic (~4,200 lines)
 │   │   ├── combat/
-│   │   │   ├── CombatEngine.ts      # ATB system, turn management
-│   │   │   ├── DamageCalculator.ts  # Formulas from FORMULAS.md
-│   │   │   ├── TechniqueSystem.ts   # Technique execution
-│   │   │   └── StatusEffects.ts     # Buffs, debuffs
+│   │   │   ├── CombatEngine.ts     # ATB system, turn management, effect processing
+│   │   │   ├── AIController.ts     # Pattern-based AI, condition evaluation
+│   │   │   └── TechniqueRegistry.ts # 55+ technique definitions
 │   │   │
-│   │   ├── entities/
-│   │   │   ├── Character.ts         # Base character class
-│   │   │   ├── Player.ts            # Li Wei specifics
-│   │   │   ├── Enemy.ts             # Enemy base class
-│   │   │   └── NPC.ts               # Non-combat NPCs
+│   │   ├── factories/
+│   │   │   └── CharacterFactory.ts # Creates player, enemies, bosses
 │   │   │
-│   │   ├── progression/
-│   │   │   ├── Stats.ts             # Stat calculations
-│   │   │   ├── Mastery.ts           # Technique mastery
-│   │   │   └── Discovery.ts         # Technique unlock tracking
+│   │   ├── story/
+│   │   │   └── StoryEngine.ts      # Non-linear narrative, choice handling
 │   │   │
-│   │   └── state/
-│   │       ├── GameState.ts         # Global state management
-│   │       ├── SaveSystem.ts        # Save/load logic
-│   │       └── StoryProgress.ts     # Chapter/scene tracking
+│   │   ├── save/
+│   │   │   └── SaveManager.ts      # File persistence, auto-save
+│   │   │
+│   │   └── game.ts                 # Main game loop, state coordination
 │   │
-│   ├── ui/                  # Ink components (React for CLI)
+│   ├── ui/                         # Ink components (~1,866 lines)
 │   │   ├── screens/
-│   │   │   ├── TitleScreen.tsx      # Main menu
-│   │   │   ├── CombatScreen.tsx     # Battle UI
-│   │   │   ├── DialogueScreen.tsx   # NPC conversations
-│   │   │   ├── ExplorationScreen.tsx # Area navigation
-│   │   │   └── CharacterScreen.tsx  # Stats, techniques
+│   │   │   ├── MainMenu.tsx        # Title, load, new game
+│   │   │   ├── CombatScreen.tsx    # Battle UI
+│   │   │   ├── StoryScreen.tsx     # Dialogue, choices
+│   │   │   └── CharacterScreen.tsx # Stats, techniques
 │   │   │
-│   │   ├── components/
-│   │   │   ├── HealthBar.tsx        # HP/Chi display
-│   │   │   ├── TurnOrder.tsx        # ATB queue display
-│   │   │   ├── ActionMenu.tsx       # Combat actions
-│   │   │   ├── TechniqueList.tsx    # Technique selection
-│   │   │   └── DialogueBox.tsx      # Text display
-│   │   │
-│   │   └── hooks/
-│   │       ├── useGameState.ts      # State access hook
-│   │       ├── useCombat.ts         # Combat logic hook
-│   │       └── useInput.ts          # Keyboard input hook
+│   │   └── components/
+│   │       ├── HealthBar.tsx       # HP/Chi display
+│   │       ├── ActionMenu.tsx      # Combat actions
+│   │       └── TechniqueList.tsx   # Technique selection
 │   │
-│   ├── data/                # Static game data (from design docs)
-│   │   ├── techniques.ts    # From TECHNIQUES.md
-│   │   ├── enemies.ts       # From ENEMIES.md
-│   │   ├── npcs.ts          # From NPC_CAST.md
-│   │   ├── chapters/        # Story content
-│   │   │   ├── chapter1.ts
-│   │   │   ├── chapter2.ts
-│   │   │   └── chapter3.ts
-│   │   └── constants.ts     # Game constants (from FORMULAS.md)
+│   ├── types/                      # TypeScript definitions (~1,457 lines)
+│   │   ├── character.ts            # Character, Enemy, Stats, StatusEffect
+│   │   ├── combat.ts               # CombatState, CombatAction, ActionResult
+│   │   ├── technique.ts            # Technique, TechniqueEffect, ComboRole
+│   │   ├── story.ts                # Scene, Choice, Consequence
+│   │   └── index.ts                # Re-exports
 │   │
-│   ├── ai/                  # Claude API integration
-│   │   ├── ClaudeClient.ts  # API wrapper
-│   │   ├── EnemyVariation.ts # Procedural enemy generation
-│   │   └── prompts/         # Prompt templates
-│   │       └── enemy-variation.ts
-│   │
-│   └── utils/
-│       ├── random.ts        # RNG utilities
-│       ├── format.ts        # Text formatting
-│       └── logger.ts        # Debug logging
+│   └── data/                       # Static content
+│       └── story/                  # Story scenes and dialogue
+│
+├── dist/                           # Build output
+│   ├── beggars-sect-win.exe
+│   ├── beggars-sect-macos
+│   └── beggars-sect-linux
 │
 ├── package.json
 ├── tsconfig.json
@@ -534,75 +528,71 @@ function getSavePath(slot: number): string {
 
 ---
 
-## Implementation Order
+## Implementation Status
 
-### Phase 1: Foundation (Week 3)
+### Phase 1: Foundation ✅ COMPLETE
 
-1. **Project setup**
-   - npm install
-   - Verify Ink renders "Hello World"
-   - Set up TypeScript paths
+1. **Project setup** ✅
+   - TypeScript + Ink 3.x configured
+   - ESBuild for fast compilation
+   - pkg for standalone executables
 
-2. **Core data structures**
-   - GameState interface
-   - Character/Stats interfaces
-   - Technique/Enemy data files
+2. **Core data structures** ✅
+   - Complete type system (~1,457 lines)
+   - Character, Enemy, Combat, Technique types
+   - Story and save types
 
-3. **Basic UI**
-   - TitleScreen (start/load/quit)
-   - Basic screen routing
+3. **Basic UI** ✅
+   - MainMenu with new/load/quit
+   - Screen routing in App.tsx
 
-### Phase 2: Combat Core (Week 4)
+### Phase 2: Combat Engine ✅ COMPLETE
 
-1. **Combat engine**
-   - ATB tick system
+1. **Combat engine** ✅ (~900 lines in CombatEngine.ts)
+   - ATB tick system with DEX-based speed
    - Turn queue management
-   - Basic attack action
+   - Full action execution (attack, technique, defend, chi-focus, stance, flee)
+   - Effect processing (damage, heal, buff, debuff, stun, multi-hit)
 
-2. **Damage calculator**
-   - Implement FORMULAS.md
-   - Basic damage application
+2. **AI Controller** ✅ (~300 lines in AIController.ts)
+   - Pattern-based decision making
+   - Priority-weighted action selection
+   - Condition evaluation with combat log analysis
+   - Boss phase transitions
 
-3. **Combat UI**
-   - HealthBar component
+3. **Combat UI** ✅
+   - HealthBar, ChiBar components
    - TurnOrder display
-   - ActionMenu
+   - ActionMenu with technique selection
 
-4. **First playable**
-   - Player vs single enemy
-   - Basic attack only
-   - Win/lose detection
+### Phase 3: Techniques ✅ COMPLETE
 
-### Phase 3: Techniques (Week 5)
-
-1. **Technique system**
-   - Load from data files
-   - Execution logic
+1. **Technique system** ✅ (~1,300 lines in TechniqueRegistry.ts)
+   - 55+ techniques defined
+   - Effect processing in CombatEngine
    - Chi management
 
-2. **Stance system**
-   - Stance switching
-   - Stance modifiers
+2. **Stance system** ✅
+   - 3 stances (Flowing, Weathered, Hungry)
+   - Stance modifiers for attack/defense/speed
 
-3. **Combo system**
-   - Combo detection
-   - Combo bonuses
+3. **Combo system** ✅
+   - Combo roles (starter, followup, finisher)
+   - Combo bonus damage
 
-### Phase 4: Content (Weeks 6-8)
+### Phase 4: Content ✅ COMPLETE
 
-1. **All 15 techniques**
-2. **All enemies + bosses**
-3. **Chapter 1-3 scenes**
-4. **NPC dialogue**
-5. **Claude integration**
+1. **All techniques** ✅ - 55+ (8 player, 48 enemy)
+2. **All enemies + bosses** ✅ - 11 enemies, 3 bosses with unique techniques
+3. **Story engine** ✅ - Non-linear narrative, 3 paths, 3 endings
+4. **Save system** ✅ - File persistence, auto-save triggers
 
-### Phase 5: Polish (Weeks 9-12)
+### Phase 5: Polish 🔄 IN PROGRESS
 
-1. **Save/load system**
-2. **Mastery progression**
-3. **Balance tuning**
-4. **ASCII art**
-5. **Testing and launch**
+1. **Save/load system** ✅
+2. **CLI packaging** ✅ - Windows, macOS, Linux executables
+3. **Balance tuning** 🔄
+4. **Additional content** 🔄
 
 ---
 
@@ -632,29 +622,29 @@ function getSavePath(slot: number): string {
 
 ---
 
-## Dependencies
+## Dependencies (Actual)
 
 ```json
 {
   "dependencies": {
-    "ink": "^4.4.1",
-    "ink-text-input": "^5.0.1",
-    "ink-select-input": "^5.0.0",
-    "react": "^18.2.0",
-    "@anthropic-ai/sdk": "^0.10.0",
-    "chalk": "^5.3.0",
-    "boxen": "^7.1.1",
-    "figlet": "^1.7.0"
+    "ink": "^3.2.0",
+    "ink-select-input": "^4.2.2",
+    "ink-text-input": "^4.0.3",
+    "react": "^17.0.2",
+    "chalk": "^4.1.2"
   },
   "devDependencies": {
-    "typescript": "^5.3.3",
-    "@types/node": "^20.10.0",
-    "@types/react": "^18.2.0",
-    "@types/figlet": "^1.5.8",
-    "tsx": "^4.6.0"
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@types/node": "^22.10.2",
+    "@types/react": "^17.0.80",
+    "esbuild": "^0.24.2",
+    "pkg": "^5.8.1",
+    "typescript": "^5.7.2"
   }
 }
 ```
+
+**Note:** Using Ink 3.x (not 4.x) for better stability with CommonJS bundling for standalone executables.
 
 ---
 
@@ -688,9 +678,14 @@ export const CONFIG = {
 
 ---
 
-**This document is the bridge between design and code. When implementing, reference the specific design docs for details:**
-- Combat mechanics → COMBAT_SYSTEM.md
-- Exact formulas → FORMULAS.md
-- Technique stats → TECHNIQUES.md
-- Enemy stats → ENEMIES.md
-- Story content → CHAPTER_*.md
+**Document Version:** 2.0
+**Last Updated:** 2025-12-06
+**Status:** Implementation complete (v0.2.0)
+
+**Related Documents:**
+- Combat mechanics → systems/COMBAT_SYSTEM.md
+- Exact formulas → reference/FORMULAS.md
+- Technique stats → systems/TECHNIQUES.md
+- Enemy stats → systems/ENEMIES.md
+- Story content → story/CHAPTER_*.md
+- Code analysis → dev/CODE_REVIEW.md

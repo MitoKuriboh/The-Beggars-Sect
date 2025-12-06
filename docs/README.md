@@ -1,7 +1,7 @@
 # The Beggars Sect - Documentation
 
 **A CLI RPG set in the Martial Arts Haven**
-**Version:** 0.2.0 | **Last Updated:** 2025-12-06
+**Version:** 0.2.0 | **Last Updated:** 2025-12-06 | **Status:** Playable Build
 
 ---
 
@@ -144,20 +144,21 @@ docs/
 
 | Layer | Files | Lines |
 |-------|-------|-------|
-| Game Logic | 10 | ~3,343 |
+| Game Logic | 10 | ~4,200 |
 | Type Definitions | 7 | ~1,457 |
 | UI Components | 16 | ~1,866 |
 | Entry + Config | 6 | ~164 |
-| **Total** | **39** | **~6,830** |
+| **Total** | **39** | **~7,700** |
 
-### Known Issues (from Code Review)
+### Implementation Status ✅
 
-| Priority | Issue |
-|----------|-------|
-| 1 | AIController not connected to CombatEngine |
-| 2 | ~30+ techniques undefined in registry |
-| 3 | Effect processing not implemented |
-| 4 | No item/location registries |
+| Component | Status |
+|-----------|--------|
+| AIController connected | ✅ Fixed |
+| 55+ techniques defined | ✅ Fixed |
+| Effect processing | ✅ Implemented |
+| Save system | ✅ Implemented |
+| Item/location registries | 🔄 Planned |
 
 See [dev/CODE_REVIEW.md](dev/CODE_REVIEW.md) for full analysis.
 
@@ -204,7 +205,7 @@ See [dev/CODE_REVIEW.md](dev/CODE_REVIEW.md) for full analysis.
 | Total Lines | 15,000+ |
 | Directories | 7 |
 | Story Scenes | 40+ |
-| Techniques Documented | 15+ |
-| Enemies Documented | 14 |
+| Techniques Implemented | 55+ (8 player, 48 enemy) |
+| Enemies Implemented | 11 + 3 bosses |
 | NPCs Documented | 9 |
 | Locations Documented | 20+ |
