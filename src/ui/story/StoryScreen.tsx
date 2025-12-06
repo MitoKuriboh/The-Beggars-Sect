@@ -234,10 +234,10 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
               lines={content}
               currentIndex={contentIndex}
             />
-            {!isPaused && contentIndex === content.length - 1 && (
+            {!isPaused && (
               <Box marginTop={1}>
                 <Text dimColor>
-                  Press [SPACE] to continue...
+                  [SPACE] {contentIndex < content.length - 1 ? 'next' : 'continue'}
                 </Text>
               </Box>
             )}
