@@ -306,6 +306,27 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
     }
   }, [content, contentIndex, isPaused, handleResult]);
 
+  // Auto-handle pause lines when content changes
+  useEffect(() => {
+    const currentLine = content[contentIndex];
+    if (currentLine?.type === 'pause' && !isPaused && phase === 'content') {
+      // Automatically start the pause (user can still skip with SPACE)
+      setIsPaused(true);
+      pauseTimeoutRef.current = setTimeout(() => {
+        pauseTimeoutRef.current = null;
+        setIsPaused(false);
+        if (contentIndex < content.length - 1) {
+          setContentIndex((i) => i + 1);
+          setIsTyping(true);
+          setTypewriterComplete(false);
+        } else {
+          const result = engineRef.current?.advance();
+          if (result) handleResult(result);
+        }
+      }, currentLine.duration || 1000);
+    }
+  }, [content, contentIndex, isPaused, phase, handleResult, setIsPaused, setContentIndex, setIsTyping, setTypewriterComplete]);
+
   // Handle choice selection
   const handleChoice = useCallback((choiceId: string) => {
     const result = engineRef.current?.makeChoice(choiceId);
