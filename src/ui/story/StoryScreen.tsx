@@ -62,6 +62,7 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
   const [sceneTitle, setSceneTitle] = useState('');
   const [location, setLocation] = useState('');
   const [isPaused, _setIsPaused] = useState(false);
+  const [sceneProgress, setSceneProgress] = useState({ current: 1, total: 7 });
 
   // Refs for input handling (avoid stale closures)
   const phaseRef = useRef(phase);
@@ -122,10 +123,21 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
 
   // Handle story result
   const handleResult = useCallback((result: StoryResult) => {
-    const scene = engineRef.current?.getScene(result.state.currentScene);
+    const engine = engineRef.current;
+    const scene = engine?.getScene(result.state.currentScene);
     if (scene) {
       setSceneTitle(scene.title);
       setLocation(scene.location || '');
+
+      // Update scene progress
+      const chapter = engine?.getChapter(result.state.currentChapter);
+      if (chapter) {
+        const sceneIndex = chapter.scenes.findIndex((s) => s.id === scene.id);
+        setSceneProgress({
+          current: sceneIndex + 1,
+          total: chapter.scenes.length,
+        });
+      }
     }
 
     switch (result.action) {
@@ -302,9 +314,14 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
     <Box flexDirection="column" padding={1}>
       {/* Header */}
       <Box marginBottom={1} flexDirection="column">
-        <Text bold color="magenta">
-          ═══ {sceneTitle.toUpperCase()} ═══
-        </Text>
+        <Box justifyContent="space-between">
+          <Text bold color="magenta">
+            ═══ {sceneTitle.toUpperCase()} ═══
+          </Text>
+          <Text dimColor>
+            [{sceneProgress.current}/{sceneProgress.total}]
+          </Text>
+        </Box>
         {location.length > 0 && (
           <Text dimColor>
             📍 {location}
@@ -326,13 +343,17 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
               lines={content}
               currentIndex={contentIndex}
             />
-            {!isPaused && (
-              <Box marginTop={1}>
+            <Box marginTop={1}>
+              {isPaused ? (
+                <Text dimColor italic>
+                  ... [SPACE] skip
+                </Text>
+              ) : (
                 <Text dimColor>
                   [SPACE] {contentIndex < content.length - 1 ? 'next' : 'continue'}
                 </Text>
-              </Box>
-            )}
+              )}
+            </Box>
           </>
         )}
 

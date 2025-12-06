@@ -7,6 +7,64 @@ import React from 'react';
 import { Box, Text } from 'ink';
 import type { ContentLine } from '../../types/index';
 
+// =============================================================================
+// SPEAKER COLOR MAPPING
+// =============================================================================
+
+type SpeakerColor = 'green' | 'yellow' | 'cyan' | 'magenta' | 'red' | 'blue' | 'white';
+
+function getSpeakerColor(speaker: string): SpeakerColor {
+  const upper = speaker.toUpperCase();
+
+  // Player
+  if (upper.includes('LI WEI')) return 'green';
+
+  // Mysterious voices
+  if (upper.includes('VOICE')) return 'magenta';
+
+  // Enemies/Hostile
+  if (upper.includes('THUG') || upper.includes('PUNK') || upper.includes('BRAWLER')) return 'red';
+  if (upper.includes('SPARTAN')) return 'red';
+
+  // Important friendly characters
+  if (upper.includes('OLD DAO') || upper.includes('DAO')) return 'yellow';
+  if (upper.includes('ELDER')) return 'yellow';
+
+  // Beggars Sect
+  if (upper.includes('BEGGAR')) return 'cyan';
+
+  // Generic NPCs
+  return 'white';
+}
+
+function getEmotionIndicator(emotion?: string): string {
+  if (!emotion) return '';
+  switch (emotion.toLowerCase()) {
+    case 'angry': return ' 😠';
+    case 'laughing': return ' 😄';
+    case 'nervous': return ' 😰';
+    case 'sad': return ' 😢';
+    case 'threatening': return ' 😈';
+    case 'greedy': return ' 🤑';
+    case 'panicked': return ' 😱';
+    case 'dismissive': return ' 😒';
+    case 'bitter': return ' 😞';
+    case 'kind': return ' 😊';
+    case 'stern': return ' 😐';
+    case 'intense': return ' 🔥';
+    case 'amused': return ' 😏';
+    case 'smiling': return ' 🙂';
+    case 'gruff': return ' 😤';
+    case 'grinning': return ' 😁';
+    case 'quiet': return '';
+    default: return '';
+  }
+}
+
+// =============================================================================
+// CONTENT RENDERER
+// =============================================================================
+
 interface ContentRendererProps {
   line: ContentLine;
 }
@@ -30,11 +88,13 @@ export const ContentRenderer: React.FC<ContentRendererProps> = ({ line }) => {
       );
 
     case 'dialogue':
+      const speakerColor = getSpeakerColor(line.speaker);
+      const emotion = getEmotionIndicator(line.emotion);
       return (
         <Box marginY={1}>
           <Text>
-            <Text color="cyan" bold>
-              {line.speaker}:
+            <Text color={speakerColor} bold>
+              {line.speaker}{emotion}:
             </Text>
             {' '}
             <Text color="white">{line.text}</Text>
