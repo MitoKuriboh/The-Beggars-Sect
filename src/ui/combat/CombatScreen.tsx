@@ -15,14 +15,14 @@ import { TechniqueMenu } from './TechniqueMenu';
 import { StanceMenu } from './StanceMenu';
 import { TargetMenu } from './TargetMenu';
 import { CenteredScreen } from '../components/PolishedBox';
+import { SEMANTIC_DIVIDERS } from '../theme/dividers';
+import { UI_CONFIG } from '../config/constants';
 
 // =============================================================================
 // CONSTANTS
 // =============================================================================
 
-const ENEMY_ACTION_DELAY = 300; // ms before enemy action executes
-const TURN_TRANSITION_DELAY = 500; // ms between turns
-const TURN_QUEUE_PREVIEW_LENGTH = 7; // Number of turns to show
+const { combat: COMBAT_CONFIG } = UI_CONFIG;
 
 // =============================================================================
 // TYPES
@@ -198,8 +198,8 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
             handleEnemyTurn();
           }
         }
-      }, TURN_TRANSITION_DELAY);
-    }, ENEMY_ACTION_DELAY);
+      }, COMBAT_CONFIG.turnTransitionDelay);
+    }, COMBAT_CONFIG.enemyActionDelay);
   }, [combatState]);
 
   // Handle player action selection
@@ -347,7 +347,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
 
   const turnOrder = useMemo(() => {
     if (!engineRef.current) return [];
-    return engineRef.current.getTurnOrderPreview(TURN_QUEUE_PREVIEW_LENGTH);
+    return engineRef.current.getTurnOrderPreview(COMBAT_CONFIG.turnQueuePreviewLength);
   }, [combatState?.turnQueue]);
 
   const livingEnemies = useMemo(() => {
@@ -395,7 +395,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
 
       {/* Divider */}
       <Box justifyContent="center">
-        <Text color="red" dimColor>────────────────────────────────────────────────────────────────────</Text>
+        <Text color="red" dimColor>{SEMANTIC_DIVIDERS.combat}</Text>
       </Box>
 
       {/* Combatants */}
@@ -447,7 +447,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
 
       {/* Divider */}
       <Box justifyContent="center">
-        <Text color="red" dimColor>────────────────────────────────────────────────────────────────────</Text>
+        <Text color="red" dimColor>{SEMANTIC_DIVIDERS.combat}</Text>
       </Box>
 
       {/* Message */}
@@ -576,7 +576,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
 
       {/* Divider */}
       <Box justifyContent="center" marginTop={1}>
-        <Text color="red" dimColor>────────────────────────────────────────────────────────────────────</Text>
+        <Text color="red" dimColor>{SEMANTIC_DIVIDERS.combat}</Text>
       </Box>
 
       {/* Turn Queue */}

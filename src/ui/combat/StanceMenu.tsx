@@ -3,9 +3,10 @@
  * Switch between combat stances
  */
 
-import React, { useState } from 'react';
-import { Box, Text, useInput } from 'ink';
+import React from 'react';
+import { Box, Text } from 'ink';
 import type { Stance } from '../../types/index';
+import { useMenuNavigation } from '../hooks/useMenuNavigation';
 
 interface StanceMenuProps {
   currentStance: Stance;
@@ -39,24 +40,16 @@ export const StanceMenu: React.FC<StanceMenuProps> = React.memo(({
   onSelect,
   onBack,
 }) => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
-  useInput((input, key) => {
-    if (key.escape) {
-      onBack();
-      return;
-    }
-
-    if (key.upArrow) {
-      setSelectedIndex((prev) => (prev > 0 ? prev - 1 : STANCES.length - 1));
-    } else if (key.downArrow) {
-      setSelectedIndex((prev) => (prev < STANCES.length - 1 ? prev + 1 : 0));
-    } else if (key.return || input === ' ') {
-      const selected = STANCES[selectedIndex];
+  const { selectedIndex } = useMenuNavigation({
+    itemCount: STANCES.length,
+    onSelect: (index) => {
+      const selected = STANCES[index];
       if (selected) {
         onSelect(selected.value);
       }
-    }
+    },
+    onBack,
+    circular: true,
   });
 
   const selectedStance = STANCES[selectedIndex];

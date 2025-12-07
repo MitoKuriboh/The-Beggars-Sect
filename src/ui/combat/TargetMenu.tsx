@@ -3,12 +3,11 @@
  * Choose which enemy to target
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
-import { Box, Text, useInput } from 'ink';
-import SelectInput from 'ink-select-input';
+import React, { useCallback, useEffect } from 'react';
+import { Box, Text } from 'ink';
 import type { Enemy } from '../../types/index';
-
-const SelectInputComponent = (SelectInput as any).default || SelectInput;
+import { SelectInputComponent } from '../components/SelectInputWrapper';
+import { useMenuNavigation } from '../hooks/useMenuNavigation';
 
 interface TargetMenuItem {
   label: string;
@@ -27,23 +26,28 @@ export const TargetMenu: React.FC<TargetMenuProps> = React.memo(({
   onSelect,
   onBack,
 }) => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
   const livingEnemies = enemies.filter((e) => e.hp > 0);
 
-  useInput((input, key) => {
-    if (key.escape) {
-      onBack();
-      return;
-    }
+  const items: TargetMenuItem[] = livingEnemies.map((enemy) => {
+    const hpPercent = Math.floor((enemy.hp / enemy.maxHp) * 100);
 
-    // Handle spacebar to select target
-    if (input === ' ' && !key.return) {
-      const selectedEnemy = livingEnemies[selectedIndex];
+    return {
+      label: `${enemy.name} (HP: ${hpPercent}%)`,
+      value: enemy.id,
+      enemy,
+    };
+  });
+
+  const { selectedIndex } = useMenuNavigation({
+    itemCount: items.length,
+    onSelect: (index) => {
+      const selectedEnemy = items[index]?.enemy;
       if (selectedEnemy) {
         onSelect(selectedEnemy);
       }
-    }
+    },
+    onBack,
+    circular: true,
   });
 
   // Auto-select if only one enemy (use effect to avoid setState during render)
@@ -53,19 +57,6 @@ export const TargetMenu: React.FC<TargetMenuProps> = React.memo(({
       onSelect(singleEnemy);
     }
   }, [livingEnemies, onSelect]);
-
-  const items: TargetMenuItem[] = livingEnemies.map((enemy) => {
-    const hpPercent = Math.floor((enemy.hp / enemy.maxHp) * 100);
-    let hpColor = 'green';
-    if (hpPercent <= 25) hpColor = 'red';
-    else if (hpPercent <= 50) hpColor = 'yellow';
-
-    return {
-      label: `${enemy.name} (HP: ${hpPercent}%)`,
-      value: enemy.id,
-      enemy,
-    };
-  });
 
   const handleSelect = useCallback(
     (item: TargetMenuItem) => {
@@ -88,10 +79,7 @@ export const TargetMenu: React.FC<TargetMenuProps> = React.memo(({
         <Text dimColor> (ESC to go back)</Text>
       </Box>
 
-      <SelectInputComponent items={items} onSelect={handleSelect} onHighlight={(item: TargetMenuItem) => {
-        const index = items.findIndex(i => i.value === item.value);
-        if (index >= 0) setSelectedIndex(index);
-      }} />
+      <SelectInputComponent items={items} onSelect={handleSelect} />
     </Box>
   );
 });

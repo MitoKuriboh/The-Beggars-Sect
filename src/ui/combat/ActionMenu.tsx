@@ -4,10 +4,10 @@
  */
 
 import React, { useCallback } from 'react';
-import { Box, Text, useInput } from 'ink';
-import SelectInput from 'ink-select-input';
-
-const SelectInputComponent = (SelectInput as any).default || SelectInput;
+import { Box, Text } from 'ink';
+import { SelectInputComponent } from '../components/SelectInputWrapper';
+import { MenuContainer } from '../components/MenuContainer';
+import { useMenuNavigation } from '../hooks/useMenuNavigation';
 
 export type ActionType = 'attack' | 'technique' | 'stance' | 'flee';
 
@@ -34,8 +34,6 @@ export const ActionMenu: React.FC<ActionMenuProps> = React.memo(({
   canFlee = true,
   disabled = false,
 }) => {
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
-
   const items: ActionMenuItem[] = [
     { label: 'Attack', value: 'attack' },
     { label: 'Technique', value: 'technique' },
@@ -46,16 +44,14 @@ export const ActionMenu: React.FC<ActionMenuProps> = React.memo(({
     items.push({ label: 'Flee', value: 'flee' });
   }
 
-  // Handle spacebar to confirm selection
-  useInput((input, key) => {
-    if (disabled) return;
-
-    if (input === ' ' && !key.return) {
-      const selectedItem = items[selectedIndex];
-      if (selectedItem) {
-        onSelect(selectedItem.value);
+  const { selectedIndex } = useMenuNavigation({
+    itemCount: items.length,
+    onSelect: (index) => {
+      if (!disabled && items[index]) {
+        onSelect(items[index].value);
       }
-    }
+    },
+    disabled,
   });
 
   const handleSelect = useCallback(
@@ -80,21 +76,17 @@ export const ActionMenu: React.FC<ActionMenuProps> = React.memo(({
   const selectedAction = items[selectedIndex]?.value || 'attack';
 
   return (
-    <Box flexDirection="column" borderStyle="round" borderColor="cyan" paddingX={2} paddingY={1} alignItems="center" width={70}>
-      <Box marginBottom={1}>
-        <Text bold color="cyan">
-          ⚡ Your Action
-        </Text>
-      </Box>
-      <Box>
-        <SelectInputComponent items={items} onSelect={handleSelect} onHighlight={(item: ActionMenuItem) => {
-          const index = items.findIndex(i => i.value === item.value);
-          if (index >= 0) setSelectedIndex(index);
-        }} />
-      </Box>
-      <Box marginTop={1} height={1}>
-        <Text dimColor italic>{ACTION_HINTS[selectedAction]} • SPACE or ENTER to select</Text>
-      </Box>
-    </Box>
+    <MenuContainer
+      title="Your Action"
+      titleIcon="⚡"
+      color="cyan"
+      width={70}
+      footer={`${ACTION_HINTS[selectedAction]} • SPACE or ENTER to select`}
+    >
+      <SelectInputComponent
+        items={items}
+        onSelect={handleSelect}
+      />
+    </MenuContainer>
   );
 });

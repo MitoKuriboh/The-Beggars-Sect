@@ -3,21 +3,13 @@
  * Shows available techniques with chi costs
  */
 
-import React, { useCallback } from 'react';
-import { Box, Text, useInput } from 'ink';
-import SelectInput from 'ink-select-input';
+import React from 'react';
+import { Box, Text } from 'ink';
 import type { Technique } from '../../types/index';
 import { canUseTechnique } from '../../game/combat/TechniqueRegistry';
-
-const SelectInputComponent = (SelectInput as any).default || SelectInput;
-
-interface TechniqueMenuItem {
-  label: string;
-  value: string;
-  technique: Technique;
-  canUse: boolean;
-  reason?: string;
-}
+import { MenuContainer } from '../components/MenuContainer';
+import { useMenuNavigation } from '../hooks/useMenuNavigation';
+import { UI_CONFIG } from '../config/constants';
 
 interface TechniqueMenuProps {
   techniques: Technique[];
@@ -38,43 +30,35 @@ export const TechniqueMenu: React.FC<TechniqueMenuProps> = React.memo(({
   onSelect,
   onBack,
 }) => {
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const maxSlots = UI_CONFIG.menus.maxTechniqueSlots;
 
-  // Handle keyboard input
-  useInput((input, key) => {
-    if (key.escape) {
-      onBack();
-      return;
-    }
-
-    const maxSlots = 4;
-    const availableCount = techniques.length;
-
-    if (key.upArrow) {
-      setSelectedIndex((prev) => (prev > 0 ? prev - 1 : maxSlots - 1));
-    } else if (key.downArrow) {
-      setSelectedIndex((prev) => (prev < maxSlots - 1 ? prev + 1 : 0));
-    } else if ((key.return || input === ' ') && selectedIndex < availableCount) {
-      const tech = techniques[selectedIndex];
-      if (tech) {
-        const { canUse } = canUseTechnique(tech, currentStance, currentChi);
-        if (canUse) {
-          onSelect(tech);
+  const { selectedIndex } = useMenuNavigation({
+    itemCount: maxSlots,
+    onSelect: (index) => {
+      if (index < techniques.length) {
+        const tech = techniques[index];
+        if (tech) {
+          const { canUse } = canUseTechnique(tech, currentStance, currentChi);
+          if (canUse) {
+            onSelect(tech);
+          }
         }
       }
-    }
+    },
+    onBack,
+    circular: true,
   });
 
   const selectedTech = techniques[selectedIndex];
 
   return (
-    <Box flexDirection="column" borderStyle="round" borderColor="magenta" paddingX={2} paddingY={1} alignItems="center" width={70} minHeight={14}>
-      <Box marginBottom={1}>
-        <Text bold color="magenta">
-          ✨ Techniques
-        </Text>
-      </Box>
-
+    <MenuContainer
+      title="Techniques"
+      titleIcon="✨"
+      color="magenta"
+      width={70}
+      minHeight={14}
+    >
       {/* 4 Technique Slots */}
       <Box flexDirection="column" marginBottom={1}>
         {[0, 1, 2, 3].map((slotIndex) => {
@@ -121,6 +105,6 @@ export const TechniqueMenu: React.FC<TechniqueMenuProps> = React.memo(({
           <Text color="magenta" bold>⚡ COMBO x{comboTechniques.length} - ★ = Finisher!</Text>
         )}
       </Box>
-    </Box>
+    </MenuContainer>
   );
 });

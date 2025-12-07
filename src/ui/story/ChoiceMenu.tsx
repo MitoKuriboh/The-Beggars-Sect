@@ -3,12 +3,11 @@
  * Displays story choices for player selection
  */
 
-import React, { useCallback, useState } from 'react';
-import { Box, Text, useInput } from 'ink';
-import SelectInput from 'ink-select-input';
+import React, { useCallback } from 'react';
+import { Box, Text } from 'ink';
 import type { Choice } from '../../types/index';
-
-const SelectInputComponent = (SelectInput as any).default || SelectInput;
+import { SelectInputComponent } from '../components/SelectInputWrapper';
+import { useMenuNavigation } from '../hooks/useMenuNavigation';
 
 interface ChoiceMenuItem {
   label: string;
@@ -36,8 +35,6 @@ export const ChoiceMenu: React.FC<ChoiceMenuProps> = React.memo(({
   onSelect,
   prompt,
 }) => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
   const items: ChoiceMenuItem[] = choices.map((choice) => ({
     label: choice.tag
       ? `${choice.label} (${choice.tag})`
@@ -45,14 +42,15 @@ export const ChoiceMenu: React.FC<ChoiceMenuProps> = React.memo(({
     value: choice.id,
   }));
 
-  // Handle spacebar to confirm selection
-  useInput((input, key) => {
-    if (input === ' ' && !key.return) {
-      const selectedItem = items[selectedIndex];
+  const { selectedIndex } = useMenuNavigation({
+    itemCount: items.length,
+    onSelect: (index) => {
+      const selectedItem = items[index];
       if (selectedItem) {
         onSelect(selectedItem.value);
       }
-    }
+    },
+    circular: true,
   });
 
   const handleSelect = useCallback(
@@ -79,10 +77,7 @@ export const ChoiceMenu: React.FC<ChoiceMenuProps> = React.memo(({
         paddingY={2}
         flexDirection="column"
       >
-        <SelectInputComponent items={items} onSelect={handleSelect} onHighlight={(item: ChoiceMenuItem) => {
-          const index = items.findIndex(i => i.value === item.value);
-          if (index >= 0) setSelectedIndex(index);
-        }} />
+        <SelectInputComponent items={items} onSelect={handleSelect} />
       </Box>
       <Box marginTop={1} justifyContent="center">
         <Text dimColor italic>SPACE or ENTER to select  •  ↑↓ to navigate</Text>
