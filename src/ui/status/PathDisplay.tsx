@@ -42,7 +42,7 @@ const PATH_INFO: Record<'blade' | 'stream' | 'shadow', PathInfo> = {
   },
 };
 
-function renderProgressBar(value: number, maxValue: number = 20, width: number = 15): string {
+function renderProgressBar(value: number, maxValue: number = 20, width: number = 20): string {
   const filled = Math.floor((value / maxValue) * width);
   const empty = width - filled;
   return '█'.repeat(filled) + '░'.repeat(empty);

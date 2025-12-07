@@ -23,6 +23,14 @@ import { ContentBlock } from './ContentRenderer';
 import { ChoiceMenu } from './ChoiceMenu';
 import { ExplorationMenu } from './ExplorationMenu';
 import { StatusMenu } from '../status/StatusMenu';
+import { CenteredScreen } from '../components/PolishedBox';
+
+// =============================================================================
+// CONSTANTS
+// =============================================================================
+
+const AUTO_ADVANCE_DELAY_MS = 200; // Delay after typewriter skip to show completed text
+const DEFAULT_PAUSE_DURATION_MS = 1000; // Default pause duration if not specified
 
 // =============================================================================
 // TYPES
@@ -172,6 +180,36 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
     }
   }, []);
 
+  // Forward declaration for handleResult (defined below)
+  // This allows handlePauseAndAdvance to call it
+  const handleResultRef = useRef<((result: StoryResult) => void) | null>(null);
+
+  // Helper: Handle pause and advance to next content
+  // Centralizes pause logic to avoid duplication across 4+ locations
+  const handlePauseAndAdvance = useCallback((pauseLine: ContentLine, nextIndex: number) => {
+    // Extract duration - only pause type has duration property
+    const duration = pauseLine.type === 'pause' ? pauseLine.duration : DEFAULT_PAUSE_DURATION_MS;
+
+    setIsPaused(true);
+    pauseTimeoutRef.current = setTimeout(() => {
+      pauseTimeoutRef.current = null;
+      setIsPaused(false);
+
+      // Advance past the pause
+      const lines = contentRef.current;
+      if (nextIndex + 1 < lines.length) {
+        setContentIndex(nextIndex + 1);
+        setIsTyping(true);
+        setTypewriterComplete(false);
+      } else {
+        const result = engineRef.current?.advance();
+        if (result && handleResultRef.current) {
+          handleResultRef.current(result);
+        }
+      }
+    }, duration);
+  }, [setIsPaused, setContentIndex, setIsTyping, setTypewriterComplete]);
+
   // Handle story result
   const handleResult = useCallback((result: StoryResult) => {
     // Batch all state updates to prevent intermediate renders
@@ -252,9 +290,19 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
     });
   }, [onCombatStart, onGameEnd]);
 
+  // Update handleResultRef whenever handleResult changes
+  useEffect(() => {
+    handleResultRef.current = handleResult;
+  }, [handleResult]);
+
   // Handle content advancement
   const advanceContent = useCallback(() => {
     if (isPaused) return;
+
+    // Safety check: Empty content or invalid index
+    if (!content || content.length === 0 || contentIndex >= content.length) {
+      return;
+    }
 
     const currentLine = content[contentIndex];
 
@@ -298,6 +346,11 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
 
   // Auto-skip effect lines when content changes
   useEffect(() => {
+    // Safety check: Empty content or invalid index
+    if (!content || content.length === 0 || contentIndex >= content.length) {
+      return;
+    }
+
     const currentLine = content[contentIndex];
     if (currentLine?.type === 'effect' && !isPaused) {
       // Check if next line after effect is a pause
@@ -305,22 +358,8 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
       if (nextIndex < content.length) {
         const nextLine = content[nextIndex];
         if (nextLine?.type === 'pause') {
-          // Next line is a pause - skip effect and auto-handle pause
-          setIsPaused(true);
-          pauseTimeoutRef.current = setTimeout(() => {
-            pauseTimeoutRef.current = null;
-            setIsPaused(false);
-
-            // Advance past the pause
-            if (nextIndex + 1 < content.length) {
-              setContentIndex(nextIndex + 1);
-              setIsTyping(true);
-              setTypewriterComplete(false);
-            } else {
-              const result = engineRef.current?.advance();
-              if (result) handleResult(result);
-            }
-          }, nextLine.duration || 1000);
+          // Next line is a pause - use centralized helper
+          handlePauseAndAdvance(nextLine, nextIndex);
         } else {
           // Normal line after effect, just advance
           setContentIndex(nextIndex);
@@ -328,10 +367,12 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
       } else {
         // No more lines in content, advance story
         const result = engineRef.current?.advance();
-        if (result) handleResult(result);
+        if (result && handleResultRef.current) {
+          handleResultRef.current(result);
+        }
       }
     }
-  }, [content, contentIndex, isPaused, handleResult, setIsPaused, setContentIndex, setIsTyping, setTypewriterComplete]);
+  }, [content, contentIndex, isPaused, handlePauseAndAdvance, setContentIndex]);
 
 
   // Handle choice selection
@@ -398,14 +439,14 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
     const typing = isTypingRef.current;
     const typeComplete = typewriterCompleteRef.current;
 
-    // Don't process other inputs when status menu is open
-    if (showStatusMenu) {
+    // Toggle status menu with ESC (works anytime)
+    if (key.escape) {
+      setShowStatusMenu(!showStatusMenu);
       return;
     }
 
-    // Open status menu with Enter during content/chapter-end (not combat/choice/exploration)
-    if (key.return && (currentPhase === 'content' || currentPhase === 'chapter-end') && !paused) {
-      setShowStatusMenu(true);
+    // Don't process other inputs when status menu is open
+    if (showStatusMenu) {
       return;
     }
 
@@ -425,24 +466,18 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
         // Direct advancement using refs
         const idx = contentIndexRef.current;
         const lines = contentRef.current;
+
+        // Safety check: Empty content array
+        if (!lines || lines.length === 0) {
+          return;
+        }
+
         const currentLine = lines[idx];
 
         // Check non-text content types FIRST (before typewriter check)
-        // Handle pause type - start pause but allow skip
+        // Handle pause type - use centralized helper
         if (currentLine?.type === 'pause') {
-          setIsPaused(true);
-          pauseTimeoutRef.current = setTimeout(() => {
-            pauseTimeoutRef.current = null;
-            setIsPaused(false);
-            if (idx < lines.length - 1) {
-              setContentIndex(idx + 1);
-              setIsTyping(true);
-              setTypewriterComplete(false);
-            } else {
-              const result = engineRef.current?.advance();
-              if (result) handleResult(result);
-            }
-          }, currentLine.duration || 1000);
+          handlePauseAndAdvance(currentLine, idx);
           return;
         }
 
@@ -462,8 +497,14 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
         // NOW check typewriter (only for text content)
         // If typewriter is still typing and enabled, complete it and auto-advance
         if (typing && !typeComplete && GameStore.isTypewriterEnabled()) {
+          // Clear any existing auto-advance timeout to prevent rapid-skip bug
+          if (autoAdvanceTimeoutRef.current) {
+            clearTimeout(autoAdvanceTimeoutRef.current);
+          }
+
           setIsTyping(false);
           setTypewriterComplete(true);
+
           // Auto-advance after brief delay so user sees completed text
           autoAdvanceTimeoutRef.current = setTimeout(() => {
             autoAdvanceTimeoutRef.current = null;
@@ -473,22 +514,8 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
             if (nextIndex < lines.length) {
               const nextLine = lines[nextIndex];
               if (nextLine?.type === 'pause') {
-                // Skip directly over the pause to the line after it
-                setIsPaused(true);
-                pauseTimeoutRef.current = setTimeout(() => {
-                  pauseTimeoutRef.current = null;
-                  setIsPaused(false);
-
-                  // Advance past the pause
-                  if (nextIndex + 1 < lines.length) {
-                    setContentIndex(nextIndex + 1);
-                    setIsTyping(true);
-                    setTypewriterComplete(false);
-                  } else {
-                    const result = engineRef.current?.advance();
-                    if (result) handleResult(result);
-                  }
-                }, nextLine.duration || 1000);
+                // Use centralized pause handler
+                handlePauseAndAdvance(nextLine, nextIndex);
                 return;
               }
             }
@@ -500,9 +527,11 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
               setTypewriterComplete(false);
             } else {
               const result = engineRef.current?.advance();
-              if (result) handleResult(result);
+              if (result && handleResultRef.current) {
+                handleResultRef.current(result);
+              }
             }
-          }, 200); // 200ms to see the completed line
+          }, AUTO_ADVANCE_DELAY_MS);
           return;
         }
 
@@ -511,23 +540,9 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
         if (nextIndex < lines.length) {
           const nextLine = lines[nextIndex];
 
-          // Check if next line is a pause - handle it automatically
+          // Check if next line is a pause - use centralized helper
           if (nextLine?.type === 'pause') {
-            setIsPaused(true);
-            pauseTimeoutRef.current = setTimeout(() => {
-              pauseTimeoutRef.current = null;
-              setIsPaused(false);
-
-              // Advance past the pause
-              if (nextIndex + 1 < lines.length) {
-                setContentIndex(nextIndex + 1);
-                setIsTyping(true);
-                setTypewriterComplete(false);
-              } else {
-                const result = engineRef.current?.advance();
-                if (result) handleResult(result);
-              }
-            }, nextLine.duration || 1000);
+            handlePauseAndAdvance(nextLine, nextIndex);
           } else {
             // Normal line, just advance
             setContentIndex(nextIndex);
@@ -536,7 +551,9 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
           }
         } else {
           const result = engineRef.current?.advance();
-          if (result) handleResult(result);
+          if (result && handleResultRef.current) {
+            handleResultRef.current(result);
+          }
         }
       } else if (currentPhase === 'chapter-end') {
         handleChapterContinue();
@@ -544,123 +561,220 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
     }
   });
 
+  // Get action hint text
+  const getActionHint = () => {
+    if (isPaused) return '...';
+    if (isTyping && !typewriterComplete && GameStore.isTypewriterEnabled()) return 'SPACE to skip  •  ESC for menu';
+    if (phase === 'content') {
+      return contentIndex < content.length - 1 ? 'SPACE to continue  •  ESC for menu' : 'SPACE to continue  •  ESC for menu';
+    }
+    if (phase === 'chapter-end') return 'SPACE to continue  •  ESC for menu';
+    return '';
+  };
+
   // Render
   return (
-    <Box flexDirection="column" padding={1}>
-      {/* Header */}
-      <Box marginBottom={1} flexDirection="column">
-        <Box justifyContent="space-between">
-          <Text bold color="magenta">
-            ═══ {sceneTitle.toUpperCase()} ═══
-          </Text>
-          <Text dimColor>
-            [{sceneProgress.current}/{sceneProgress.total}]
-          </Text>
-        </Box>
-        {location.length > 0 && (
-          <Text dimColor>
-            📍 {location}
-          </Text>
-        )}
-        <Box marginTop={0}>
-          <Text dimColor>[Enter] Status</Text>
-        </Box>
-      </Box>
-
-      {/* Content area */}
+    <CenteredScreen>
       <Box
         flexDirection="column"
-        minHeight={15}
-        borderStyle="single"
-        borderColor="gray"
-        padding={1}
+        borderStyle="double"
+        borderColor="cyan"
+        paddingX={2}
+        paddingY={0}
+        width={84}
       >
-        {phase === 'content' && (
-          <>
-            <ContentBlock
-              lines={content}
-              currentIndex={contentIndex}
-              isTyping={isTyping && GameStore.isTypewriterEnabled()}
-              typewriterSpeed={GameStore.getTypewriterSpeed()}
-              onTypeComplete={handleTypeComplete}
-            />
-            <Box marginTop={1}>
-              {isPaused ? (
-                <Text dimColor italic>
-                  ... [SPACE] skip
-                </Text>
-              ) : isTyping && !typewriterComplete && GameStore.isTypewriterEnabled() ? (
-                <Text dimColor italic>
-                  [SPACE] skip
-                </Text>
-              ) : (
-                <Text dimColor>
-                  [SPACE] {contentIndex < content.length - 1 ? 'next' : 'continue'}
-                </Text>
-              )}
-            </Box>
-          </>
-        )}
+        {/* Header */}
+        <Box marginY={1} justifyContent="center">
+          <Text bold color="cyan">
+            📖 {sceneTitle.toUpperCase()}
+          </Text>
+        </Box>
 
-        {phase === 'choice' && choices.length > 0 && (
-          <>
-            {content.length > 0 && <ContentBlock lines={content} showAll />}
-            <ChoiceMenu
-              choices={choices}
-              onSelect={handleChoice}
-              prompt={choicePrompt}
-            />
-          </>
-        )}
-
-        {phase === 'exploration' && (
-          <ExplorationMenu
-            areas={areas}
-            onComplete={handleExplorationComplete}
-          />
-        )}
-
-        {phase === 'chapter-end' && (
-          <ContentBlock lines={content} showAll />
-        )}
-
-        {phase === 'game-end' && (
-          <Box flexDirection="column" alignItems="center">
-            <Text bold color="green">
-              ═══ THE END ═══
-            </Text>
-            <Text>Thank you for playing.</Text>
+        {/* Location & Progress */}
+        <Box justifyContent="space-between" marginBottom={1}>
+          <Box>
+            {location.length > 0 && (
+              <Text dimColor>📍 {location}</Text>
+            )}
           </Box>
-        )}
+          <Text dimColor>
+            Scene {sceneProgress.current}/{sceneProgress.total}
+          </Text>
+        </Box>
 
-        {phase === 'combat' && (
-          <Box flexDirection="column" alignItems="center">
-            <Text color="red" bold>
-              ⚔️ Entering Combat...
-            </Text>
+        {/* Path Affinity Bar */}
+        {(() => {
+          const storyState = GameStore.getStoryState();
+          if (!storyState) return null;
+
+          const pathScores = storyState.pathScores;
+          const total = pathScores.blade + pathScores.stream + pathScores.shadow;
+          if (total === 0) return null;
+
+          const bladePercent = Math.round((pathScores.blade / total) * 100);
+          const streamPercent = Math.round((pathScores.stream / total) * 100);
+          const shadowPercent = Math.round((pathScores.shadow / total) * 100);
+
+          const getBar = (percent: number, length: number = 5) => {
+            const filled = Math.round((percent / 100) * length);
+            return '█'.repeat(filled) + '░'.repeat(length - filled);
+          };
+
+          return (
+            <Box marginBottom={1} justifyContent="center">
+              <Text color="red">{getBar(bladePercent)}</Text>
+              <Text dimColor> </Text>
+              <Text color="cyan">{getBar(streamPercent)}</Text>
+              <Text dimColor> </Text>
+              <Text color="magenta">{getBar(shadowPercent)}</Text>
+              <Text dimColor> • </Text>
+              <Text color="red">B:{bladePercent}%</Text>
+              <Text dimColor> </Text>
+              <Text color="cyan">S:{streamPercent}%</Text>
+              <Text dimColor> </Text>
+              <Text color="magenta">Sh:{shadowPercent}%</Text>
+            </Box>
+          );
+        })()}
+
+        {/* Divider */}
+        <Box justifyContent="center">
+          <Text color="cyan" dimColor>────────────────────────────────────────────────────────────────────────────</Text>
+        </Box>
+
+        {/* Content area - Optimal reading zone */}
+        <Box
+          flexDirection="column"
+          minHeight={28}
+          paddingX={3}
+          paddingY={2}
+        >
+          {phase === 'content' && (
+            <>
+              <ContentBlock
+                lines={content}
+                currentIndex={contentIndex}
+                isTyping={isTyping && GameStore.isTypewriterEnabled()}
+                typewriterSpeed={GameStore.getTypewriterSpeed()}
+                onTypeComplete={handleTypeComplete}
+              />
+            </>
+          )}
+
+          {phase === 'choice' && choices.length > 0 && (
+            <>
+              {content.length > 0 && (
+                <Box marginBottom={1}>
+                  <ContentBlock lines={content} showAll />
+                </Box>
+              )}
+              <ChoiceMenu
+                choices={choices}
+                onSelect={handleChoice}
+                prompt={choicePrompt}
+              />
+            </>
+          )}
+
+          {phase === 'exploration' && (
+            <ExplorationMenu
+              areas={areas}
+              onComplete={handleExplorationComplete}
+            />
+          )}
+
+          {phase === 'chapter-end' && (
+            <>
+              <ContentBlock lines={content} showAll />
+            </>
+          )}
+
+          {phase === 'game-end' && (
+            <Box flexDirection="column" alignItems="center" justifyContent="center" minHeight={25}>
+              <Box marginBottom={2}>
+                <Text bold color="green">
+                  ═══════════════════════════════════════
+                </Text>
+              </Box>
+              <Box marginBottom={1}>
+                <Text bold color="green">
+                  ✓  THE END  ✓
+                </Text>
+              </Box>
+              <Box marginBottom={2}>
+                <Text bold color="green">
+                  ═══════════════════════════════════════
+                </Text>
+              </Box>
+              <Text dimColor italic>Thank you for playing.</Text>
+            </Box>
+          )}
+
+          {phase === 'combat' && (
+            <Box flexDirection="column" alignItems="center" justifyContent="center" minHeight={25}>
+              <Text color="red" bold>
+                ⚔ Entering Combat...
+              </Text>
+            </Box>
+          )}
+        </Box>
+
+        {/* Divider */}
+        <Box justifyContent="center">
+          <Text color="cyan" dimColor>────────────────────────────────────────────────────────────────────────────</Text>
+        </Box>
+
+        {/* Action Bar */}
+        <Box marginY={1} justifyContent="center">
+          <Text dimColor italic>
+            {getActionHint()}
+          </Text>
+        </Box>
+
+        {/* Status Menu Overlay with Backdrop */}
+        {showStatusMenu && engineRef.current && (
+          <Box
+            position="absolute"
+            width="100%"
+            height="100%"
+            flexDirection="column"
+          >
+            {/* Solid backdrop to cover content */}
+            <Box
+              flexDirection="column"
+              borderStyle="double"
+              borderColor="black"
+              width={80}
+              paddingX={2}
+              paddingY={1}
+            >
+              {Array.from({ length: 35 }).map((_, i) => (
+                <Text key={i} backgroundColor="black">
+                  {' '.repeat(76)}
+                </Text>
+              ))}
+            </Box>
+
+            {/* Status Menu on top of backdrop */}
+            <Box
+              position="absolute"
+              width="100%"
+              height="100%"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <StatusMenu
+                player={player}
+                storyState={engineRef.current.getState()}
+                onClose={() => setShowStatusMenu(false)}
+                onSaveLoad={handleSaveLoadComplete}
+                onQuitToMenu={onQuitToMenu}
+              />
+            </Box>
           </Box>
         )}
       </Box>
-
-      {/* Status Menu Overlay */}
-      {showStatusMenu && engineRef.current && (
-        <Box
-          position="absolute"
-          width="100%"
-          height="100%"
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <StatusMenu
-            player={player}
-            storyState={engineRef.current.getState()}
-            onClose={() => setShowStatusMenu(false)}
-            onSaveLoad={handleSaveLoadComplete}
-            onQuitToMenu={onQuitToMenu}
-          />
-        </Box>
-      )}
-    </Box>
+    </CenteredScreen>
   );
 };

@@ -72,18 +72,35 @@ export function useTypewriter(
     }
   }, [text, autoStart]);
 
-  // Typing effect
+  // Typing effect with batched updates to reduce flickering
   useEffect(() => {
     if (!isTyping || isComplete) return;
 
     const msPerChar = 1000 / speed;
+    let isActive = true; // Race condition guard
+    let pendingUpdate = false;
+
+    // Batch state updates by queueing them in microtask queue
+    // This reduces the number of re-renders and prevents flickering
+    const batchedUpdate = () => {
+      if (!pendingUpdate && isActive) {
+        pendingUpdate = true;
+        // Use setImmediate (Node.js) or setTimeout(0) to batch updates
+        setImmediate(() => {
+          if (isActive) {
+            setDisplayedText(textRef.current.slice(0, indexRef.current));
+            pendingUpdate = false;
+          }
+        });
+      }
+    };
 
     intervalRef.current = setInterval(() => {
       const currentText = textRef.current;
 
       if (indexRef.current < currentText.length) {
         indexRef.current++;
-        setDisplayedText(currentText.slice(0, indexRef.current));
+        batchedUpdate();
       } else {
         // Typing complete
         if (intervalRef.current) {
@@ -92,11 +109,22 @@ export function useTypewriter(
         }
         setIsTyping(false);
         setIsComplete(true);
-        onCompleteRef.current?.();
+
+        // Only call onComplete if effect is still active (not cleaned up)
+        // This prevents race condition where callback triggers during cleanup
+        if (isActive) {
+          // Use setTimeout to defer callback until after state updates complete
+          setTimeout(() => {
+            if (isActive) {
+              onCompleteRef.current?.();
+            }
+          }, 0);
+        }
       }
     }, msPerChar);
 
     return () => {
+      isActive = false; // Mark as inactive to prevent callback during cleanup
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
@@ -113,7 +141,11 @@ export function useTypewriter(
     setDisplayedText(textRef.current);
     setIsTyping(false);
     setIsComplete(true);
-    onCompleteRef.current?.();
+
+    // Defer callback to prevent race conditions
+    setTimeout(() => {
+      onCompleteRef.current?.();
+    }, 0);
   }, []);
 
   const reset = useCallback(() => {

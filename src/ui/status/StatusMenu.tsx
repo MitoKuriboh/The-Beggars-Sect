@@ -11,6 +11,8 @@ import { PathDisplay } from './PathDisplay';
 import { StatsDisplay } from './StatsDisplay';
 import { RelationshipsDisplay } from './RelationshipsDisplay';
 import { SaveLoadTab } from './SaveLoadTab';
+import { CenteredScreen, useTerminalHeight } from '../components/PolishedBox';
+import { Header } from '../components/Decorative';
 
 interface StatusMenuProps {
   player: Character;
@@ -38,6 +40,7 @@ const TABS: Tab[] = [
 
 export const StatusMenu: React.FC<StatusMenuProps> = ({ player, storyState, onClose, onSaveLoad, onQuitToMenu }) => {
   const [activeTab, setActiveTab] = useState<TabKey>('paths');
+  const terminalHeight = useTerminalHeight();
 
   const handleSaveLoadComplete = () => {
     onSaveLoad?.();
@@ -68,35 +71,43 @@ export const StatusMenu: React.FC<StatusMenuProps> = ({ player, storyState, onCl
   });
 
   return (
-    <Box flexDirection="column" borderStyle="double" borderColor="yellow" padding={1}>
+    <Box flexDirection="column" borderStyle="double" borderColor="yellow" paddingX={2} paddingY={0} width={74}>
       {/* Header */}
-      <Box marginBottom={1} justifyContent="center">
+      <Box marginY={1} justifyContent="center">
         <Text bold color="yellow">
-          ═══ CHARACTER STATUS ═══
+          ⚡ CHARACTER STATUS
         </Text>
       </Box>
 
+      {/* Divider */}
+      <Box justifyContent="center">
+        <Text color="yellow" dimColor>──────────────────────────────────────────────────────────────────</Text>
+      </Box>
+
       {/* Tab Navigation */}
-      <Box marginBottom={1} justifyContent="space-around">
+      <Box marginY={1} justifyContent="space-around">
         {TABS.map((tab) => (
-          <Box key={tab.key}>
-            <Text
-              bold={activeTab === tab.key}
-              color={activeTab === tab.key ? 'cyan' : 'white'}
-              dimColor={activeTab === tab.key ? false : true}
-            >
-              {activeTab === tab.key ? '▸ ' : ''}{tab.label}{activeTab === tab.key ? ' ◂' : ''}
-            </Text>
-          </Box>
+          <Text
+            key={tab.key}
+            bold={activeTab === tab.key}
+            color={activeTab === tab.key ? 'cyan' : 'white'}
+            dimColor={activeTab === tab.key ? false : true}
+          >
+            {tab.label}
+          </Text>
         ))}
+      </Box>
+
+      {/* Divider */}
+      <Box justifyContent="center">
+        <Text color="yellow" dimColor>──────────────────────────────────────────────────────────────────</Text>
       </Box>
 
       {/* Tab Content */}
       <Box
-        minHeight={20}
-        borderStyle="single"
-        borderColor="gray"
-        padding={1}
+        minHeight={22}
+        paddingX={1}
+        paddingY={1}
         flexDirection="column"
       >
         {activeTab === 'stats' && <StatsDisplay player={player} />}
@@ -106,43 +117,31 @@ export const StatusMenu: React.FC<StatusMenuProps> = ({ player, storyState, onCl
         )}
         {activeTab === 'progress' && (
           <Box flexDirection="column">
-            <Box marginBottom={1}>
-              <Text bold color="yellow">
-                道 JOURNEY PROGRESS
+            <Box marginBottom={1} justifyContent="center">
+              <Text bold color="cyan">
+                道 JOURNEY
               </Text>
             </Box>
-            <Box flexDirection="column">
+            <Box flexDirection="column" paddingX={2}>
               <Box marginBottom={1}>
-                <Text bold>Current Chapter:</Text>
-                <Text> {storyState.currentChapter.toUpperCase()}</Text>
+                <Text dimColor>Chapter: </Text>
+                <Text color="cyan" bold>{storyState.currentChapter.toUpperCase()}</Text>
               </Box>
               <Box marginBottom={1}>
-                <Text bold>Scenes Completed:</Text>
-                <Text> {storyState.completedScenes.length}</Text>
+                <Text dimColor>Scenes: </Text>
+                <Text color="cyan">{storyState.completedScenes.length}</Text>
               </Box>
               <Box marginBottom={1}>
-                <Text bold>Choices Made:</Text>
-                <Text> {storyState.choiceHistory.length}</Text>
+                <Text dimColor>Choices: </Text>
+                <Text color="cyan">{storyState.choiceHistory.length}</Text>
               </Box>
               {storyState.discoveredItems.length > 0 && (
-                <Box marginBottom={1} flexDirection="column">
-                  <Text bold>Items Discovered:</Text>
-                  {storyState.discoveredItems.map((item) => (
-                    <Text key={item} dimColor>
-                      • {item}
-                    </Text>
-                  ))}
-                </Box>
-              )}
-              {Object.keys(storyState.flags).length > 0 && (
                 <Box marginTop={1} flexDirection="column">
-                  <Text bold dimColor>
-                    Story Flags:
-                  </Text>
-                  <Box flexDirection="column" marginLeft={2}>
-                    {Object.entries(storyState.flags).map(([key, value]) => (
-                      <Text key={key} dimColor>
-                        {key}: {String(value)}
+                  <Text bold>Items:</Text>
+                  <Box paddingLeft={2} flexDirection="column">
+                    {storyState.discoveredItems.map((item) => (
+                      <Text key={item} dimColor>
+                        • {item}
                       </Text>
                     ))}
                   </Box>
@@ -160,9 +159,14 @@ export const StatusMenu: React.FC<StatusMenuProps> = ({ player, storyState, onCl
         )}
       </Box>
 
+      {/* Divider */}
+      <Box justifyContent="center">
+        <Text color="yellow" dimColor>──────────────────────────────────────────────────────────────────</Text>
+      </Box>
+
       {/* Footer */}
-      <Box marginTop={1} justifyContent="center">
-        <Text dimColor>[←→] Switch Tabs  |  [ESC] Close</Text>
+      <Box marginY={1} justifyContent="center">
+        <Text dimColor italic>← → switch tabs  •  ESC to close</Text>
       </Box>
     </Box>
   );

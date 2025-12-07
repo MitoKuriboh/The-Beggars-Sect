@@ -5,11 +5,11 @@
 
 import React, { useState, useCallback } from 'react';
 import { Box, Text, useInput } from 'ink';
-import SelectInput from 'ink-select-input';
-const SelectInputComponent = (SelectInput as any).default || SelectInput;
-
 import { GameStore } from '../game/state/GameStore';
 import type { SaveSlot } from '../game/state/SaveManager';
+import { CenteredScreen, PolishedBox, MessageBox, ConfirmationBox } from './components/PolishedBox';
+import { SelectMenu } from './components/Menu';
+import type { MenuItem } from './components/Menu';
 
 // =============================================================================
 // TYPES
@@ -24,10 +24,6 @@ interface SaveLoadScreenProps {
   onBack: () => void;
 }
 
-interface SlotMenuItem {
-  label: string;
-  value: string;
-}
 
 // =============================================================================
 // HELPERS
@@ -70,8 +66,8 @@ export const SaveLoadScreen: React.FC<SaveLoadScreenProps> = ({
   const slots = GameStore.getSaveSlots();
 
   // Build menu items
-  const buildMenuItems = (): SlotMenuItem[] => {
-    const items: SlotMenuItem[] = [];
+  const buildMenuItems = (): MenuItem[] => {
+    const items: MenuItem[] = [];
 
     // Delete mode - show delete options
     if (internalMode === 'delete') {
@@ -138,7 +134,7 @@ export const SaveLoadScreen: React.FC<SaveLoadScreenProps> = ({
   };
 
   const handleSelect = useCallback(
-    (item: SlotMenuItem) => {
+    (item: MenuItem) => {
       if (item.value === 'back') {
         if (internalMode === 'delete') {
           setInternalMode('normal');
@@ -259,7 +255,7 @@ export const SaveLoadScreen: React.FC<SaveLoadScreenProps> = ({
   };
 
   // Handle confirmation selections
-  const handleDeleteAllConfirm = useCallback((item: SlotMenuItem) => {
+  const handleDeleteAllConfirm = useCallback((item: MenuItem) => {
     if (item.value === 'yes') {
       performDeleteAll();
     } else {
@@ -267,7 +263,7 @@ export const SaveLoadScreen: React.FC<SaveLoadScreenProps> = ({
     }
   }, []);
 
-  const handleSlotConfirm = useCallback((item: SlotMenuItem) => {
+  const handleSlotConfirm = useCallback((item: MenuItem) => {
     if (item.value === 'yes') {
       if (internalMode === 'delete') {
         performDelete(confirmSlot!);
@@ -281,87 +277,73 @@ export const SaveLoadScreen: React.FC<SaveLoadScreenProps> = ({
 
   // Delete all confirmation
   if (confirmDeleteAll) {
-    const confirmItems: SlotMenuItem[] = [
+    const confirmItems: MenuItem[] = [
       { label: 'Yes, Delete All', value: 'yes' },
       { label: 'No, Cancel', value: 'no' },
     ];
     return (
-      <Box flexDirection="column" padding={1}>
-        <Text bold color="yellow">
-          ⚠ ⚠ ⚠  DELETE ALL SAVES? ⚠ ⚠ ⚠
-        </Text>
-        <Box marginTop={1}>
-          <Text>
-            Permanently delete ALL save files? This CANNOT be undone!
-          </Text>
-        </Box>
-        <Box marginTop={1}>
-          <SelectInputComponent items={confirmItems} onSelect={handleDeleteAllConfirm} />
-        </Box>
-      </Box>
+      <ConfirmationBox
+        title="⚠ DELETE ALL SAVES?"
+        message="Permanently delete ALL save files? This CANNOT be undone!"
+        type="warning"
+      >
+        <SelectMenu items={confirmItems} onSelect={handleDeleteAllConfirm} />
+      </ConfirmationBox>
     );
   }
 
   // Slot confirmation dialog
   if (confirmSlot !== null) {
-    const confirmItems: SlotMenuItem[] = [
+    const confirmItems: MenuItem[] = [
       { label: 'Yes, Confirm', value: 'yes' },
       { label: 'No, Cancel', value: 'no' },
     ];
     return (
-      <Box flexDirection="column" padding={1}>
-        <Text bold color="yellow">
-          {internalMode === 'delete' ? '⚠ DELETE SAVE?' : 'OVERWRITE SAVE?'}
-        </Text>
-        <Box marginTop={1}>
-          <Text>
-            {internalMode === 'delete'
-              ? `Permanently delete Slot ${confirmSlot}? This cannot be undone.`
-              : `Slot ${confirmSlot} already has a save. Overwrite it?`}
-          </Text>
-        </Box>
-        <Box marginTop={1}>
-          <SelectInputComponent items={confirmItems} onSelect={handleSlotConfirm} />
-        </Box>
-      </Box>
+      <ConfirmationBox
+        title={internalMode === 'delete' ? '⚠ DELETE SAVE?' : 'OVERWRITE SAVE?'}
+        message={
+          internalMode === 'delete'
+            ? `Permanently delete Slot ${confirmSlot}? This cannot be undone.`
+            : `Slot ${confirmSlot} already has a save. Overwrite it?`
+        }
+        type="warning"
+      >
+        <SelectMenu items={confirmItems} onSelect={handleSlotConfirm} />
+      </ConfirmationBox>
     );
   }
 
   // Message display
   if (message) {
-    return (
-      <Box flexDirection="column" padding={1}>
-        <Text color={messageType === 'success' ? 'green' : 'red'}>
-          {message}
-        </Text>
-      </Box>
-    );
+    return <MessageBox message={message} type={messageType} />;
   }
 
   const menuItems = buildMenuItems();
 
+  const icon = internalMode === 'delete' ? '🗑' : mode === 'save' ? '💾' : '📂';
+  const title = internalMode === 'delete' ? 'DELETE SAVE' : mode === 'save' ? 'SAVE GAME' : 'LOAD GAME';
+  const subtitle = internalMode === 'delete'
+    ? 'Select a save to delete'
+    : mode === 'save'
+    ? 'Select a slot to save your progress'
+    : 'Select a save to load';
+
   return (
-    <Box flexDirection="column" padding={1}>
-      <Text bold color="cyan">
-        {internalMode === 'delete' ? '🗑️  DELETE SAVE' : mode === 'save' ? 'SAVE GAME' : 'LOAD GAME'}
-      </Text>
-      <Text dimColor>
-        {internalMode === 'delete'
-          ? 'Select a save to delete'
-          : mode === 'save'
-          ? 'Select a slot to save your progress'
-          : 'Select a save to load'}
-      </Text>
+    <CenteredScreen>
+      <PolishedBox
+        title={title}
+        subtitle={subtitle}
+        icon={icon}
+        footer="Press ESC to return"
+      >
+        <SelectMenu items={menuItems} onSelect={handleSelect} />
 
-      <Box marginTop={1}>
-        <SelectInputComponent items={menuItems} onSelect={handleSelect} />
-      </Box>
-
-      {mode === 'load' && slots.length === 0 && (
-        <Box marginTop={1}>
-          <Text color="gray">No saves found.</Text>
-        </Box>
-      )}
-    </Box>
+        {mode === 'load' && slots.length === 0 && (
+          <Box marginTop={1}>
+            <Text color="gray">No saves found.</Text>
+          </Box>
+        )}
+      </PolishedBox>
+    </CenteredScreen>
   );
 };

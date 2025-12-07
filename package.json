@@ -9,7 +9,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "lint": "eslint src --ext .ts,.tsx",
-    "package": "npm run build && pkg . --targets node18-win-x64,node18-linux-x64,node18-macos-x64 --output dist/beggars-sect --compress GZip"
+    "package": "npm run build && pkg . --targets node18-win-x64,node18-linux-x64,node18-macos-x64 --output dist/beggars-sect-v$npm_package_version --compress GZip"
   },
   "pkg": {
     "scripts": ["dist/**/*.js", "node_modules/**/*.js"],

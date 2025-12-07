@@ -51,15 +51,21 @@ export const HealthBar = memo<HealthBarProps>(({
     };
   }
 
+  // Pad label to fixed width (accounting for wide characters like 逆)
+  const getLabelPadding = () => {
+    if (label === '逆') return `${label} `; // Wide char (2 spaces) + 1 space = 3 display width
+    return label.padEnd(3, ' '); // Regular chars
+  };
+
   return (
     <Box>
-      <Text>
-        {label}:
+      <Text dimColor>
+        {getLabelPadding()}:
       </Text>
       <Text color={barData.color}>
-        {' '}{barData.bar}
+        {' '}[{barData.bar}]
       </Text>
-      <Text>
+      <Text dimColor>
         {' '}
         {current}/{max}
       </Text>
@@ -70,14 +76,14 @@ export const HealthBar = memo<HealthBarProps>(({
 HealthBar.displayName = 'HealthBar';
 
 // Get descriptive health state based on HP percentage
-const getHealthDescription = (current: number, max: number): { text: string; color: string } => {
+const getHealthDescription = (current: number, max: number): { text: string; color: string; icon: string } => {
   const percent = current / max;
-  if (percent >= 0.9) return { text: 'Uninjured', color: 'green' };
-  if (percent >= 0.7) return { text: 'Lightly Wounded', color: 'green' };
-  if (percent >= 0.5) return { text: 'Wounded', color: 'yellow' };
-  if (percent >= 0.3) return { text: 'Badly Wounded', color: 'yellow' };
-  if (percent >= 0.1) return { text: 'Near Death', color: 'red' };
-  return { text: 'Critical', color: 'red' };
+  if (percent >= 0.9) return { text: 'Healthy', color: 'green', icon: '●' };
+  if (percent >= 0.7) return { text: 'Hurt', color: 'green', icon: '●' };
+  if (percent >= 0.5) return { text: 'Wounded', color: 'yellow', icon: '◐' };
+  if (percent >= 0.3) return { text: 'Critical', color: 'yellow', icon: '◑' };
+  if (percent >= 0.1) return { text: 'Dying', color: 'red', icon: '○' };
+  return { text: 'Death\'s Door', color: 'red', icon: '○' };
 };
 
 interface CharacterStatusProps {
@@ -106,15 +112,15 @@ export const CharacterStatus = memo<CharacterStatusProps>(({
   const healthState = getHealthDescription(hp, maxHp);
 
   return (
-    <Box flexDirection="column">
-      <Text bold color={isPlayer ? 'cyan' : 'red'}>
-        {name}
-        {!isPlayer && (
-          <Text color={healthState.color} dimColor> — {healthState.text}</Text>
-        )}
-      </Text>
-      <Box paddingLeft={1} flexDirection="column">
-        <HealthBar current={hp} max={maxHp} label="HP" color="green" />
+    <Box flexDirection="column" paddingY={1}>
+      {/* Character Name */}
+      <Box marginBottom={1}>
+        <Text color={isPlayer ? 'cyan' : 'red'}>{isPlayer ? '人' : '敵'}</Text>
+        <Text bold color={isPlayer ? 'cyan' : 'red'}> {name}</Text>
+      </Box>
+
+      <Box flexDirection="column">
+        <HealthBar current={hp} max={maxHp} label="HP" color="green" width={15} />
         <HealthBar current={chi} max={maxChi} label="Chi" color="blue" width={15} />
         {isPlayer && maxInverseChi > 0 && (
           <HealthBar
@@ -122,7 +128,7 @@ export const CharacterStatus = memo<CharacterStatusProps>(({
             max={maxInverseChi}
             label="逆"
             color="magenta"
-            width={10}
+            width={15}
           />
         )}
         <Text dimColor>

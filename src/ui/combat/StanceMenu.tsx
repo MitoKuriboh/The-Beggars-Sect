@@ -3,18 +3,9 @@
  * Switch between combat stances
  */
 
-import React, { useCallback } from 'react';
+import React, { useState } from 'react';
 import { Box, Text, useInput } from 'ink';
-import SelectInput from 'ink-select-input';
 import type { Stance } from '../../types/index';
-import { STANCE_MODIFIERS } from '../../types/character';
-
-const SelectInputComponent = (SelectInput as any).default || SelectInput;
-
-interface StanceMenuItem {
-  label: string;
-  value: Stance;
-}
 
 interface StanceMenuProps {
   currentStance: Stance;
@@ -22,67 +13,112 @@ interface StanceMenuProps {
   onBack: () => void;
 }
 
-const STANCE_DESCRIPTIONS: Record<Stance, string> = {
-  flowing: 'Balanced - No bonuses or penalties',
-  weathered: 'Defensive - +50% DEF, +30% chi gen, -10% ATK, -20% SPD',
-  hungry: 'Aggressive - +30% ATK, +10% SPD, +50% chi gen, -30% DEF',
-};
+const STANCES: Array<{ value: Stance; label: string; icon: string; desc: string }> = [
+  {
+    value: 'flowing',
+    label: 'Flowing (流)',
+    icon: '🌊',
+    desc: 'Balanced - No modifiers',
+  },
+  {
+    value: 'weathered',
+    label: 'Weathered (风雨)',
+    icon: '🏔️',
+    desc: 'DEF +50%, Chi +30%, ATK -10%, SPD -20%',
+  },
+  {
+    value: 'hungry',
+    label: 'Hungry (饿)',
+    icon: '🔥',
+    desc: 'ATK +30%, SPD +10%, Chi +50%, DEF -30%',
+  },
+];
 
-export const StanceMenu: React.FC<StanceMenuProps> = ({
+export const StanceMenu: React.FC<StanceMenuProps> = React.memo(({
   currentStance,
   onSelect,
   onBack,
 }) => {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
   useInput((input, key) => {
     if (key.escape) {
       onBack();
+      return;
+    }
+
+    if (key.upArrow) {
+      setSelectedIndex((prev) => (prev > 0 ? prev - 1 : STANCES.length - 1));
+    } else if (key.downArrow) {
+      setSelectedIndex((prev) => (prev < STANCES.length - 1 ? prev + 1 : 0));
+    } else if (key.return || input === ' ') {
+      const selected = STANCES[selectedIndex];
+      if (selected) {
+        onSelect(selected.value);
+      }
     }
   });
 
-  const items: StanceMenuItem[] = [
-    { label: '🌊 Flowing (流)', value: 'flowing' },
-    { label: '🏔️  Weathered (风雨)', value: 'weathered' },
-    { label: '🔥 Hungry (饿)', value: 'hungry' },
-  ];
-
-  const handleSelect = useCallback(
-    (item: StanceMenuItem) => {
-      if (item.value !== currentStance) {
-        onSelect(item.value);
-      } else {
-        onBack(); // Already in this stance
-      }
-    },
-    [currentStance, onSelect, onBack]
-  );
+  const selectedStance = STANCES[selectedIndex];
 
   return (
     <Box flexDirection="column">
-      <Box marginBottom={1}>
-        <Text bold color="yellow">
-          Select Stance
-        </Text>
-        <Text dimColor> (ESC to go back)</Text>
+      <Box marginBottom={1} justifyContent="center">
+        <Text bold color="cyan">⚡ Select Stance</Text>
       </Box>
 
-      <Box marginBottom={1}>
-        <Text>
-          Current: <Text color="cyan">{currentStance}</Text>
-        </Text>
+      <Box marginBottom={1} justifyContent="center">
+        <Text dimColor>Current: </Text>
+        <Text color="cyan" bold>{currentStance}</Text>
       </Box>
 
-      <SelectInputComponent items={items} onSelect={handleSelect} />
+      {/* Main Layout: Stances centered, effects below */}
+      <Box flexDirection="column" alignItems="center">
+        {/* Stance Options */}
+        <Box flexDirection="column" marginBottom={2}>
+          {STANCES.map((stance, index) => {
+            const isSelected = index === selectedIndex;
+            const isCurrent = stance.value === currentStance;
 
-      <Box marginTop={1} flexDirection="column">
-        {items.map((item) => (
-          <Box key={item.value}>
-            <Text dimColor>
-              {item.value === currentStance ? '→ ' : '  '}
-              {STANCE_DESCRIPTIONS[item.value]}
-            </Text>
-          </Box>
-        ))}
+            return (
+              <Box key={stance.value} justifyContent="center">
+                <Text
+                  color={isSelected ? 'cyan' : 'white'}
+                  bold={isSelected}
+                  inverse={isSelected}
+                >
+                  {isSelected ? '▸ ' : '  '}
+                  {stance.icon} {stance.label}
+                  {isCurrent ? ' [CURRENT]' : ''}
+                </Text>
+              </Box>
+            );
+          })}
+        </Box>
+
+        {/* Dynamic Description Box - Below */}
+        <Box
+          borderStyle="round"
+          borderColor="cyan"
+          paddingX={2}
+          paddingY={1}
+          flexDirection="column"
+          alignItems="center"
+          width={50}
+          minHeight={5}
+        >
+          {selectedStance && (
+            <>
+              <Text color="cyan" bold>
+                {selectedStance.icon} {selectedStance.label}
+              </Text>
+              <Text dimColor italic>
+                {selectedStance.desc}
+              </Text>
+            </>
+          )}
+        </Box>
       </Box>
     </Box>
   );
-};
+});

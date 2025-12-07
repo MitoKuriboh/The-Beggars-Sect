@@ -3,7 +3,7 @@
  * Choose which enemy to target
  */
 
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Box, Text, useInput } from 'ink';
 import SelectInput from 'ink-select-input';
 import type { Enemy } from '../../types/index';
@@ -22,18 +22,29 @@ interface TargetMenuProps {
   onBack: () => void;
 }
 
-export const TargetMenu: React.FC<TargetMenuProps> = ({
+export const TargetMenu: React.FC<TargetMenuProps> = React.memo(({
   enemies,
   onSelect,
   onBack,
 }) => {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const livingEnemies = enemies.filter((e) => e.hp > 0);
+
   useInput((input, key) => {
     if (key.escape) {
       onBack();
+      return;
+    }
+
+    // Handle spacebar to select target
+    if (input === ' ' && !key.return) {
+      const selectedEnemy = livingEnemies[selectedIndex];
+      if (selectedEnemy) {
+        onSelect(selectedEnemy);
+      }
     }
   });
-
-  const livingEnemies = enemies.filter((e) => e.hp > 0);
 
   // Auto-select if only one enemy (use effect to avoid setState during render)
   useEffect(() => {
@@ -77,7 +88,10 @@ export const TargetMenu: React.FC<TargetMenuProps> = ({
         <Text dimColor> (ESC to go back)</Text>
       </Box>
 
-      <SelectInputComponent items={items} onSelect={handleSelect} />
+      <SelectInputComponent items={items} onSelect={handleSelect} onHighlight={(item: TargetMenuItem) => {
+        const index = items.findIndex(i => i.value === item.value);
+        if (index >= 0) setSelectedIndex(index);
+      }} />
     </Box>
   );
-};
+});

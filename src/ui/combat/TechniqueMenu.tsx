@@ -29,7 +29,7 @@ interface TechniqueMenuProps {
   onBack: () => void;
 }
 
-export const TechniqueMenu: React.FC<TechniqueMenuProps> = ({
+export const TechniqueMenu: React.FC<TechniqueMenuProps> = React.memo(({
   techniques,
   currentChi,
   currentStance,
@@ -38,98 +38,89 @@ export const TechniqueMenu: React.FC<TechniqueMenuProps> = ({
   onSelect,
   onBack,
 }) => {
-  // Handle escape to go back
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+
+  // Handle keyboard input
   useInput((input, key) => {
     if (key.escape) {
       onBack();
+      return;
+    }
+
+    const maxSlots = 4;
+    const availableCount = techniques.length;
+
+    if (key.upArrow) {
+      setSelectedIndex((prev) => (prev > 0 ? prev - 1 : maxSlots - 1));
+    } else if (key.downArrow) {
+      setSelectedIndex((prev) => (prev < maxSlots - 1 ? prev + 1 : 0));
+    } else if ((key.return || input === ' ') && selectedIndex < availableCount) {
+      const tech = techniques[selectedIndex];
+      if (tech) {
+        const { canUse } = canUseTechnique(tech, currentStance, currentChi);
+        if (canUse) {
+          onSelect(tech);
+        }
+      }
     }
   });
 
-  // Build menu items with usability info
-  const items: TechniqueMenuItem[] = techniques.map((tech) => {
-    const { canUse, reason } = canUseTechnique(tech, currentStance, currentChi);
-
-    // Highlight combo hints
-    let comboHint = '';
-    if (comboActive) {
-      if (tech.comboRole === 'finisher') {
-        comboHint = ' [FINISH]';
-      } else if (tech.comboRole === 'followup') {
-        comboHint = ' [COMBO]';
-      }
-    } else if (tech.comboRole === 'starter') {
-      comboHint = ' [START]';
-    }
-
-    const chiText = tech.chiCost > 0 ? ` (${tech.chiCost} chi)` : ' (free)';
-    const usableText = canUse ? '' : ` [${reason}]`;
-
-    return {
-      label: `${tech.name}${chiText}${comboHint}${usableText}`,
-      value: tech.id,
-      technique: tech,
-      canUse,
-      reason,
-    };
-  });
-
-  const handleSelect = useCallback(
-    (item: TechniqueMenuItem) => {
-      if (item.canUse) {
-        onSelect(item.technique);
-      }
-    },
-    [onSelect]
-  );
-
-  // Custom item component for styling
-  const ItemComponent: React.FC<{ isSelected: boolean; label: string }> = ({
-    isSelected,
-    label,
-  }) => {
-    const item = items.find((i) => i.label === label);
-    const canUse = item?.canUse ?? false;
-
-    return (
-      <Text
-        color={canUse ? (isSelected ? 'cyan' : 'white') : 'gray'}
-        bold={isSelected}
-        dimColor={!canUse}
-      >
-        {isSelected ? '> ' : '  '}
-        {label}
-      </Text>
-    );
-  };
+  const selectedTech = techniques[selectedIndex];
 
   return (
-    <Box flexDirection="column">
+    <Box flexDirection="column" borderStyle="round" borderColor="magenta" paddingX={2} paddingY={1} alignItems="center" width={70} minHeight={14}>
       <Box marginBottom={1}>
-        <Text bold color="yellow">
-          Select Technique
-        </Text>
-        <Text dimColor> (ESC to go back)</Text>
-      </Box>
-
-      <Box marginBottom={1}>
-        <Text>
-          Chi: <Text color="blue">{currentChi}</Text>
-          {' | '}
-          Stance: <Text color="cyan">{currentStance}</Text>
-          {comboActive && (
-            <>
-              {' | '}
-              <Text color="yellow">Combo x{comboTechniques.length}</Text>
-            </>
-          )}
+        <Text bold color="magenta">
+          ✨ Techniques
         </Text>
       </Box>
 
-      <SelectInputComponent
-        items={items}
-        onSelect={handleSelect}
-        itemComponent={ItemComponent}
-      />
+      {/* 4 Technique Slots */}
+      <Box flexDirection="column" marginBottom={1}>
+        {[0, 1, 2, 3].map((slotIndex) => {
+          const tech = techniques[slotIndex];
+          const isSelected = slotIndex === selectedIndex;
+
+          if (!tech) {
+            // Empty slot
+            return (
+              <Box key={slotIndex}>
+                <Text dimColor inverse={isSelected}>
+                  {isSelected ? '▸ ' : '  '}─
+                </Text>
+              </Box>
+            );
+          }
+
+          const { canUse } = canUseTechnique(tech, currentStance, currentChi);
+          const comboMarker = comboActive && tech.comboRole === 'finisher' ? '★' : tech.comboRole === 'starter' ? '◆' : '';
+
+          return (
+            <Box key={slotIndex}>
+              <Text
+                color={canUse ? (isSelected ? 'cyan' : 'white') : 'gray'}
+                bold={isSelected}
+                inverse={isSelected}
+                dimColor={!canUse}
+              >
+                {isSelected ? '▸ ' : '  '}
+                {tech.name.padEnd(20)} {comboMarker} {tech.chiCost > 0 ? `${tech.chiCost} Chi` : 'Free'}
+              </Text>
+            </Box>
+          );
+        })}
+      </Box>
+
+      {/* Selected Technique Details */}
+      <Box borderStyle="single" borderColor="cyan" paddingX={1} width={60} minHeight={5}>
+        <Text dimColor italic wrap="wrap">{selectedTech?.description || 'No description available'}</Text>
+      </Box>
+
+      <Box marginTop={1} height={1}>
+        {comboActive && (
+          <Text color="magenta" bold>⚡ COMBO x{comboTechniques.length} - ★ = Finisher!</Text>
+        )}
+      </Box>
     </Box>
   );
-};
+});

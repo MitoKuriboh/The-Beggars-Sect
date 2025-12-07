@@ -3,7 +3,7 @@
  * Renders different types of story content lines with typewriter effect
  */
 
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { Box, Text } from 'ink';
 import type { ContentLine } from '../../types/index';
 import { useTypewriter } from '../hooks';
@@ -74,7 +74,7 @@ interface TypewriterTextProps {
   onComplete?: () => void;
 }
 
-const TypewriterText: React.FC<TypewriterTextProps> = ({
+const TypewriterText: React.FC<TypewriterTextProps> = React.memo(({
   text,
   color = 'white',
   italic = false,
@@ -87,26 +87,13 @@ const TypewriterText: React.FC<TypewriterTextProps> = ({
     onComplete,
   });
 
-  // Track if we've called onComplete for this text
-  const completedRef = useRef(false);
-  useEffect(() => {
-    if (isComplete && !completedRef.current) {
-      completedRef.current = true;
-    }
-  }, [isComplete]);
-
-  // Reset tracking when text changes
-  useEffect(() => {
-    completedRef.current = false;
-  }, [text]);
-
   return (
     <Text color={color} italic={italic}>
       {displayedText}
       {!isComplete && <Text color="gray">▌</Text>}
     </Text>
   );
-};
+});
 
 // =============================================================================
 // CONTENT RENDERER
@@ -119,7 +106,7 @@ interface ContentRendererProps {
   onTypeComplete?: () => void;
 }
 
-export const ContentRenderer: React.FC<ContentRendererProps> = ({
+export const ContentRenderer: React.FC<ContentRendererProps> = React.memo(({
   line,
   isTyping = false,
   typewriterSpeed = 50,
@@ -133,36 +120,42 @@ export const ContentRenderer: React.FC<ContentRendererProps> = ({
   switch (line.type) {
     case 'narration':
       return (
-        <Box marginY={1}>
-          {isTyping ? (
-            <TypewriterText
-              text={line.text}
-              color="white"
-              speed={narrationSpeed}
-              onComplete={onTypeComplete}
-            />
-          ) : (
-            <Text color="white">{line.text}</Text>
-          )}
+        <Box marginBottom={1} marginTop={0.5}>
+          <Box paddingLeft={0}>
+            {isTyping ? (
+              <TypewriterText
+                text={line.text}
+                color="white"
+                speed={narrationSpeed}
+                onComplete={onTypeComplete}
+              />
+            ) : (
+              <Text color="white">{line.text}</Text>
+            )}
+          </Box>
         </Box>
       );
 
     case 'internal':
       return (
-        <Box marginY={1} paddingLeft={2}>
-          {isTyping ? (
-            <TypewriterText
-              text={line.text}
-              color="gray"
-              italic
-              speed={internalSpeed}
-              onComplete={onTypeComplete}
-            />
-          ) : (
-            <Text color="gray" italic>
-              {line.text}
-            </Text>
-          )}
+        <Box marginBottom={1} marginTop={0.5}>
+          <Box paddingLeft={2}>
+            <Text dimColor>「 </Text>
+            {isTyping ? (
+              <TypewriterText
+                text={line.text}
+                color="cyan"
+                italic
+                speed={internalSpeed}
+                onComplete={onTypeComplete}
+              />
+            ) : (
+              <Text color="cyan" italic>
+                {line.text}
+              </Text>
+            )}
+            <Text dimColor> 」</Text>
+          </Box>
         </Box>
       );
 
@@ -170,12 +163,14 @@ export const ContentRenderer: React.FC<ContentRendererProps> = ({
       const speakerColor = getSpeakerColor(line.speaker);
       const emotion = getEmotionIndicator(line.emotion);
       return (
-        <Box marginY={1}>
-          <Text>
+        <Box marginBottom={1} marginTop={0.5} flexDirection="column">
+          <Box>
             <Text color={speakerColor} bold>
-              {line.speaker}{emotion}:
+              {line.speaker}{emotion}
             </Text>
-            {' '}
+          </Box>
+          <Box paddingLeft={2} marginTop={0.25}>
+            <Text dimColor>"</Text>
             {isTyping ? (
               <TypewriterText
                 text={line.text}
@@ -186,15 +181,16 @@ export const ContentRenderer: React.FC<ContentRendererProps> = ({
             ) : (
               <Text color="white">{line.text}</Text>
             )}
-          </Text>
+            <Text dimColor>"</Text>
+          </Box>
         </Box>
       );
 
     case 'system':
       return (
-        <Box marginY={1} paddingX={2}>
+        <Box marginY={1} justifyContent="center">
           <Text color="yellow" bold>
-            [{line.text}]
+            ═══ {line.text.toUpperCase()} ═══
           </Text>
         </Box>
       );
@@ -202,7 +198,7 @@ export const ContentRenderer: React.FC<ContentRendererProps> = ({
     case 'instruction':
       return (
         <Box marginY={1}>
-          <Text color="gray" dimColor>
+          <Text color="gray" dimColor italic>
             {line.text}
           </Text>
         </Box>
@@ -210,16 +206,11 @@ export const ContentRenderer: React.FC<ContentRendererProps> = ({
 
     case 'divider':
       const label = line.label || '';
-      const padding = Math.max(0, Math.floor((40 - label.length) / 2));
       return (
-        <Box marginY={2} flexDirection="column" alignItems="center">
-          <Text color="gray">{'═'.repeat(40)}</Text>
-          {label.length > 0 && (
-            <Text color="white" bold>
-              {' '.repeat(padding)}{label}
-            </Text>
-          )}
-          <Text color="gray">{'═'.repeat(40)}</Text>
+        <Box marginY={2} justifyContent="center">
+          <Text color="cyan" dimColor>
+            {'─'.repeat(20)} {label.length > 0 ? label.toUpperCase() : ''} {'─'.repeat(20)}
+          </Text>
         </Box>
       );
 
@@ -248,7 +239,7 @@ export const ContentRenderer: React.FC<ContentRendererProps> = ({
     default:
       return null;
   }
-};
+});
 
 interface ContentBlockProps {
   lines: ContentLine[];
@@ -259,7 +250,7 @@ interface ContentBlockProps {
   onTypeComplete?: () => void;
 }
 
-export const ContentBlock: React.FC<ContentBlockProps> = ({
+export const ContentBlock: React.FC<ContentBlockProps> = React.memo(({
   lines,
   currentIndex,
   showAll = false,
@@ -280,9 +271,17 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({
         const isLastLine = index === visibleLines.length - 1;
         const shouldType = isTyping && isLastLine && !showAll;
 
+        // Use stable key based on line type and content hash instead of index
+        // This prevents React from reusing components incorrectly when list changes
+        const contentPreview =
+          'text' in line ? line.text?.slice(0, 20) :
+          'label' in line ? line.label :
+          '';
+        const stableKey = `${line.type}-${index}-${contentPreview}`;
+
         return (
           <ContentRenderer
-            key={index}
+            key={stableKey}
             line={line}
             isTyping={shouldType}
             typewriterSpeed={typewriterSpeed}
@@ -292,4 +291,4 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({
       })}
     </Box>
   );
-};
+});

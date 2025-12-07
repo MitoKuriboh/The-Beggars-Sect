@@ -9,13 +9,15 @@ import { CombatScreen } from './combat/CombatScreen';
 import { StoryScreen } from './story/StoryScreen';
 import { SaveLoadScreen } from './SaveLoadScreen';
 import { SettingsScreen } from './SettingsScreen';
+import { CenteredScreen, PolishedBox, useTerminalHeight } from './components/PolishedBox';
+import { SelectMenu } from './components/Menu';
 import type { Character, Enemy, StoryState } from '../types/index';
 
 // =============================================================================
 // TYPES
 // =============================================================================
 
-type Screen = 'title' | 'menu' | 'newgame' | 'stats' | 'story' | 'combat' | 'credits' | 'save' | 'load' | 'settings';
+type Screen = 'title' | 'menu' | 'newgame' | 'skip-prologue' | 'stats' | 'story' | 'combat' | 'credits' | 'save' | 'load' | 'settings';
 
 interface MenuItem {
   label: string;
@@ -30,6 +32,18 @@ interface MenuItem {
  * Title Screen - Game logo and prompt
  */
 const TitleScreen: React.FC<{ onContinue: () => void }> = ({ onContinue }) => {
+  const [terminalHeight, setTerminalHeight] = useState(process.stdout.rows || 24);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setTerminalHeight(process.stdout.rows || 24);
+    };
+    process.stdout.on('resize', handleResize);
+    return () => {
+      process.stdout.off('resize', handleResize);
+    };
+  }, []);
+
   useInput((_input, _key) => {
     onContinue();
   });
@@ -76,7 +90,7 @@ const TitleScreen: React.FC<{ onContinue: () => void }> = ({ onContinue }) => {
   };
 
   return (
-    <Box flexDirection="column" height="100%" justifyContent="center" alignItems="center">
+    <Box flexDirection="column" width="100%" height={terminalHeight} justifyContent="center" alignItems="center">
       <Box flexDirection="column" alignItems="center">
         {/* Decorative top */}
         <Text color="yellow">{swordArt}</Text>
@@ -128,21 +142,24 @@ const MainMenu: React.FC<{ onSelect: (screen: Screen) => void }> = ({ onSelect }
   const isGameActive = GameStore.isInitialized();
   const hasSaves = GameStore.getSaveSlots().length > 0;
 
-  const menuItems: MenuItem[] = [];
-
-  if (isGameActive) {
-    menuItems.push({ label: '▸ Continue Journey', value: 'stats' });
-  }
-  menuItems.push({ label: '⚡ New Game', value: 'newgame' });
-  if (hasSaves) {
-    menuItems.push({ label: '📂 Load Game', value: 'load' });
-  }
-  menuItems.push({ label: '⚙️  Settings', value: 'settings' });
-  menuItems.push({ label: '📜 Credits', value: 'credits' });
-  menuItems.push({ label: '🚪 Quit', value: 'quit' });
+  // Always show all menu items for consistent box size
+  const menuItems: MenuItem[] = [
+    { label: '▸ Continue Journey', value: isGameActive ? 'stats' : 'disabled-continue' },
+    { label: '⚡ New Game', value: 'newgame' },
+    { label: '⏩ Skip to Chapter 1', value: 'skip-prologue' },
+    { label: '📂 Load Game', value: hasSaves ? 'load' : 'disabled-load' },
+    { label: '⚙️  Settings', value: 'settings' },
+    { label: '📜 Credits', value: 'credits' },
+    { label: '🚪 Quit', value: 'quit' },
+  ];
 
   const handleSelect = useCallback(
     (item: MenuItem) => {
+      // Ignore disabled items
+      if (item.value.startsWith('disabled-')) {
+        return;
+      }
+
       if (item.value === 'quit') {
         exit();
       } else {
@@ -157,57 +174,65 @@ const MainMenu: React.FC<{ onSelect: (screen: Screen) => void }> = ({ onSelect }
   const player = isGameActive ? GameStore.getPlayer() : null;
 
   return (
-    <Box flexDirection="column" height="100%" justifyContent="center" alignItems="center">
-      <Box flexDirection="column" alignItems="center" borderStyle="double" borderColor="yellow" padding={2}>
-        {/* Header with decorative elements */}
-        <Box marginBottom={1}>
-          <Text color="yellow">════════════════════════════════════</Text>
+    <CenteredScreen>
+      <Box flexDirection="column" borderStyle="double" borderColor="cyan" paddingX={2} paddingY={0} width={74}>
+        {/* Header */}
+        <Box marginY={1} justifyContent="center">
+          <Text bold color="cyan">
+            ⚔ THE BEGGARS SECT
+          </Text>
         </Box>
 
-        <Text bold color="cyan">
-          THE BEGGARS SECT
-        </Text>
-        <Text dimColor italic>
-          丐 帮
-        </Text>
+        {/* Subtitle */}
+        <Box justifyContent="center" marginBottom={1}>
+          <Text dimColor italic>
+            丐 帮 ： 李 伟 的 崛 起
+          </Text>
+        </Box>
 
-        <Box marginTop={1} marginBottom={1}>
-          <Text color="yellow">════════════════════════════════════</Text>
+        {/* Divider */}
+        <Box justifyContent="center">
+          <Text color="cyan" dimColor>──────────────────────────────────────────────────────────────────</Text>
         </Box>
 
         {/* Current game status (if active) */}
         {isGameActive && player && progress && (
-          <Box flexDirection="column" alignItems="center" marginBottom={2} paddingX={2}>
-            <Text dimColor>─── Current Game ───</Text>
-            <Box marginTop={1}>
-              <Text>
+          <>
+            <Box flexDirection="column" alignItems="center" marginY={1}>
+              <Text color="green" bold>CURRENT JOURNEY</Text>
+              <Box marginTop={1}>
                 <Text bold color="yellow">{player.name}</Text>
-                <Text dimColor> | </Text>
-                <Text color="magenta">{player.stance.charAt(0).toUpperCase() + player.stance.slice(1)} Stance</Text>
-              </Text>
-            </Box>
-            <Box>
+                <Text dimColor> • </Text>
+                <Text color="magenta">{player.stance.charAt(0).toUpperCase() + player.stance.slice(1)}</Text>
+              </Box>
               <Text dimColor>
-                Chapter: {progress.chapter} | Scene: {progress.scene}
+                Chapter {progress.chapter} • Scene {progress.scene}
               </Text>
             </Box>
-            <Box marginTop={1} marginBottom={1}>
-              <Text color="gray">───────────────────────────────────</Text>
+
+            {/* Divider */}
+            <Box justifyContent="center">
+              <Text color="cyan" dimColor>──────────────────────────────────────────────────────────────────</Text>
             </Box>
-          </Box>
+          </>
         )}
 
         {/* Menu */}
-        <Box flexDirection="column" minWidth={40}>
-          <SelectInputComponent items={menuItems} onSelect={handleSelect} />
+        <Box paddingY={2} flexDirection="column" alignItems="center">
+          <SelectMenu items={menuItems} onSelect={handleSelect} />
+        </Box>
+
+        {/* Divider */}
+        <Box justifyContent="center">
+          <Text color="cyan" dimColor>──────────────────────────────────────────────────────────────────</Text>
         </Box>
 
         {/* Footer */}
-        <Box marginTop={2}>
-          <Text dimColor>Use ↑↓ arrows and Enter to select</Text>
+        <Box marginY={1} justifyContent="center">
+          <Text dimColor italic>v0.3.7 • ↑↓ to navigate • Enter to select</Text>
         </Box>
       </Box>
-    </Box>
+    </CenteredScreen>
   );
 };
 
@@ -252,37 +277,35 @@ const NewGameScreen: React.FC<{ onComplete: () => void; onBack: () => void }> = 
       { label: 'No, Return to Menu', value: 'no' },
     ];
     return (
-      <Box flexDirection="column" padding={1}>
-        <Text bold color="cyan">
-          NEW GAME
-        </Text>
-        <Box marginTop={1}>
-          <Text>
-            You are about to begin a new journey as <Text color="yellow">Li Wei</Text>,
-          </Text>
-        </Box>
-        <Text>
-          a beggar with no memory of his past.
-        </Text>
-        <Box marginTop={2}>
-          <SelectInputComponent items={confirmItems} onSelect={handleConfirm} />
-        </Box>
-      </Box>
+      <CenteredScreen>
+        <PolishedBox title="NEW GAME" subtitle="Begin Your Journey" icon="⚡">
+          <Box flexDirection="column" alignItems="center" marginBottom={2}>
+            <Text>You are about to begin a new journey as</Text>
+            <Text bold color="yellow">Li Wei</Text>
+            <Text dimColor>a beggar with no memory of his past.</Text>
+          </Box>
+          <SelectMenu items={confirmItems} onSelect={handleConfirm} />
+        </PolishedBox>
+      </CenteredScreen>
     );
   }
 
   if (stage === 'creating') {
     return (
-      <Box flexDirection="column" padding={1}>
-        <Text color="yellow">Awakening in the alley...</Text>
-      </Box>
+      <CenteredScreen>
+        <Box flexDirection="column" alignItems="center" borderStyle="round" borderColor="yellow" paddingX={4} paddingY={2}>
+          <Text color="yellow">✨ Awakening in the alley... ✨</Text>
+        </Box>
+      </CenteredScreen>
     );
   }
 
   return (
-    <Box flexDirection="column" padding={1}>
-      <Text color="green">Li Wei opens his eyes.</Text>
-    </Box>
+    <CenteredScreen>
+      <Box flexDirection="column" alignItems="center" borderStyle="round" borderColor="green" paddingX={4} paddingY={2}>
+        <Text bold color="green">✓ Li Wei opens his eyes.</Text>
+      </Box>
+    </CenteredScreen>
   );
 };
 
@@ -300,6 +323,18 @@ const StatsScreen: React.FC<{
   onStory,
   onSave,
 }) => {
+  const [terminalHeight, setTerminalHeight] = useState(process.stdout.rows || 24);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setTerminalHeight(process.stdout.rows || 24);
+    };
+    process.stdout.on('resize', handleResize);
+    return () => {
+      process.stdout.off('resize', handleResize);
+    };
+  }, []);
+
   const menuItems: MenuItem[] = [
     { label: '📖 Play Story (Prologue)', value: 'story' },
     { label: '⚔️  Test Combat', value: 'combat' },
@@ -324,9 +359,11 @@ const StatsScreen: React.FC<{
 
   if (!GameStore.isInitialized()) {
     return (
-      <Box flexDirection="column" padding={1}>
-        <Text color="red">No game in progress.</Text>
-      </Box>
+      <CenteredScreen>
+        <Box flexDirection="column" alignItems="center" borderStyle="round" borderColor="red" paddingX={4} paddingY={2}>
+          <Text bold color="red">✗ No game in progress.</Text>
+        </Box>
+      </CenteredScreen>
     );
   }
 
@@ -334,57 +371,47 @@ const StatsScreen: React.FC<{
   const progress = GameStore.getStoryProgress();
 
   return (
-    <Box flexDirection="column" padding={1}>
-      <Text bold color="cyan">
-        CHARACTER STATUS
-      </Text>
-      <Box marginTop={1} flexDirection="column">
-        <Box>
-          <Text color="yellow">{player.name}</Text>
-          <Text dimColor> - The Beggar</Text>
+    <CenteredScreen>
+      <PolishedBox
+        title="CHARACTER STATUS"
+        subtitle={`${player.name} • The Beggar`}
+        icon="⚔"
+        footer="Select an option to continue"
+      >
+
+        {/* Stats */}
+        <Box flexDirection="column" alignItems="center" width={55}>
+          <Box flexDirection="row" justifyContent="space-between" width="100%">
+            <Text>HP: <Text color={player.hp < player.maxHp * 0.3 ? 'red' : 'green'}>{player.hp}/{player.maxHp}</Text></Text>
+            <Text>Chi: <Text color="blue">{player.chi}/{player.maxChi}</Text></Text>
+          </Box>
+          <Box flexDirection="row" justifyContent="space-between" width="100%">
+            <Text>Inv.Chi: <Text color="magenta">{player.inverseChi}/{player.maxInverseChi}</Text></Text>
+            <Text>Stance: <Text color="cyan">{player.stance}</Text></Text>
+          </Box>
+
+          <Box marginTop={1}>
+            <Text dimColor>━━━━━━━ Base Stats ━━━━━━━</Text>
+          </Box>
+          <Box flexDirection="row" justifyContent="space-around" width="100%">
+            <Text>STR:<Text bold color="yellow">{player.stats.str}</Text></Text>
+            <Text>DEX:<Text bold color="yellow">{player.stats.dex}</Text></Text>
+            <Text>END:<Text bold color="yellow">{player.stats.end}</Text></Text>
+            <Text>WIS:<Text bold color="yellow">{player.stats.wis}</Text></Text>
+          </Box>
+
+          <Box marginTop={1}>
+            <Text dimColor>Ch.{progress.chapter} • Scene {progress.scene}</Text>
+          </Box>
+          <Text dimColor>Techniques: {player.techniques.slice(0, 2).join(', ')}{player.techniques.length > 2 ? '...' : ''}</Text>
         </Box>
+
+        {/* Menu */}
         <Box marginTop={1}>
-          <Text>
-            HP: <Text color={player.hp < player.maxHp * 0.3 ? 'red' : 'green'}>
-              {player.hp}/{player.maxHp}
-            </Text>
-          </Text>
+          <SelectMenu items={menuItems} onSelect={handleSelect} />
         </Box>
-        <Box>
-          <Text>
-            Chi: <Text color="blue">{player.chi}/{player.maxChi}</Text>
-          </Text>
-        </Box>
-        <Box>
-          <Text>
-            Inverse Chi: <Text color="magenta">{player.inverseChi}/{player.maxInverseChi}</Text>
-          </Text>
-        </Box>
-        <Box marginTop={1}>
-          <Text dimColor>Stats:</Text>
-        </Box>
-        <Box paddingLeft={2} flexDirection="column">
-          <Text>STR: {player.stats.str} | DEX: {player.stats.dex}</Text>
-          <Text>END: {player.stats.end} | WIS: {player.stats.wis}</Text>
-        </Box>
-        <Box marginTop={1}>
-          <Text>
-            Stance: <Text color="cyan">{player.stance}</Text>
-          </Text>
-        </Box>
-        <Box>
-          <Text>
-            Chapter: <Text color="white">{progress.chapter}</Text> | Scene: <Text dimColor>{progress.scene}</Text>
-          </Text>
-        </Box>
-        <Box marginTop={1}>
-          <Text dimColor>Techniques: {player.techniques.join(', ')}</Text>
-        </Box>
-      </Box>
-      <Box marginTop={2}>
-        <SelectInputComponent items={menuItems} onSelect={handleSelect} />
-      </Box>
-    </Box>
+      </PolishedBox>
+    </CenteredScreen>
   );
 };
 
@@ -400,55 +427,39 @@ const CreditsScreen: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   });
 
   return (
-    <Box flexDirection="column" height="100%" justifyContent="center" alignItems="center">
-      <Box flexDirection="column" alignItems="center" borderStyle="round" borderColor="cyan" padding={3} minWidth={60}>
-        {/* Header */}
-        <Text bold color="cyan">
-          ═══ CREDITS ═══
-        </Text>
-
-        <Box marginTop={2} flexDirection="column" alignItems="center">
-          <Text bold color="yellow">
-            The Beggars Sect: Li Wei's Ascension
-          </Text>
-          <Text dimColor italic>丐 帮 ： 李 伟 的 崛 起</Text>
+    <CenteredScreen>
+      <PolishedBox
+        title="CREDITS"
+        subtitle="丐 帮 ： 李 伟 的 崛 起"
+        icon="═"
+        footer="▸ Press Enter or Escape to return ◂"
+        borderColor="cyan"
+      >
+        <Box flexDirection="column" alignItems="center">
+          <Text bold color="yellow">The Beggars Sect</Text>
+          <Text bold color="yellow">Li Wei's Ascension</Text>
         </Box>
 
-        <Box marginTop={2} marginBottom={1}>
-          <Text color="gray">─────────────────────────────────────</Text>
-        </Box>
-
-        {/* Creator */}
         <Box marginTop={1} flexDirection="column" alignItems="center">
           <Text dimColor>Created by</Text>
           <Text bold color="yellow">Mito (Mitchell Grebe)</Text>
           <Text dimColor>With assistance from Claude</Text>
         </Box>
 
-        <Box marginTop={2} flexDirection="column" alignItems="center">
+        <Box marginTop={1} flexDirection="column" alignItems="center">
           <Text dimColor>Part of the <Text color="cyan">genkaw.com</Text> universe</Text>
         </Box>
 
-        <Box marginTop={2} marginBottom={2}>
-          <Text color="gray">─────────────────────────────────────</Text>
-        </Box>
-
-        {/* Tech */}
-        <Box flexDirection="column" alignItems="center">
+        <Box marginTop={1} flexDirection="column" alignItems="center">
           <Text dimColor>Built with</Text>
           <Text color="magenta">Ink • React • TypeScript</Text>
         </Box>
 
-        <Box marginTop={2}>
+        <Box marginTop={1}>
           <Text dimColor>Version 0.3.7</Text>
         </Box>
-
-        {/* Back prompt */}
-        <Box marginTop={3}>
-          <Text color="cyan">▸ Press Enter or Escape to return ◂</Text>
-        </Box>
-      </Box>
-    </Box>
+      </PolishedBox>
+    </CenteredScreen>
   );
 };
 
@@ -475,13 +486,29 @@ export const App: React.FC = () => {
     };
   }, []);
 
-  const goToMenu = useCallback(() => setScreen('menu'), []);
-  const goToStats = useCallback(() => setScreen('stats'), []);
-  const goToStory = useCallback(() => setScreen('story'), []);
-  const goToSave = useCallback(() => setScreen('save'), []);
-  const goToLoad = useCallback(() => setScreen('load'), []);
+  const goToMenu = useCallback(() => {
+    console.clear();
+    setScreen('menu');
+  }, []);
+  const goToStats = useCallback(() => {
+    console.clear();
+    setScreen('stats');
+  }, []);
+  const goToStory = useCallback(() => {
+    console.clear();
+    setScreen('story');
+  }, []);
+  const goToSave = useCallback(() => {
+    console.clear();
+    setScreen('save');
+  }, []);
+  const goToLoad = useCallback(() => {
+    console.clear();
+    setScreen('load');
+  }, []);
 
   const startCombat = useCallback(() => {
+    console.clear();
     // Create a test enemy
     const enemy = createEnemy('street-punk');
     setCombatEnemies([enemy]);
@@ -491,6 +518,7 @@ export const App: React.FC = () => {
 
   // Handle combat starting from story
   const handleStoryCombat = useCallback((enemies: Enemy[], canLose: boolean) => {
+    console.clear();
     setCombatEnemies(enemies);
     setReturnToStory(true);
     setCombatCanLose(canLose);
@@ -578,6 +606,13 @@ export const App: React.FC = () => {
       {screen === 'menu' && <MainMenu onSelect={setScreen} />}
       {screen === 'newgame' && (
         <NewGameScreen onComplete={goToStats} onBack={goToMenu} />
+      )}
+      {screen === 'skip-prologue' && (
+        <NewGameScreen onComplete={() => {
+          // TODO: Skip to Chapter 1 when it's implemented
+          // For now, just go to stats
+          goToStats();
+        }} onBack={goToMenu} />
       )}
       {screen === 'stats' && (
         <StatsScreen onBack={goToMenu} onCombat={startCombat} onStory={goToStory} onSave={goToSave} />

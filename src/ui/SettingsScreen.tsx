@@ -5,19 +5,14 @@
 
 import React, { useState, useCallback } from 'react';
 import { Box, Text, useInput } from 'ink';
-import SelectInput from 'ink-select-input';
 import { GameStore } from '../game/state/GameStore';
-
-const SelectInputComponent = (SelectInput as any).default || SelectInput;
+import { CenteredScreen, PolishedBox } from './components/PolishedBox';
+import { SelectMenu } from './components/Menu';
+import type { MenuItem } from './components/Menu';
 
 // =============================================================================
 // TYPES
 // =============================================================================
-
-interface MenuItem {
-  label: string;
-  value: string;
-}
 
 interface SettingsScreenProps {
   onBack: () => void;
@@ -101,68 +96,42 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ onBack }) => {
   // Speed selection submenu
   if (selectedSetting === 'speed') {
     return (
-      <Box flexDirection="column" padding={1}>
-        <Text bold color="cyan">
-          ═══ TEXT SPEED ═══
-        </Text>
-        <Box marginTop={1}>
-          <Text dimColor>
-            Characters per second (cps). Higher = faster text.
-          </Text>
-        </Box>
-        <Box marginTop={1} flexDirection="column">
-          <SelectInputComponent items={speedOptions} onSelect={handleSpeedSelect} />
-        </Box>
-        <Box marginTop={1}>
-          <Text dimColor>
-            Current: {settings.typewriterSpeed} cps
-          </Text>
-        </Box>
-        <Box marginTop={1}>
-          <Text color="gray">ESC to go back</Text>
-        </Box>
-      </Box>
+      <CenteredScreen>
+        <PolishedBox
+          title="TEXT SPEED"
+          subtitle="Characters per second (cps). Higher = faster text."
+          icon="⚙"
+          footer="Press ESC to go back"
+        >
+          <SelectMenu items={speedOptions} onSelect={handleSpeedSelect} />
+
+          <Box marginTop={1}>
+            <Text dimColor>Current: <Text bold color="yellow">{settings.typewriterSpeed} cps</Text></Text>
+          </Box>
+        </PolishedBox>
+      </CenteredScreen>
     );
   }
 
   // Main settings menu
   return (
-    <Box flexDirection="column" padding={1}>
-      <Text bold color="cyan">
-        ═══ SETTINGS ═══
-      </Text>
-      <Box marginTop={1} flexDirection="column">
-        <Text dimColor>Accessibility & Display Options</Text>
-      </Box>
+    <CenteredScreen>
+      <PolishedBox
+        title="SETTINGS"
+        subtitle="Accessibility & Display Options"
+        icon="⚙"
+        footer="Press ESC to return to main menu"
+      >
+        <SelectMenu items={menuItems} onSelect={handleMainSelect} />
 
-      <Box marginTop={1} flexDirection="column">
-        <SelectInputComponent items={menuItems} onSelect={handleMainSelect} />
-      </Box>
-
-      {/* Setting descriptions */}
-      <Box marginTop={2} flexDirection="column" borderStyle="single" borderColor="gray" padding={1}>
-        <Text bold color="yellow">Setting Info:</Text>
-        <Box marginTop={1}>
-          <Text>
-            <Text bold>Typewriter Effect:</Text> When ON, text appears character
-          </Text>
+        {/* Setting descriptions */}
+        <Box marginTop={1} flexDirection="column" borderStyle="single" borderColor="gray" paddingX={2} paddingY={1} width={55}>
+          <Text bold color="yellow">ℹ Setting Info</Text>
+          <Text dimColor><Text bold color="cyan">Typewriter:</Text> Text appears character</Text>
+          <Text dimColor>by character. Press SPACE to skip.</Text>
+          <Text dimColor><Text bold color="cyan">Speed:</Text> How fast text appears (cps).</Text>
         </Box>
-        <Text>
-          by character for immersive storytelling. Press SPACE to skip.
-        </Text>
-        <Box marginTop={1}>
-          <Text>
-            <Text bold>Text Speed:</Text> How fast text appears when typewriter
-          </Text>
-        </Box>
-        <Text>
-          is enabled. Higher values = faster text display.
-        </Text>
-      </Box>
-
-      <Box marginTop={1}>
-        <Text color="gray">ESC to go back</Text>
-      </Box>
-    </Box>
+      </PolishedBox>
+    </CenteredScreen>
   );
 };

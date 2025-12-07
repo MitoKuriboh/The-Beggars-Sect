@@ -42,7 +42,7 @@ export const StatsDisplay: React.FC<StatsDisplayProps> = ({ player }) => {
         </Box>
 
         {/* Health and Chi */}
-        <Box marginBottom={1} flexDirection="column">
+        <Box marginBottom={1} flexDirection="column" borderStyle="round" borderColor="gray" paddingX={2} paddingY={1}>
           <Box>
             <Text color="red">❤ Health: </Text>
             <Text bold>
@@ -58,7 +58,7 @@ export const StatsDisplay: React.FC<StatsDisplayProps> = ({ player }) => {
         </Box>
 
         {/* Stats Grid */}
-        <Box borderStyle="single" borderColor="gray" paddingX={1} paddingY={0} flexDirection="column">
+        <Box borderStyle="single" borderColor="gray" paddingX={1} paddingY={1} flexDirection="column">
           {statKeys.map((key) => {
             const stat = STAT_INFO[key];
             if (!stat) return null;

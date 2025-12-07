@@ -14,6 +14,7 @@ import { ActionMenu, ActionType } from './ActionMenu';
 import { TechniqueMenu } from './TechniqueMenu';
 import { StanceMenu } from './StanceMenu';
 import { TargetMenu } from './TargetMenu';
+import { CenteredScreen } from '../components/PolishedBox';
 
 // =============================================================================
 // CONSTANTS
@@ -367,39 +368,40 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
   // Render
   if (!combatState) {
     return (
-      <Box flexDirection="column" padding={2} alignItems="center" justifyContent="center">
-        <Text bold color="yellow">⚔  Preparing for battle...</Text>
-        <Text dimColor>Loading combat system...</Text>
-      </Box>
+      <CenteredScreen>
+        <Box flexDirection="column" borderStyle="double" borderColor="yellow" padding={2} alignItems="center" width={84}>
+          <Box marginBottom={1}>
+            <Text bold color="yellow">⚔ Preparing for battle...</Text>
+          </Box>
+          <Text dimColor italic>Loading combat system...</Text>
+        </Box>
+      </CenteredScreen>
     );
   }
 
   return (
-    <Box flexDirection="column" padding={1}>
-      {/* Header */}
-      <Box marginBottom={1} justifyContent="space-between" alignItems="center">
-        <Text bold color="red">
-          ═══ COMBAT ═══
-        </Text>
-        {combatState.isBossFight && (
-          <Text color="yellow" bold>
-            [BOSS FIGHT]
-          </Text>
-        )}
-        {combatState.comboChain.isActive && (
-          <Text color="magenta" bold>
-            [COMBO ×{combatState.comboChain.techniques.length}]
-          </Text>
-        )}
+    <CenteredScreen>
+      <Box flexDirection="column" borderStyle="double" borderColor="red" paddingX={2} paddingY={0} width={84}>
+        {/* Header */}
+        <Box marginY={1} justifyContent="center">
+          <Text bold color="red">⚔ COMBAT ⚔</Text>
+          {combatState.isBossFight && (
+            <Text color="yellow" bold> [BOSS]</Text>
+          )}
+          {combatState.comboChain.isActive && (
+            <Text color="magenta" bold> [COMBO×{combatState.comboChain.techniques.length}]</Text>
+          )}
+        </Box>
+
+      {/* Divider */}
+      <Box justifyContent="center">
+        <Text color="red" dimColor>────────────────────────────────────────────────────────────────────</Text>
       </Box>
 
-      {/* Turn Queue */}
-      <TurnQueue turnOrder={turnOrder} currentActorId={combatState.player.id} />
-
       {/* Combatants */}
-      <Box marginTop={1} flexDirection="row" justifyContent="space-between">
+      <Box flexDirection="row" justifyContent="space-between" marginY={1} marginTop={2}>
         {/* Player Status */}
-        <Box width="40%">
+        <Box width="47%" borderStyle="round" borderColor="cyan" paddingX={2}>
           <CharacterStatus
             name={combatState.player.name}
             hp={combatState.player.hp}
@@ -414,44 +416,56 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
         </Box>
 
         {/* VS */}
-        <Box alignItems="center" justifyContent="center">
+        <Box alignItems="center" justifyContent="center" flexDirection="column" paddingX={1}>
           <Text bold color="yellow">
-            {combatState.isPlayerTurn ? '⟹' : '⟸'}
+            ⚡
+          </Text>
+          <Text bold color="yellow" dimColor>
+            VS
+          </Text>
+          <Text bold color="yellow">
+            {combatState.isPlayerTurn ? '⇣' : '⇡'}
           </Text>
         </Box>
 
         {/* Enemy Status */}
-        <Box width="40%" flexDirection="column">
-          {livingEnemies.map((enemy) => (
-            <CharacterStatus
-              key={enemy.id}
-              name={enemy.name}
-              hp={enemy.hp}
-              maxHp={enemy.maxHp}
-              chi={enemy.chi}
-              maxChi={enemy.maxChi}
-              stance={enemy.stance}
-            />
+        <Box width="47%" borderStyle="round" borderColor="red" paddingX={2} flexDirection="column">
+          {livingEnemies.map((enemy, index) => (
+            <Box key={enemy.id} marginBottom={index < livingEnemies.length - 1 ? 1 : 0}>
+              <CharacterStatus
+                name={enemy.name}
+                hp={enemy.hp}
+                maxHp={enemy.maxHp}
+                chi={enemy.chi}
+                maxChi={enemy.maxChi}
+                stance={enemy.stance}
+              />
+            </Box>
           ))}
         </Box>
       </Box>
 
+      {/* Divider */}
+      <Box justifyContent="center">
+        <Text color="red" dimColor>────────────────────────────────────────────────────────────────────</Text>
+      </Box>
+
       {/* Message */}
       {message.length > 0 && (
-        <Box marginTop={1} borderStyle="round" borderColor={getMessageColor()} padding={1}>
-          <Text color={getMessageColor()}>{message}</Text>
+        <Box marginY={1} borderStyle="round" borderColor={getMessageColor()} paddingY={1} paddingX={2}>
+          <Text color={getMessageColor()} wrap="wrap">{message}</Text>
         </Box>
       )}
 
       {/* Action Area */}
       <Box marginTop={1}>
         {phase === 'initial-stance-select' && (
-          <Box flexDirection="column">
+          <Box flexDirection="column" alignItems="center">
             <Box marginBottom={1}>
-              <Text bold color="cyan">⚡ Choose your starting stance</Text>
+              <Text bold color="yellow">⚡ Choose Your Starting Stance</Text>
             </Box>
             <Box marginBottom={1}>
-              <Text dimColor>Your stance affects damage, defense, and speed</Text>
+              <Text dimColor italic>This choice affects your combat style for the entire battle</Text>
             </Box>
             <StanceMenu
               currentStance={combatState.player.stance}
@@ -498,61 +512,76 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
         )}
 
         {phase === 'enemy-turn' && (
-          <Box borderStyle="single" borderColor="red" padding={1}>
-            <Text color="red" italic>敵 Enemy Turn</Text>
+          <Box borderStyle="round" borderColor="red" padding={1} justifyContent="center">
+            <Text color="red" italic bold>⚔ Enemy Turn</Text>
           </Box>
         )}
 
         {phase === 'animating' && (
-          <Box borderStyle="single" borderColor="yellow" padding={1}>
-            <Text color="yellow">⚡ ⚡ ⚡</Text>
+          <Box borderStyle="round" borderColor="yellow" padding={1} justifyContent="center">
+            <Text color="yellow" bold>⚡ Processing ⚡</Text>
           </Box>
         )}
 
         {phase === 'victory' && (
-          <Box flexDirection="column" borderStyle="double" borderColor="green" padding={1}>
-            <Text bold color="green">
-              ══════ VICTORY! ══════
-            </Text>
-            <Box marginTop={1}>
+          <Box flexDirection="column" borderStyle="double" borderColor="green" paddingX={3} paddingY={2} alignItems="center">
+            <Box marginBottom={1}>
+              <Text bold color="green">
+                ✓ ═══════ VICTORY! ═══════ ✓
+              </Text>
+            </Box>
+            <Box marginBottom={2}>
               <Text color="yellow">
                 You defeated {livingEnemies.length === 0 ? combatState.enemies.map(e => e.name).join(', ') : 'your enemies'}!
               </Text>
             </Box>
-            <Box marginTop={1}>
-              <Text dimColor>Press Enter to continue...</Text>
+            <Box>
+              <Text dimColor italic>Press Enter to continue...</Text>
             </Box>
           </Box>
         )}
 
         {phase === 'defeat' && (
-          <Box flexDirection="column" borderStyle="double" borderColor="red" padding={1}>
-            <Text bold color="red">
-              ══════ DEFEAT ══════
-            </Text>
-            <Box marginTop={1}>
+          <Box flexDirection="column" borderStyle="double" borderColor="red" paddingX={3} paddingY={2} alignItems="center">
+            <Box marginBottom={1}>
+              <Text bold color="red">
+                ✗ ═══════ DEFEAT ═══════ ✗
+              </Text>
+            </Box>
+            <Box marginBottom={2}>
               <Text>You have been defeated...</Text>
             </Box>
-            <Box marginTop={1}>
-              <Text dimColor>Press Enter to continue...</Text>
+            <Box>
+              <Text dimColor italic>Press Enter to continue...</Text>
             </Box>
           </Box>
         )}
 
         {phase === 'fled' && (
-          <Box flexDirection="column" borderStyle="double" borderColor="yellow" padding={1}>
-            <Text bold color="yellow">
-              ══════ ESCAPED ══════
-            </Text>
-            <Box marginTop={1}>
+          <Box flexDirection="column" borderStyle="double" borderColor="yellow" paddingX={3} paddingY={2} alignItems="center">
+            <Box marginBottom={1}>
+              <Text bold color="yellow">
+                ⚠ ═══════ ESCAPED ═══════ ⚠
+              </Text>
+            </Box>
+            <Box marginBottom={2}>
               <Text>You fled from battle!</Text>
             </Box>
-            <Box marginTop={1}>
-              <Text dimColor>Press Enter to continue...</Text>
+            <Box>
+              <Text dimColor italic>Press Enter to continue...</Text>
             </Box>
           </Box>
         )}
       </Box>
-    </Box>
+
+      {/* Divider */}
+      <Box justifyContent="center" marginTop={1}>
+        <Text color="red" dimColor>────────────────────────────────────────────────────────────────────</Text>
+      </Box>
+
+      {/* Turn Queue */}
+      <TurnQueue turnOrder={turnOrder} currentActorId={combatState.player.id} />
+      </Box>
+    </CenteredScreen>
   );
 };
