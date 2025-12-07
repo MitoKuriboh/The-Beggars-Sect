@@ -13,6 +13,7 @@ import { RelationshipsDisplay } from './RelationshipsDisplay';
 import { SaveLoadTab } from './SaveLoadTab';
 import { CenteredScreen, useTerminalHeight } from '../components/PolishedBox';
 import { Header } from '../components/Decorative';
+import { SEMANTIC_DIVIDERS } from '../theme/dividers';
 
 interface StatusMenuProps {
   player: Character;
@@ -81,7 +82,7 @@ export const StatusMenu: React.FC<StatusMenuProps> = ({ player, storyState, onCl
 
       {/* Divider */}
       <Box justifyContent="center">
-        <Text color="yellow" dimColor>──────────────────────────────────────────────────────────────────</Text>
+        <Text color="yellow" dimColor>{SEMANTIC_DIVIDERS.status}</Text>
       </Box>
 
       {/* Tab Navigation */}
@@ -100,7 +101,7 @@ export const StatusMenu: React.FC<StatusMenuProps> = ({ player, storyState, onCl
 
       {/* Divider */}
       <Box justifyContent="center">
-        <Text color="yellow" dimColor>──────────────────────────────────────────────────────────────────</Text>
+        <Text color="yellow" dimColor>{SEMANTIC_DIVIDERS.status}</Text>
       </Box>
 
       {/* Tab Content */}
@@ -161,7 +162,7 @@ export const StatusMenu: React.FC<StatusMenuProps> = ({ player, storyState, onCl
 
       {/* Divider */}
       <Box justifyContent="center">
-        <Text color="yellow" dimColor>──────────────────────────────────────────────────────────────────</Text>
+        <Text color="yellow" dimColor>{SEMANTIC_DIVIDERS.status}</Text>
       </Box>
 
       {/* Footer */}

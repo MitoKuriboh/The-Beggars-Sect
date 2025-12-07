@@ -24,13 +24,14 @@ import { ChoiceMenu } from './ChoiceMenu';
 import { ExplorationMenu } from './ExplorationMenu';
 import { StatusMenu } from '../status/StatusMenu';
 import { CenteredScreen } from '../components/PolishedBox';
+import { SEMANTIC_DIVIDERS } from '../theme/dividers';
+import { UI_CONFIG } from '../config/constants';
 
 // =============================================================================
 // CONSTANTS
 // =============================================================================
 
-const AUTO_ADVANCE_DELAY_MS = 200; // Delay after typewriter skip to show completed text
-const DEFAULT_PAUSE_DURATION_MS = 1000; // Default pause duration if not specified
+const { story: STORY_CONFIG } = UI_CONFIG;
 
 // =============================================================================
 // TYPES
@@ -188,7 +189,7 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
   // Centralizes pause logic to avoid duplication across 4+ locations
   const handlePauseAndAdvance = useCallback((pauseLine: ContentLine, nextIndex: number) => {
     // Extract duration - only pause type has duration property
-    const duration = pauseLine.type === 'pause' ? pauseLine.duration : DEFAULT_PAUSE_DURATION_MS;
+    const duration = pauseLine.type === 'pause' ? pauseLine.duration : STORY_CONFIG.defaultPauseDuration;
 
     setIsPaused(true);
     pauseTimeoutRef.current = setTimeout(() => {
@@ -531,7 +532,7 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
                 handleResultRef.current(result);
               }
             }
-          }, AUTO_ADVANCE_DELAY_MS);
+          }, STORY_CONFIG.autoAdvanceDelay);
           return;
         }
 
@@ -639,7 +640,7 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
 
         {/* Divider */}
         <Box justifyContent="center">
-          <Text color="cyan" dimColor>────────────────────────────────────────────────────────────────────────────</Text>
+          <Text color="cyan" dimColor>{SEMANTIC_DIVIDERS.story}</Text>
         </Box>
 
         {/* Content area - Optimal reading zone */}
@@ -721,7 +722,7 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
 
         {/* Divider */}
         <Box justifyContent="center">
-          <Text color="cyan" dimColor>────────────────────────────────────────────────────────────────────────────</Text>
+          <Text color="cyan" dimColor>{SEMANTIC_DIVIDERS.story}</Text>
         </Box>
 
         {/* Action Bar */}

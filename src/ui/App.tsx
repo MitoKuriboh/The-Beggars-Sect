@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { Box, Text, useApp, useInput } from 'ink';
-import SelectInput from 'ink-select-input';
-const SelectInputComponent = (SelectInput as any).default || SelectInput;
+import { SelectInputComponent } from './components/SelectInputWrapper';
 
 import { GameStore } from '../game/state/GameStore';
 import { createPlayer, createEnemy, scaleEnemyForChapter } from '../game/factories/CharacterFactory';
@@ -11,6 +10,7 @@ import { SaveLoadScreen } from './SaveLoadScreen';
 import { SettingsScreen } from './SettingsScreen';
 import { CenteredScreen, PolishedBox, useTerminalHeight } from './components/PolishedBox';
 import { SelectMenu } from './components/Menu';
+import { DIVIDERS } from './theme/dividers';
 import type { Character, Enemy, StoryState } from '../types/index';
 
 // =============================================================================
@@ -115,7 +115,7 @@ const TitleScreen: React.FC<{ onContinue: () => void }> = ({ onContinue }) => {
 
         {/* Decorative separator */}
         <Box marginTop={1} marginBottom={1}>
-          <Text color="gray">─────────────────────────────────────</Text>
+          <Text color="gray">{DIVIDERS.short}</Text>
         </Box>
 
         {/* Prompt */}
@@ -192,7 +192,7 @@ const MainMenu: React.FC<{ onSelect: (screen: Screen) => void }> = ({ onSelect }
 
         {/* Divider */}
         <Box justifyContent="center">
-          <Text color="cyan" dimColor>──────────────────────────────────────────────────────────────────</Text>
+          <Text color="cyan" dimColor>{DIVIDERS.standard}</Text>
         </Box>
 
         {/* Current game status (if active) */}
@@ -212,7 +212,7 @@ const MainMenu: React.FC<{ onSelect: (screen: Screen) => void }> = ({ onSelect }
 
             {/* Divider */}
             <Box justifyContent="center">
-              <Text color="cyan" dimColor>──────────────────────────────────────────────────────────────────</Text>
+              <Text color="cyan" dimColor>{DIVIDERS.standard}</Text>
             </Box>
           </>
         )}
@@ -224,7 +224,7 @@ const MainMenu: React.FC<{ onSelect: (screen: Screen) => void }> = ({ onSelect }
 
         {/* Divider */}
         <Box justifyContent="center">
-          <Text color="cyan" dimColor>──────────────────────────────────────────────────────────────────</Text>
+          <Text color="cyan" dimColor>{DIVIDERS.standard}</Text>
         </Box>
 
         {/* Footer */}
