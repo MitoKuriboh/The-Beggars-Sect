@@ -1,7 +1,7 @@
 # The Beggars Sect - Documentation
 
 **A CLI RPG set in the Martial Arts Haven**
-**Version:** 0.2.4 | **Last Updated:** 2025-12-06
+**Version:** 0.3.6 | **Last Updated:** 2025-12-07
 
 ---
 

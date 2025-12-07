@@ -2,6 +2,49 @@
 
 All notable changes to this project will be documented in this file.
 
+**Latest:** Phase 2 Complete - v0.3.6 (2025-12-07)
+
+---
+
+## [2025-12-07] - Phase 2 Complete: Demo Polish & v0.3.6
+
+### Milestone: Phase 2 COMPLETE
+**Polished Demo Ready** - Smooth UX flow, enhanced combat, improved saves
+
+### Added
+- **Enhanced Combat UI** - Improved targeting system
+- **Save System Improvements** - Better reliability and feedback
+- **Smooth Story Flow** - 1 SPACE per line achievement
+  - Auto-advance after typewriter completion
+  - Smart pause handling
+  - Optimized SPACE handler order
+- **Phase 2 Documentation** - All docs updated to v0.3.6
+
+### Changed
+- Combat UI with better target selection feedback
+- Save/Load UI improvements
+- Story advancement now requires only 1 SPACE per line
+- Typewriter effect with auto-advance (200ms delay)
+
+### Fixed
+- React warning in TargetMenu component
+- Double-SPACE issue in story flow
+- SPACE handler check order
+- Effect line auto-skip
+
+### Released
+- **v0.3.0** - Phase 1: Combat balance, mastery system
+- **v0.3.2-v0.3.5** - UX improvements (SPACE handling, pacing)
+- **v0.3.6** - Phase 2 Complete with all executables:
+  - Windows: beggars-sect-win.exe (81 MB)
+  - macOS: beggars-sect-macos (94 MB)
+  - Linux: beggars-sect-linux (89 MB) + DEB installer (57 MB)
+
+### Context
+**Why:** Phase 2 goal was polishing the demo experience. The core systems from Phase 1 (combat, story, saves) now have a smooth, professional feel.
+
+**Impact:** Demo is production-ready. Next phase: Content expansion (Chapters 1-3).
+
 ---
 
 ## [Unreleased]

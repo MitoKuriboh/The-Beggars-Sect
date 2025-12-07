@@ -1,8 +1,8 @@
 # The Beggars Sect - Design Status & System Breakdown
 
-**Last Updated:** 2025-12-06
-**Current Phase:** IMPLEMENTATION (Phase 2 of 6)
-**Status:** v0.2.3 - Combat/story improvements, tutorial retry
+**Last Updated:** 2025-12-07
+**Current Phase:** IMPLEMENTATION (Phase 2 Complete - Content Expansion Next)
+**Status:** v0.3.6 - Phase 2 Complete: UX polish, smooth story flow (1 SPACE/line), enhanced combat UI, improved save system
 
 ---
 

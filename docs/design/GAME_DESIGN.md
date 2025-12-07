@@ -5,7 +5,7 @@
 **Protagonist:** Li Wei
 **Genre:** Wuxia Turn-Based RPG
 **Platform:** CLI (Terminal/Command Line)
-**Version:** 0.2.0 (Playable Build)
+**Version:** 0.3.6 (Phase 2 Complete - Demo Polish)
 **Last Updated:** 2025-12-06
 
 ---
@@ -21,7 +21,7 @@
 - Non-linear narrative with 3 paths and 3 endings
 - Discovery-based progression (no grinding)
 
-**Current Status:** v0.2.0 playable build with complete combat system, save system, and full story.
+**Current Status:** v0.3.6 polished demo with smooth UX flow (1 SPACE per line), enhanced combat UI, improved save system, and complete Prologue.
 
 ---
 
@@ -455,11 +455,13 @@ Each enemy has AI patterns defining aggressive, defensive, and tactical behavior
 | **Week 2: Combat Engine** | ✅ Complete | ATB system, 2500+ lines of combat code |
 | **Week 3: Story Engine** | ✅ Complete | Non-linear narrative, 3 paths, 3 endings |
 | **Week 4: Save System** | ✅ Complete | SaveManager, auto-save, v0.2.0 release |
+| **Phase 1: Balance** | ✅ Complete | Combat balance, mastery system, v0.3.0 |
+| **Phase 2: Demo Polish** | ✅ Complete | UX flow (1 SPACE/line), combat UI, v0.3.6 |
 | **Week 5+: Content** | 🔄 In Progress | Additional chapters and techniques |
 
 ### Current Status
 
-**v0.2.0 Playable Build - COMPLETE**
+**v0.3.6 Polished Demo - Phase 2 COMPLETE**
 
 Implementation complete:
 - ✅ Full ATB combat engine with DEX-based speed
@@ -480,7 +482,7 @@ Implementation complete:
 
 ---
 
-## Scope Boundaries (v0.2.0 Current)
+## Scope Boundaries (v0.3.6 Current)
 
 ### Implemented ✅
 
@@ -525,9 +527,9 @@ From nothing, to legend.
 
 ---
 
-**Document Version:** 3.0 (v0.2.0 Build)
-**Last Updated:** 2025-12-06
-**Status:** Design complete, implementation v0.2.0 released
+**Document Version:** 3.1 (v0.3.6 Build)
+**Last Updated:** 2025-12-07
+**Status:** Design complete, Phase 2 v0.3.6 released (polished demo)
 
 *This document provides overview and navigation. See linked documents for detailed specifications.*
 

@@ -3,13 +3,13 @@
 **Project:** The Beggars Sect: Li Wei's Ascension
 **Version:** 2.0
 **Last Updated:** 2025-12-06
-**Status:** IMPLEMENTED - v0.2.0 playable build released
+**Status:** IMPLEMENTED - v0.3.6 polished demo released (Phase 2 Complete)
 
 ---
 
 ## Overview
 
-This document defines the technical architecture for The Beggars Sect CLI RPG. It reflects the actual implemented codebase (v0.2.0).
+This document defines the technical architecture for The Beggars Sect CLI RPG. It reflects the actual implemented codebase (v0.3.6).
 
 **Tech Stack (Implemented):**
 - Node.js >=20.0.0
@@ -680,7 +680,7 @@ export const CONFIG = {
 
 **Document Version:** 2.0
 **Last Updated:** 2025-12-06
-**Status:** Implementation complete (v0.2.0)
+**Status:** Implementation complete (v0.3.6 - Phase 2 polished demo)
 
 **Related Documents:**
 - Combat mechanics → systems/COMBAT_SYSTEM.md

@@ -7,6 +7,32 @@ All notable changes to The Beggars Sect project.
 
 ---
 
+## [0.3.6] - 2025-12-07
+
+### Phase 2 Complete - Demo Polish
+
+**Combat Improvements:**
+- Enhanced combat UI with improved targeting system
+- Fixed React warning in TargetMenu component
+- Smoother combat flow and transitions
+
+**Save System Enhancements:**
+- Save system improvements for better reliability
+- Enhanced save/load UI feedback
+
+**Documentation:**
+- Updated all documentation to v0.3.6
+- Updated version references across docs
+- Updated build scripts to v0.3.6
+
+**Release:**
+- GitHub release v0.3.6 with all executables and installers
+- Windows: beggars-sect-win.exe (81 MB)
+- macOS: beggars-sect-macos (94 MB)
+- Linux: beggars-sect-linux (89 MB) + DEB installer (57 MB)
+
+---
+
 ## [0.3.5] - 2025-12-06
 
 ### Changed - Single SPACE Advancement
