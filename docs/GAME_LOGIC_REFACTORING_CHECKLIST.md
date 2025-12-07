@@ -52,7 +52,14 @@
 **Exit Criteria:**
 - ✅ All magic numbers in centralized config
 - ✅ No code duplication in utilities
-- ✅ All tests passing
+- ✅ Build passes
+- ✅ Utilities created and exported
+
+**Utilities Applied:**
+- [x] CombatEngine.ts - Uses GAME_BALANCE, StatusEffectUtils, ConditionParser (Phase 2A)
+- [x] AIController.ts - Uses ConditionParser, ComparisonEvaluator (Phase 2B)
+- [ ] TechniqueRegistry.ts - Could use TECHNIQUE_DEFAULTS (Future)
+- [ ] CharacterFactory.ts - Could use DIFFICULTY_CONFIG (Future)
 
 ---
 
