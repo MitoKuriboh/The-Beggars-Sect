@@ -53,14 +53,21 @@ the-beggars-sect/
 │   │   ├── story/              # StoryEngine, chapters
 │   │   └── factories/          # Character/enemy creation
 │   ├── types/                  # TypeScript definitions
-│   ├── ui/                     # Ink/React components
+│   ├── ui/                     # Ink/React components (AAA Architecture)
+│   │   ├── hooks/              # Custom hooks (navigation, state)
+│   │   ├── components/         # Reusable UI components
+│   │   ├── config/             # UI constants and configuration
+│   │   ├── theme/              # Design system (dividers, colors)
+│   │   ├── utils/              # Input helpers and utilities
 │   │   ├── combat/             # Combat UI (8 components)
-│   │   └── story/              # Story UI (4 components)
+│   │   ├── story/              # Story UI (4 components)
+│   │   ├── status/             # Status menu components
+│   │   └── menus/              # Game menus
 │   ├── data/                   # Data files (scaffold)
 │   ├── automation/             # AI integration (scaffold)
 │   └── utils/                  # Utilities (scaffold)
 │
-├── docs/                       # Documentation (~15,000 lines)
+├── docs/                       # Documentation (~20,000+ lines)
 │   ├── README.md               # Documentation index
 │   ├── design/                 # Game & tech design
 │   ├── systems/                # Combat, techniques, enemies
@@ -68,7 +75,9 @@ the-beggars-sect/
 │   ├── lore/                   # World building (11 files)
 │   ├── planning/               # TODO, changelog, roadmap
 │   ├── reference/              # Formulas
-│   └── dev/                    # Code review, guidelines
+│   ├── dev/                    # Code review, guidelines
+│   ├── AAA_UI_ARCHITECTURE.md  # Complete UI architecture guide
+│   └── UI_REFACTORING_CHECKLIST.md  # Implementation tracker
 │
 ├── assets/                     # Game assets (placeholder)
 ├── release/                    # Release packaging
@@ -95,7 +104,7 @@ The demo showcases all core systems. Full chapters (1-3) coming in future releas
 
 ## Features
 
-### Implemented (v0.3.5 Demo)
+### Implemented (v0.3.7 Demo)
 
 **Combat Systems:**
 - **ATB Combat System** - DEX-based turn order, 7-turn preview
@@ -112,7 +121,8 @@ The demo showcases all core systems. Full chapters (1-3) coming in future releas
 - **Prologue Chapter** - 7 scenes, ~25 minutes (complete demo)
 - **Smooth Story Flow** - 1 SPACE per line, typewriter effect, optimized pacing
 - **Save System** - 3 slots + auto-save, file persistence
-- **Full UI** - Combat screen, story renderer, menus
+- **AAA UI Architecture** - Custom hooks, design system, optimized components
+- **Polished Controls** - Consistent keyboard navigation, refined feedback
 
 ### Planned
 
@@ -131,8 +141,28 @@ The demo showcases all core systems. Full chapters (1-3) coming in future releas
 | Runtime | Node.js 18+ |
 | Language | TypeScript 5.3 |
 | UI Framework | Ink 3.2 (React for CLI) |
-| State | Custom singleton store |
+| Architecture | AAA Game UI Patterns |
+| State | Custom singleton store + React hooks |
 | Build | tsc, esbuild, pkg |
+
+### UI Architecture
+
+**AAA-Grade Component System** (Refactored Dec 2025):
+
+- **Custom Hooks** - Reusable state logic (navigation, state management)
+- **Design System** - Centralized constants (timing, sizing, colors, dividers)
+- **Component Library** - MenuContainer, ScreenBox, SectionHeader, SelectInputWrapper
+- **State Machines** - Combat and Story UI phases
+- **Utilities** - Input validation, navigation helpers
+
+**Key Patterns:**
+- Container-Presentational separation
+- React.memo optimization
+- Custom hooks for complex logic
+- Centralized configuration (zero magic numbers)
+- Consistent visual language
+
+See [docs/AAA_UI_ARCHITECTURE.md](docs/AAA_UI_ARCHITECTURE.md) for complete architecture details.
 
 ### Dependencies
 
@@ -150,6 +180,7 @@ The demo showcases all core systems. Full chapters (1-3) coming in future releas
 | Need to... | Go to |
 |------------|-------|
 | Understand the codebase | [docs/dev/CODE_REVIEW.md](docs/dev/CODE_REVIEW.md) |
+| See UI architecture | [docs/AAA_UI_ARCHITECTURE.md](docs/AAA_UI_ARCHITECTURE.md) |
 | See implementation tasks | [docs/planning/TODO.md](docs/planning/TODO.md) |
 | Read game design | [docs/design/GAME_DESIGN.md](docs/design/GAME_DESIGN.md) |
 | Understand combat | [docs/systems/COMBAT_SYSTEM.md](docs/systems/COMBAT_SYSTEM.md) |
@@ -193,6 +224,7 @@ npm run package  # Build standalone executables
 | Week 4: Polish | ✅ Complete | Save system, v0.2.0 |
 | **Phase 1: Balance** | ✅ **Complete** | **Combat balance, mastery, scaling (v0.3.0)** |
 | **Phase 2: Demo Polish** | ✅ **Complete** | **UX flow + combat + save system (v0.3.1-0.3.6)** |
+| **Phase 2.5: AAA UI** | ✅ **Complete** | **Custom hooks, design system, component refactoring (v0.3.7)** |
 | Phase 3: Content | Planned | Chapters 1-3, items, locations |
 
 ---
