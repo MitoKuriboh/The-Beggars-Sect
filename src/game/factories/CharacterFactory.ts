@@ -17,6 +17,7 @@ import type {
 } from '../../types/index';
 
 import { calculateMaxHp, calculateMaxChi } from '../../types/character';
+import { GAME_BALANCE } from '../config/GameBalance';
 
 // =============================================================================
 // PLAYER CREATION
@@ -666,27 +667,19 @@ export function getRandomEnemyByTier(tier: EnemyTier): Enemy {
 // STAT SCALING (for difficulty)
 // =============================================================================
 
-interface ScalingConfig {
-  hpMultiplier: number;
-  damageMultiplier: number;
-}
-
-const CHAPTER_SCALING: Record<number, ScalingConfig> = {
-  1: { hpMultiplier: 1.0, damageMultiplier: 1.0 },
-  2: { hpMultiplier: 1.3, damageMultiplier: 1.15 },
-  3: { hpMultiplier: 1.6, damageMultiplier: 1.3 },
-};
-
 /**
  * Apply chapter-based scaling to an enemy
+ * Uses centralized difficulty configuration from GAME_BALANCE
  */
 export function scaleEnemyForChapter(enemy: Enemy, chapter: number): void {
-  const scaling = CHAPTER_SCALING[chapter] ?? CHAPTER_SCALING[1] ?? { hpMultiplier: 1.0, damageMultiplier: 1.0 };
+  // Map chapter number to config key
+  const chapterKey = chapter === 1 ? 'chapter1' : chapter === 2 ? 'chapter2' : chapter === 3 ? 'chapter3' : 'prologue';
+  const scaling = GAME_BALANCE.difficulty.chapterScaling[chapterKey];
 
   enemy.maxHp = Math.floor(enemy.maxHp * scaling.hpMultiplier);
   enemy.hp = enemy.maxHp;
 
-  // Note: damageMultiplier is applied during combat calculations
-  // Store it on the enemy for reference
-  (enemy as Enemy & { damageScale?: number }).damageScale = scaling.damageMultiplier;
+  // Store damage scale on enemy for combat calculations
+  // Note: damageScale is applied during combat damage calculation
+  (enemy as Enemy & { damageScale?: number }).damageScale = scaling.damageScale;
 }
