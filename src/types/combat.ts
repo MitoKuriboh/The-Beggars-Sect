@@ -14,8 +14,6 @@ import type { Item } from './item';
 export type ActionType =
   | 'attack'      // Basic palm strike
   | 'technique'   // Use a technique
-  | 'defend'      // Guard stance
-  | 'chi-focus'   // Meditate, recover chi
   | 'item'        // Use consumable
   | 'stance'      // Switch stance
   | 'flee';       // Escape combat

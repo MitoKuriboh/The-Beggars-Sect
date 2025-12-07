@@ -9,7 +9,7 @@ import SelectInput from 'ink-select-input';
 
 const SelectInputComponent = (SelectInput as any).default || SelectInput;
 
-export type ActionType = 'attack' | 'technique' | 'defend' | 'chi-focus' | 'stance' | 'flee';
+export type ActionType = 'attack' | 'technique' | 'stance' | 'flee';
 
 interface ActionMenuItem {
   label: string;
@@ -30,8 +30,6 @@ export const ActionMenu: React.FC<ActionMenuProps> = ({
   const items: ActionMenuItem[] = [
     { label: '⚔️  Attack', value: 'attack' },
     { label: '✨ Technique', value: 'technique' },
-    { label: '🛡️  Defend', value: 'defend' },
-    { label: '🧘 Chi Focus', value: 'chi-focus' },
     { label: '🔄 Stance', value: 'stance' },
   ];
 

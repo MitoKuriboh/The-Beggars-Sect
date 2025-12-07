@@ -62,6 +62,10 @@ const TitleScreen: React.FC<{ onContinue: () => void }> = ({ onContinue }) => {
     '╚════════════════════════════════════════════════════════════════╝',
   ];
 
+  // Decorative elements
+  const swordArt = '   ⚔                                                          ⚔   ';
+  const dragonArt = '   🐉                    CLI RPG v0.3.7                      🐉   ';
+
   // Color mapping: border=yellow, THE=cyan, BEGGARS=magenta, SECT=green, chinese=white
   const getColor = (i: number): string => {
     if (i === 0 || i === titleArt.length - 1) return 'yellow';  // Border
@@ -72,21 +76,45 @@ const TitleScreen: React.FC<{ onContinue: () => void }> = ({ onContinue }) => {
   };
 
   return (
-    <Box flexDirection="column" alignItems="center" padding={1}>
-      {titleArt.map((line, i) => (
-        <Text key={i} color={getColor(i)}>
-          {line}
-        </Text>
-      ))}
-      <Box marginTop={1}>
-        <Text dimColor italic>
-          Li Wei's Ascension
-        </Text>
-      </Box>
-      <Box marginTop={1}>
-        <Text color="gray">
-          ▸ Press any key to begin ◂
-        </Text>
+    <Box flexDirection="column" height="100%" justifyContent="center" alignItems="center">
+      <Box flexDirection="column" alignItems="center">
+        {/* Decorative top */}
+        <Text color="yellow">{swordArt}</Text>
+        <Text dimColor>{dragonArt}</Text>
+        <Box marginBottom={1}>
+          <Text color="gray">════════════════════════════════════════════════════════════════</Text>
+        </Box>
+
+        {/* Main title */}
+        {titleArt.map((line, i) => (
+          <Text key={i} color={getColor(i)}>
+            {line}
+          </Text>
+        ))}
+
+        {/* Subtitle */}
+        <Box marginTop={1}>
+          <Text bold italic color="white">
+            Li Wei's Ascension
+          </Text>
+        </Box>
+
+        {/* Decorative separator */}
+        <Box marginTop={1} marginBottom={1}>
+          <Text color="gray">─────────────────────────────────────</Text>
+        </Box>
+
+        {/* Prompt */}
+        <Box marginTop={1}>
+          <Text color="cyan">
+            ▸ Press Enter or Space to begin ◂
+          </Text>
+        </Box>
+
+        {/* Decorative bottom */}
+        <Box marginTop={2}>
+          <Text dimColor>A tale of honor, chi, and redemption in the Martial Arts Haven</Text>
+        </Box>
       </Box>
     </Box>
   );
@@ -103,15 +131,15 @@ const MainMenu: React.FC<{ onSelect: (screen: Screen) => void }> = ({ onSelect }
   const menuItems: MenuItem[] = [];
 
   if (isGameActive) {
-    menuItems.push({ label: 'Continue', value: 'stats' });
+    menuItems.push({ label: '▸ Continue Journey', value: 'stats' });
   }
-  menuItems.push({ label: 'New Game', value: 'newgame' });
+  menuItems.push({ label: '⚡ New Game', value: 'newgame' });
   if (hasSaves) {
-    menuItems.push({ label: 'Load Game', value: 'load' });
+    menuItems.push({ label: '📂 Load Game', value: 'load' });
   }
-  menuItems.push({ label: 'Settings', value: 'settings' });
-  menuItems.push({ label: 'Credits', value: 'credits' });
-  menuItems.push({ label: 'Quit', value: 'quit' });
+  menuItems.push({ label: '⚙️  Settings', value: 'settings' });
+  menuItems.push({ label: '📜 Credits', value: 'credits' });
+  menuItems.push({ label: '🚪 Quit', value: 'quit' });
 
   const handleSelect = useCallback(
     (item: MenuItem) => {
@@ -124,16 +152,60 @@ const MainMenu: React.FC<{ onSelect: (screen: Screen) => void }> = ({ onSelect }
     [exit, onSelect]
   );
 
+  // Game status info (only if game is active)
+  const progress = isGameActive ? GameStore.getState().storyProgress : null;
+  const player = isGameActive ? GameStore.getPlayer() : null;
+
   return (
-    <Box flexDirection="column" padding={1}>
-      <Text bold color="cyan">
-        THE BEGGARS SECT
-      </Text>
-      <Text dimColor>
-        A CLI RPG in the Martial Arts Haven
-      </Text>
-      <Box marginTop={1} flexDirection="column">
-        <SelectInputComponent items={menuItems} onSelect={handleSelect} />
+    <Box flexDirection="column" height="100%" justifyContent="center" alignItems="center">
+      <Box flexDirection="column" alignItems="center" borderStyle="double" borderColor="yellow" padding={2}>
+        {/* Header with decorative elements */}
+        <Box marginBottom={1}>
+          <Text color="yellow">════════════════════════════════════</Text>
+        </Box>
+
+        <Text bold color="cyan">
+          THE BEGGARS SECT
+        </Text>
+        <Text dimColor italic>
+          丐 帮
+        </Text>
+
+        <Box marginTop={1} marginBottom={1}>
+          <Text color="yellow">════════════════════════════════════</Text>
+        </Box>
+
+        {/* Current game status (if active) */}
+        {isGameActive && player && progress && (
+          <Box flexDirection="column" alignItems="center" marginBottom={2} paddingX={2}>
+            <Text dimColor>─── Current Game ───</Text>
+            <Box marginTop={1}>
+              <Text>
+                <Text bold color="yellow">{player.name}</Text>
+                <Text dimColor> | </Text>
+                <Text color="magenta">{player.stance.charAt(0).toUpperCase() + player.stance.slice(1)} Stance</Text>
+              </Text>
+            </Box>
+            <Box>
+              <Text dimColor>
+                Chapter: {progress.chapter} | Scene: {progress.scene}
+              </Text>
+            </Box>
+            <Box marginTop={1} marginBottom={1}>
+              <Text color="gray">───────────────────────────────────</Text>
+            </Box>
+          </Box>
+        )}
+
+        {/* Menu */}
+        <Box flexDirection="column" minWidth={40}>
+          <SelectInputComponent items={menuItems} onSelect={handleSelect} />
+        </Box>
+
+        {/* Footer */}
+        <Box marginTop={2}>
+          <Text dimColor>Use ↑↓ arrows and Enter to select</Text>
+        </Box>
       </Box>
     </Box>
   );
@@ -158,25 +230,27 @@ const NewGameScreen: React.FC<{ onComplete: () => void; onBack: () => void }> = 
     };
   }, []);
 
-  useInput((input, key) => {
-    if (stage === 'confirm') {
-      if (input === 'y' || key.return) {
-        setStage('creating');
-        // Initialize game
-        const player = createPlayer();
-        GameStore.initializeNewGame(player);
-        setStage('done');
-        completionTimeoutRef.current = setTimeout(() => {
-          completionTimeoutRef.current = null;
-          onComplete();
-        }, 1000);
-      } else if (input === 'n' || key.escape) {
-        onBack();
-      }
+  const handleConfirm = useCallback((item: MenuItem) => {
+    if (item.value === 'yes') {
+      setStage('creating');
+      // Initialize game
+      const player = createPlayer();
+      GameStore.initializeNewGame(player);
+      setStage('done');
+      completionTimeoutRef.current = setTimeout(() => {
+        completionTimeoutRef.current = null;
+        onComplete();
+      }, 1000);
+    } else {
+      onBack();
     }
-  });
+  }, [onComplete, onBack]);
 
   if (stage === 'confirm') {
+    const confirmItems: MenuItem[] = [
+      { label: 'Yes, Begin Journey', value: 'yes' },
+      { label: 'No, Return to Menu', value: 'no' },
+    ];
     return (
       <Box flexDirection="column" padding={1}>
         <Text bold color="cyan">
@@ -190,10 +264,8 @@ const NewGameScreen: React.FC<{ onComplete: () => void; onBack: () => void }> = 
         <Text>
           a beggar with no memory of his past.
         </Text>
-        <Box marginTop={1}>
-          <Text dimColor>
-            Start new game? (Y/n)
-          </Text>
+        <Box marginTop={2}>
+          <SelectInputComponent items={confirmItems} onSelect={handleConfirm} />
         </Box>
       </Box>
     );
@@ -328,31 +400,53 @@ const CreditsScreen: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   });
 
   return (
-    <Box flexDirection="column" padding={1}>
-      <Text bold color="cyan">
-        CREDITS
-      </Text>
-      <Box marginTop={1} flexDirection="column">
-        <Text>
-          <Text bold>The Beggars Sect: Li Wei's Ascension</Text>
+    <Box flexDirection="column" height="100%" justifyContent="center" alignItems="center">
+      <Box flexDirection="column" alignItems="center" borderStyle="round" borderColor="cyan" padding={3} minWidth={60}>
+        {/* Header */}
+        <Text bold color="cyan">
+          ═══ CREDITS ═══
         </Text>
-        <Box marginTop={1}>
-          <Text>Created by: <Text color="yellow">Mito (Mitchell Grebe)</Text></Text>
-        </Box>
-        <Text dimColor>With assistance from Claude</Text>
-        <Box marginTop={1}>
-          <Text dimColor>
-            Part of the genkaw.com universe
+
+        <Box marginTop={2} flexDirection="column" alignItems="center">
+          <Text bold color="yellow">
+            The Beggars Sect: Li Wei's Ascension
           </Text>
+          <Text dimColor italic>丐 帮 ： 李 伟 的 崛 起</Text>
         </Box>
-        <Box marginTop={1}>
-          <Text dimColor>
-            Built with Ink, React, and TypeScript
-          </Text>
+
+        <Box marginTop={2} marginBottom={1}>
+          <Text color="gray">─────────────────────────────────────</Text>
         </Box>
-      </Box>
-      <Box marginTop={2}>
-        <Text color="gray">Press Enter to go back...</Text>
+
+        {/* Creator */}
+        <Box marginTop={1} flexDirection="column" alignItems="center">
+          <Text dimColor>Created by</Text>
+          <Text bold color="yellow">Mito (Mitchell Grebe)</Text>
+          <Text dimColor>With assistance from Claude</Text>
+        </Box>
+
+        <Box marginTop={2} flexDirection="column" alignItems="center">
+          <Text dimColor>Part of the <Text color="cyan">genkaw.com</Text> universe</Text>
+        </Box>
+
+        <Box marginTop={2} marginBottom={2}>
+          <Text color="gray">─────────────────────────────────────</Text>
+        </Box>
+
+        {/* Tech */}
+        <Box flexDirection="column" alignItems="center">
+          <Text dimColor>Built with</Text>
+          <Text color="magenta">Ink • React • TypeScript</Text>
+        </Box>
+
+        <Box marginTop={2}>
+          <Text dimColor>Version 0.3.7</Text>
+        </Box>
+
+        {/* Back prompt */}
+        <Box marginTop={3}>
+          <Text color="cyan">▸ Press Enter or Escape to return ◂</Text>
+        </Box>
       </Box>
     </Box>
   );
@@ -493,6 +587,7 @@ export const App: React.FC = () => {
           player={GameStore.getPlayer()}
           onCombatStart={handleStoryCombat}
           onGameEnd={handleStoryEnd}
+          onQuitToMenu={goToMenu}
           combatResult={storyCombatResult}
           onCombatResultHandled={handleCombatResultHandled}
         />

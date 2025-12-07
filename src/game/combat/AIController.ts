@@ -199,14 +199,6 @@ function evaluateCondition(condition: string, ctx: EvalContext): boolean {
  * Parse an action string into a CombatAction
  */
 function parseAction(actionStr: string, enemy: Enemy, player: Character): CombatAction {
-  // Defend action
-  if (actionStr === 'defend') {
-    return {
-      type: 'defend',
-      actor: enemy,
-    };
-  }
-
   // Technique action: "use:technique-id"
   const useMatch = actionStr.match(/use:(.+)/);
   if (useMatch && useMatch[1]) {

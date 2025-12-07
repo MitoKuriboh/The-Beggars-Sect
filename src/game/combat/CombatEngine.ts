@@ -27,7 +27,7 @@ import {
   getAllCombatants,
 } from '../../types/combat';
 
-import { getEffectiveStat, STANCE_MODIFIERS, STATUS_EFFECTS } from '../../types/character';
+import { getEffectiveStat, STANCE_MODIFIERS, STATUS_EFFECTS, type Stance } from '../../types/character';
 import { AIController } from './AIController';
 import {
   getAttackMessage,
@@ -98,6 +98,18 @@ export class CombatEngine {
 
   getTurnQueue(): TurnQueueEntry[] {
     return this.state.turnQueue;
+  }
+
+  // ---------------------------------------------------------------------------
+  // SETTERS
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Set player stance (used for initial stance selection)
+   */
+  setPlayerStance(stance: Stance): void {
+    this.state.player.stance = stance;
+    this.notifyStateChange();
   }
 
   // ---------------------------------------------------------------------------
@@ -321,12 +333,6 @@ export class CombatEngine {
       case 'technique':
         result = this.executeTechnique(action);
         break;
-      case 'defend':
-        result = this.executeDefend(action);
-        break;
-      case 'chi-focus':
-        result = this.executeChiFocus(action);
-        break;
       case 'flee':
         result = this.executeFlee(action);
         break;
@@ -381,9 +387,6 @@ export class CombatEngine {
         break;
       case 'technique':
         result = this.executeTechnique(action);
-        break;
-      case 'defend':
-        result = this.executeDefend(action);
         break;
       default:
         result = this.executeBasicAttack({
@@ -672,40 +675,6 @@ export class CombatEngine {
     }
 
     return { totalDamage, effectMessages };
-  }
-
-  private executeDefend(action: CombatAction): ActionResult {
-    const { actor } = action;
-
-    // Apply defending status (using helper to prevent stacking)
-    this.applyStatusEffect(actor, { ...STATUS_EFFECTS.DEFENDING });
-
-    // Small chi recovery
-    const chiRecovered = Math.min(5, actor.maxChi - actor.chi);
-    actor.chi += chiRecovered;
-
-    return {
-      type: 'defend',
-      success: true,
-      message: `${getDefendMessage(actor.name)} (+${chiRecovered} chi)`,
-      chiGained: chiRecovered,
-    };
-  }
-
-  private executeChiFocus(action: CombatAction): ActionResult {
-    const { actor } = action;
-
-    // Recover chi based on WIS
-    const wisBonus = Math.floor(getEffectiveStat(actor, 'wis') / 5);
-    const chiRecovered = Math.min(10 + wisBonus, actor.maxChi - actor.chi);
-    actor.chi += chiRecovered;
-
-    return {
-      type: 'chi-focus',
-      success: true,
-      message: `${getChiFocusMessage(actor.name)} (+${chiRecovered} chi)`,
-      chiGained: chiRecovered,
-    };
   }
 
   private executeFlee(action: CombatAction): ActionResult {

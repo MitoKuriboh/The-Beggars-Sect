@@ -22,6 +22,7 @@ import { createEnemy, scaleEnemyForChapter } from '../../game/factories/Characte
 import { ContentBlock } from './ContentRenderer';
 import { ChoiceMenu } from './ChoiceMenu';
 import { ExplorationMenu } from './ExplorationMenu';
+import { StatusMenu } from '../status/StatusMenu';
 
 // =============================================================================
 // TYPES
@@ -39,6 +40,7 @@ interface StoryScreenProps {
   player: Character;
   onCombatStart: (enemies: Enemy[], canLose: boolean) => void;
   onGameEnd: (state: StoryState) => void;
+  onQuitToMenu?: () => void;
   combatResult?: 'victory' | 'defeat' | 'fled' | null;
   onCombatResultHandled?: () => void;
 }
@@ -51,6 +53,7 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
   player,
   onCombatStart,
   onGameEnd,
+  onQuitToMenu,
   combatResult,
   onCombatResultHandled,
 }) => {
@@ -70,6 +73,7 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
   const [sceneProgress, setSceneProgress] = useState({ current: 1, total: 7 });
   const [isTyping, _setIsTyping] = useState(true);
   const [typewriterComplete, _setTypewriterComplete] = useState(false);
+  const [showStatusMenu, setShowStatusMenu] = useState(false);
 
   // Refs for input handling (avoid stale closures)
   const phaseRef = useRef(phase);
@@ -349,6 +353,19 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
     if (result) handleResult(result);
   }, [handleResult]);
 
+  // Handle save/load completion
+  const handleSaveLoadComplete = useCallback(() => {
+    setShowStatusMenu(false);
+
+    // Reload story state from GameStore
+    const savedState = GameStore.getStoryState();
+    if (savedState && engineRef.current) {
+      engineRef.current.setState(savedState);
+      const result = engineRef.current.advance();
+      if (result) handleResult(result);
+    }
+  }, [handleResult]);
+
   // Handle typewriter completion
   const handleTypeComplete = useCallback(() => {
     setTypewriterComplete(true);
@@ -381,7 +398,18 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
     const typing = isTypingRef.current;
     const typeComplete = typewriterCompleteRef.current;
 
-    if ((key.return || input === ' ')) {
+    // Don't process other inputs when status menu is open
+    if (showStatusMenu) {
+      return;
+    }
+
+    // Open status menu with Enter during content/chapter-end (not combat/choice/exploration)
+    if (key.return && (currentPhase === 'content' || currentPhase === 'chapter-end') && !paused) {
+      setShowStatusMenu(true);
+      return;
+    }
+
+    if (input === ' ') {
       // Block input if auto-advance is pending
       if (autoAdvanceTimeoutRef.current) {
         return;
@@ -534,6 +562,9 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
             📍 {location}
           </Text>
         )}
+        <Box marginTop={0}>
+          <Text dimColor>[Enter] Status</Text>
+        </Box>
       </Box>
 
       {/* Content area */}
@@ -610,6 +641,26 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
           </Box>
         )}
       </Box>
+
+      {/* Status Menu Overlay */}
+      {showStatusMenu && engineRef.current && (
+        <Box
+          position="absolute"
+          width="100%"
+          height="100%"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <StatusMenu
+            player={player}
+            storyState={engineRef.current.getState()}
+            onClose={() => setShowStatusMenu(false)}
+            onSaveLoad={handleSaveLoadComplete}
+            onQuitToMenu={onQuitToMenu}
+          />
+        </Box>
+      )}
     </Box>
   );
 };
