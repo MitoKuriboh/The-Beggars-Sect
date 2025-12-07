@@ -116,6 +116,9 @@ export const SEMANTIC_DIVIDERS = {
   /** Status display sections */
   status: DIVIDERS.short,
 
+  /** Training screens */
+  training: DIVIDERS.short,
+
   /** Decorative accent */
   accent: DIVIDERS.dashed,
 } as const;

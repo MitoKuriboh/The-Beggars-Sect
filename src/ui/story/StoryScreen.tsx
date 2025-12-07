@@ -608,13 +608,12 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
           const storyState = GameStore.getStoryState();
           if (!storyState) return null;
 
-          const pathScores = storyState.pathScores;
-          const total = pathScores.blade + pathScores.stream + pathScores.shadow;
-          if (total === 0) return null;
+          const pathPercentages = storyState.pathPercentages;
 
-          const bladePercent = Math.round((pathScores.blade / total) * 100);
-          const streamPercent = Math.round((pathScores.stream / total) * 100);
-          const shadowPercent = Math.round((pathScores.shadow / total) * 100);
+          // Already in percentages, just round
+          const bladePercent = Math.round(pathPercentages.blade);
+          const streamPercent = Math.round(pathPercentages.stream);
+          const shadowPercent = Math.round(pathPercentages.shadow);
 
           const getBar = (percent: number, length: number = 5) => {
             const filled = Math.round((percent / 100) * length);

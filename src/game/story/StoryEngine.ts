@@ -15,7 +15,7 @@ import type {
   ExplorationArea,
 } from '../../types/index';
 
-import { createStoryState } from '../../types/story';
+import { createStoryState, applyPathShift } from '../../types/story';
 import { GameStore } from '../state/GameStore';
 
 // =============================================================================
@@ -455,8 +455,8 @@ export class StoryEngine {
         return true;
 
       case 'path':
-        const pathScore = this.state.pathScores[cond.path];
-        return cond.min !== undefined ? pathScore >= cond.min : true;
+        const pathPercentage = this.state.pathPercentages[cond.path];
+        return cond.min !== undefined ? pathPercentage >= cond.min : true;
 
       case 'item':
         const hasItem = this.state.discoveredItems.includes(cond.itemId);
@@ -483,7 +483,12 @@ export class StoryEngine {
           break;
 
         case 'path':
-          this.state.pathScores[effect.path] += effect.delta;
+          // Apply zero-sum path shift
+          this.state.pathPercentages = applyPathShift(
+            this.state.pathPercentages,
+            effect.path,
+            effect.delta
+          );
           break;
 
         case 'item':
@@ -543,7 +548,7 @@ export class StoryEngine {
    * Get the dominant path based on scores
    */
   getDominantPath(): 'blade' | 'stream' | 'shadow' | 'balanced' {
-    const { blade, stream, shadow } = this.state.pathScores;
+    const { blade, stream, shadow } = this.state.pathPercentages;
 
     if (blade === stream && stream === shadow) {
       return 'balanced';

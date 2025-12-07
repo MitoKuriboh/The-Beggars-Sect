@@ -10,6 +10,7 @@ import type { Character, StoryState } from '../../types/index';
 import { PathDisplay } from './PathDisplay';
 import { StatsDisplay } from './StatsDisplay';
 import { RelationshipsDisplay } from './RelationshipsDisplay';
+import { AspectLoadoutDisplay } from './AspectLoadoutDisplay';
 import { SaveLoadTab } from './SaveLoadTab';
 import { CenteredScreen, useTerminalHeight } from '../components/PolishedBox';
 import { Header } from '../components/Decorative';
@@ -23,7 +24,7 @@ interface StatusMenuProps {
   onQuitToMenu?: () => void;
 }
 
-type TabKey = 'stats' | 'paths' | 'relationships' | 'progress' | 'saveload';
+type TabKey = 'stats' | 'paths' | 'aspects' | 'relationships' | 'progress' | 'saveload';
 
 interface Tab {
   key: TabKey;
@@ -34,9 +35,10 @@ interface Tab {
 const TABS: Tab[] = [
   { key: 'stats', label: 'Stats', shortcut: '1' },
   { key: 'paths', label: 'Paths', shortcut: '2' },
-  { key: 'relationships', label: 'Relationships', shortcut: '3' },
-  { key: 'progress', label: 'Progress', shortcut: '4' },
-  { key: 'saveload', label: 'Save/Load', shortcut: '5' },
+  { key: 'aspects', label: 'Aspects', shortcut: '3' },
+  { key: 'relationships', label: 'Relationships', shortcut: '4' },
+  { key: 'progress', label: 'Progress', shortcut: '5' },
+  { key: 'saveload', label: 'Save/Load', shortcut: '6' },
 ];
 
 export const StatusMenu: React.FC<StatusMenuProps> = ({ player, storyState, onClose, onSaveLoad, onQuitToMenu }) => {
@@ -112,7 +114,13 @@ export const StatusMenu: React.FC<StatusMenuProps> = ({ player, storyState, onCl
         flexDirection="column"
       >
         {activeTab === 'stats' && <StatsDisplay player={player} />}
-        {activeTab === 'paths' && <PathDisplay pathScores={storyState.pathScores} />}
+        {activeTab === 'paths' && <PathDisplay pathScores={storyState.pathPercentages} />}
+        {activeTab === 'aspects' && (
+          <AspectLoadoutDisplay
+            player={player}
+            currentChapter={parseInt(storyState.currentChapter.replace('prologue', '0').replace('chapter-', ''))}
+          />
+        )}
         {activeTab === 'relationships' && (
           <RelationshipsDisplay relationships={storyState.relationships} />
         )}

@@ -91,13 +91,16 @@ class GameStoreClass {
   /**
    * Initialize new game with player character
    */
-  initializeNewGame(player: Character): void {
+  initializeNewGame(player: Character, difficulty: 'easy' | 'medium' | 'hard' | 'hell' = 'medium'): void {
     this.state = {
       // Meta
       version: '1.0.0',
       saveSlot: 0,
       createdAt: Date.now(),
       updatedAt: Date.now(),
+
+      // Gameplay settings
+      difficulty,
 
       // Player
       player,

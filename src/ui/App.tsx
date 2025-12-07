@@ -3,9 +3,10 @@ import { Box, Text, useApp, useInput } from 'ink';
 import { SelectInputComponent } from './components/SelectInputWrapper';
 
 import { GameStore } from '../game/state/GameStore';
-import { createPlayer, createEnemy, scaleEnemyForChapter } from '../game/factories/CharacterFactory';
+import { createPlayer, createEnemy, createTrainingDummy, scaleEnemyForChapter } from '../game/factories/CharacterFactory';
 import { CombatScreen } from './combat/CombatScreen';
 import { StoryScreen } from './story/StoryScreen';
+import { TrainingMenu } from './training/TrainingMenu';
 import { SaveLoadScreen } from './SaveLoadScreen';
 import { SettingsScreen } from './SettingsScreen';
 import { CenteredScreen, PolishedBox, useTerminalHeight } from './components/PolishedBox';
@@ -17,7 +18,7 @@ import type { Character, Enemy, StoryState } from '../types/index';
 // TYPES
 // =============================================================================
 
-type Screen = 'title' | 'menu' | 'newgame' | 'skip-prologue' | 'stats' | 'story' | 'combat' | 'credits' | 'save' | 'load' | 'settings';
+type Screen = 'title' | 'menu' | 'newgame' | 'skip-prologue' | 'stats' | 'story' | 'combat' | 'training' | 'credits' | 'save' | 'load' | 'settings';
 
 interface MenuItem {
   label: string;
@@ -243,7 +244,8 @@ const NewGameScreen: React.FC<{ onComplete: () => void; onBack: () => void }> = 
   onComplete,
   onBack,
 }) => {
-  const [stage, setStage] = useState<'confirm' | 'creating' | 'done'>('confirm');
+  const [stage, setStage] = useState<'confirm' | 'difficulty' | 'creating' | 'done'>('confirm');
+  const [selectedDifficulty, setSelectedDifficulty] = useState<'easy' | 'medium' | 'hard' | 'hell'>('medium');
   const completionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Cleanup timeout on unmount
@@ -257,19 +259,32 @@ const NewGameScreen: React.FC<{ onComplete: () => void; onBack: () => void }> = 
 
   const handleConfirm = useCallback((item: MenuItem) => {
     if (item.value === 'yes') {
-      setStage('creating');
-      // Initialize game
-      const player = createPlayer();
-      GameStore.initializeNewGame(player);
-      setStage('done');
-      completionTimeoutRef.current = setTimeout(() => {
-        completionTimeoutRef.current = null;
-        onComplete();
-      }, 1000);
+      setStage('difficulty');
     } else {
       onBack();
     }
-  }, [onComplete, onBack]);
+  }, [onBack]);
+
+  const handleDifficultySelect = useCallback((item: MenuItem) => {
+    if (item.value === 'back') {
+      setStage('confirm');
+      return;
+    }
+
+    const difficulty = item.value as 'easy' | 'medium' | 'hard' | 'hell';
+    setSelectedDifficulty(difficulty);
+    setStage('creating');
+
+    // Initialize game with selected difficulty
+    const player = createPlayer();
+    GameStore.initializeNewGame(player, difficulty);
+    setStage('done');
+
+    completionTimeoutRef.current = setTimeout(() => {
+      completionTimeoutRef.current = null;
+      onComplete();
+    }, 1000);
+  }, [onComplete]);
 
   if (stage === 'confirm') {
     const confirmItems: MenuItem[] = [
@@ -285,6 +300,53 @@ const NewGameScreen: React.FC<{ onComplete: () => void; onBack: () => void }> = 
             <Text dimColor>a beggar with no memory of his past.</Text>
           </Box>
           <SelectMenu items={confirmItems} onSelect={handleConfirm} />
+        </PolishedBox>
+      </CenteredScreen>
+    );
+  }
+
+  if (stage === 'difficulty') {
+    const difficultyItems: MenuItem[] = [
+      { label: '🌸 Easy - Forgiving enemies, gentle introduction', value: 'easy' },
+      { label: '⚔️  Medium - Balanced challenge (Recommended)', value: 'medium' },
+      { label: '🔥 Hard - Demanding combat, tactical thinking', value: 'hard' },
+      { label: '💀 Hell - Brutal, relentless, unforgiving', value: 'hell' },
+      { label: '← Back', value: 'back' },
+    ];
+    return (
+      <CenteredScreen>
+        <PolishedBox title="DIFFICULTY SELECTION" subtitle="Choose Your Challenge" icon="⚡">
+          <Box flexDirection="column" marginBottom={2}>
+            <Text bold color="yellow">
+              Select Difficulty:
+            </Text>
+            <Box marginTop={1}>
+              <Text dimColor>
+                Difficulty affects enemy AI quality, stats, and player damage.
+              </Text>
+            </Box>
+            <Box marginTop={1}>
+              <Text dimColor italic>
+                You can change this later in Settings (coming soon).
+              </Text>
+            </Box>
+          </Box>
+
+          <Box marginBottom={2}>
+            <SelectMenu items={difficultyItems} onSelect={handleDifficultySelect} />
+          </Box>
+
+          <Box flexDirection="column" paddingX={2} paddingY={1} borderStyle="round" borderColor="gray">
+            <Text bold color="cyan">
+              Difficulty Details:
+            </Text>
+            <Box marginTop={0.5} flexDirection="column">
+              <Text dimColor>• Easy: Enemies make mistakes 30% of the time</Text>
+              <Text dimColor>• Medium: Standard AI behavior</Text>
+              <Text dimColor>• Hard: Optimal enemy tactics, +30% damage</Text>
+              <Text dimColor>• Hell: Perfect AI, +50% stats, relentless</Text>
+            </Box>
+          </Box>
         </PolishedBox>
       </CenteredScreen>
     );
@@ -317,11 +379,13 @@ const StatsScreen: React.FC<{
   onCombat: () => void;
   onStory: () => void;
   onSave: () => void;
+  onTraining: () => void;
 }> = ({
   onBack,
   onCombat,
   onStory,
   onSave,
+  onTraining,
 }) => {
   const [terminalHeight, setTerminalHeight] = useState(process.stdout.rows || 24);
 
@@ -337,6 +401,7 @@ const StatsScreen: React.FC<{
 
   const menuItems: MenuItem[] = [
     { label: '📖 Play Story (Prologue)', value: 'story' },
+    { label: '🥋 Training Grounds', value: 'training' },
     { label: '⚔️  Test Combat', value: 'combat' },
     { label: '💾 Save Game', value: 'save' },
     { label: 'Back to Menu', value: 'back' },
@@ -352,9 +417,11 @@ const StatsScreen: React.FC<{
         onStory();
       } else if (item.value === 'save') {
         onSave();
+      } else if (item.value === 'training') {
+        onTraining();
       }
     },
-    [onBack, onCombat, onStory, onSave]
+    [onBack, onCombat, onStory, onSave, onTraining]
   );
 
   if (!GameStore.isInitialized()) {
@@ -471,6 +538,7 @@ export const App: React.FC = () => {
   const [screen, setScreen] = useState<Screen>('title');
   const [combatEnemies, setCombatEnemies] = useState<Enemy[]>([]);
   const [returnToStory, setReturnToStory] = useState(false);
+  const [returnToTraining, setReturnToTraining] = useState(false);
   const [storyCombatResult, setStoryCombatResult] = useState<'victory' | 'defeat' | 'fled' | null>(null);
   const [combatCanLose, setCombatCanLose] = useState(true);
 
@@ -506,6 +574,10 @@ export const App: React.FC = () => {
     console.clear();
     setScreen('load');
   }, []);
+  const goToTraining = useCallback(() => {
+    console.clear();
+    setScreen('training');
+  }, []);
 
   const startCombat = useCallback(() => {
     console.clear();
@@ -521,7 +593,21 @@ export const App: React.FC = () => {
     console.clear();
     setCombatEnemies(enemies);
     setReturnToStory(true);
+    setReturnToTraining(false);
     setCombatCanLose(canLose);
+    setScreen('combat');
+  }, []);
+
+  // Handle sparring match from training
+  const handleSparring = useCallback(() => {
+    console.clear();
+    const player = GameStore.getPlayer();
+    const difficulty = GameStore.getState()?.difficulty || 'medium';
+    const dummy = createTrainingDummy(player, difficulty);
+    setCombatEnemies([dummy]);
+    setReturnToStory(false);
+    setReturnToTraining(true);
+    setCombatCanLose(true); // Can lose sparring
     setScreen('combat');
   }, []);
 
@@ -589,11 +675,13 @@ export const App: React.FC = () => {
       if (returnToStory) {
         setStoryCombatResult(result);
         goToStory();
+      } else if (returnToTraining) {
+        goToTraining();
       } else {
         goToStats();
       }
     },
-    [goToStats, goToStory, returnToStory, combatCanLose, combatEnemies]
+    [goToStats, goToStory, goToTraining, returnToStory, returnToTraining, combatCanLose, combatEnemies]
   );
 
   const handleCombatResultHandled = useCallback(() => {
@@ -615,7 +703,7 @@ export const App: React.FC = () => {
         }} onBack={goToMenu} />
       )}
       {screen === 'stats' && (
-        <StatsScreen onBack={goToMenu} onCombat={startCombat} onStory={goToStory} onSave={goToSave} />
+        <StatsScreen onBack={goToMenu} onCombat={startCombat} onStory={goToStory} onSave={goToSave} onTraining={goToTraining} />
       )}
       {screen === 'story' && GameStore.isInitialized() && (
         <StoryScreen
@@ -632,6 +720,13 @@ export const App: React.FC = () => {
           player={GameStore.getPlayer()}
           enemies={combatEnemies}
           onCombatEnd={handleCombatEnd}
+        />
+      )}
+      {screen === 'training' && GameStore.isInitialized() && (
+        <TrainingMenu
+          player={GameStore.getPlayer()}
+          onSparring={handleSparring}
+          onClose={goToStats}
         />
       )}
       {screen === 'credits' && <CreditsScreen onBack={goToMenu} />}

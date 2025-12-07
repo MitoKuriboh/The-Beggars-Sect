@@ -121,6 +121,81 @@ export const STATUS_EFFECTS = {
 };
 
 // =============================================================================
+// ASPECT LOADOUT SYSTEM
+// =============================================================================
+
+/**
+ * Chi aspect loadout - equippable passive bonuses
+ * Player can equip 1 primary (path-locked) + up to 3 secondary aspects
+ */
+export interface AspectLoadout {
+  /** Primary aspect (locked by path, cannot change) */
+  primary: ChiAspect;
+  /** Secondary aspect slots (unlock through progression) */
+  secondary: {
+    slot1: ChiAspect | null;
+    slot2: ChiAspect | null;
+    slot3: ChiAspect | null;
+  };
+  /** Unlocked aspects available for equipping */
+  unlocked: ChiAspect[];
+}
+
+export const DEFAULT_ASPECT_LOADOUT: AspectLoadout = {
+  primary: 'force', // Default, gets overridden by path
+  secondary: {
+    slot1: null,
+    slot2: null,
+    slot3: null,
+  },
+  unlocked: ['force'], // Start with primary only
+};
+
+// =============================================================================
+// TRAINING PROGRESS
+// =============================================================================
+
+export interface TrainingProgress {
+  /** Total mastery points earned */
+  masteryPoints: number;
+  /** Techniques unlocked through training */
+  techniquesUnlocked: string[];
+  /** Completed training challenges */
+  challengesCompleted: string[];
+  /** Path trial completion status */
+  pathTrialCompleted: {
+    blade: boolean;
+    stream: boolean;
+    shadow: boolean;
+  };
+  /** Total sparring victories */
+  sparringWins: number;
+  /** Best performance records */
+  bestPerformance: {
+    fastestWin: number;      // Turns
+    mostDamage: number;
+    longestCombo: number;
+  };
+}
+
+export const DEFAULT_TRAINING_PROGRESS: TrainingProgress = {
+  masteryPoints: 0,
+  techniquesUnlocked: [],
+  challengesCompleted: [],
+  pathTrialCompleted: {
+    blade: false,
+    stream: false,
+    shadow: false,
+  },
+  sparringWins: 0,
+  bestPerformance: {
+    fastestWin: 999,
+    mostDamage: 0,
+    longestCombo: 0,
+  },
+};
+
+// =============================================================================
 // CHARACTER
 // =============================================================================
 
@@ -154,6 +229,19 @@ export interface Character {
 
   // Active status effects
   statusEffects: StatusEffect[];
+
+  // Path alignment percentages (player only, zero-sum totaling 100%)
+  pathAlignment?: {
+    blade: number;    // 0-100%
+    stream: number;   // 0-100%
+    shadow: number;   // 0-100%
+  };
+
+  // Aspect loadout (player only)
+  aspectLoadout?: AspectLoadout;
+
+  // Training progress (player only)
+  trainingProgress?: TrainingProgress;
 
   // Is this the player character?
   isPlayer: boolean;
@@ -255,4 +343,37 @@ function getStatusStatModifier(effects: StatusEffect[], stat: keyof Stats): numb
   return effects
     .filter(e => e.stat === stat)
     .reduce((sum, e) => sum + e.modifier, 0);
+}
+
+/**
+ * Get all equipped aspects from loadout
+ */
+export function getEquippedAspects(loadout: AspectLoadout): ChiAspect[] {
+  const aspects: ChiAspect[] = [loadout.primary];
+
+  if (loadout.secondary.slot1) aspects.push(loadout.secondary.slot1);
+  if (loadout.secondary.slot2) aspects.push(loadout.secondary.slot2);
+  if (loadout.secondary.slot3) aspects.push(loadout.secondary.slot3);
+
+  return aspects;
+}
+
+/**
+ * Check if character has specific aspect equipped
+ */
+export function hasAspectEquipped(character: Character, aspect: ChiAspect): boolean {
+  if (!character.aspectLoadout) return false;
+  return getEquippedAspects(character.aspectLoadout).includes(aspect);
+}
+
+/**
+ * Get primary aspect based on dominant path
+ */
+export function getPrimaryAspectForPath(path: 'blade' | 'stream' | 'shadow'): ChiAspect {
+  const mapping: Record<'blade' | 'stream' | 'shadow', ChiAspect> = {
+    blade: 'force',
+    stream: 'flow',
+    shadow: 'precision',
+  };
+  return mapping[path];
 }

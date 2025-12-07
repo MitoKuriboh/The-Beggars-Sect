@@ -9,6 +9,11 @@
 
 | I want to... | Go to |
 |--------------|-------|
+| **Understand the AAA architecture** | [Architecture/AAA_GAME_LOGIC_ARCHITECTURE.md](Architecture/AAA_GAME_LOGIC_ARCHITECTURE.md) |
+| **See UI architecture** | [Architecture/AAA_UI_ARCHITECTURE.md](Architecture/AAA_UI_ARCHITECTURE.md) |
+| **Review Phase 1 & 2 refactoring** | [Architecture/PHASE_1_2_SUMMARY.md](Architecture/PHASE_1_2_SUMMARY.md) |
+| **Understand progression system** | [systems/PROGRESSION_SYSTEM.md](systems/PROGRESSION_SYSTEM.md) |
+| **See training & mastery loop** | [systems/TRAINING_INTEGRATION.md](systems/TRAINING_INTEGRATION.md) |
 | **Understand the codebase** | [dev/CODE_REVIEW.md](dev/CODE_REVIEW.md) |
 | **Build and deploy** | [dev/BUILD_AND_DEPLOY.md](dev/BUILD_AND_DEPLOY.md) |
 | **Learn the tech stack** | [dev/README.md](dev/README.md) |
@@ -30,6 +35,13 @@
 docs/
 ├── README.md
 │
+├── Architecture/          # ⭐ AAA Architecture (5 files)
+│   ├── AAA_GAME_LOGIC_ARCHITECTURE.md    # Game logic audit & refactoring (1,567 lines)
+│   ├── AAA_UI_ARCHITECTURE.md            # UI architecture guide (1,200+ lines)
+│   ├── PHASE_1_2_SUMMARY.md              # Refactoring summary with metrics (446 lines)
+│   ├── GAME_LOGIC_REFACTORING_CHECKLIST.md  # Logic refactoring checklist (400+ lines)
+│   └── UI_REFACTORING_CHECKLIST.md       # UI refactoring checklist (300+ lines)
+│
 ├── design/                # Game Design & Systems (6 files)
 │   ├── GAME_DESIGN.md     # Vision, pillars, mechanics
 │   ├── TECH_DESIGN.md     # Architecture guide
@@ -37,6 +49,11 @@ docs/
 │   ├── TECHNIQUES.md      # All techniques
 │   ├── ENEMIES.md         # All enemies & bosses
 │   └── FORMULAS.md        # Game math
+│
+├── systems/               # Game Systems (3 files)
+│   ├── PROGRESSION_SYSTEM.md    # Unified progression (paths/aspects/mastery)
+│   ├── STARTER_TECHNIQUES.md    # Path-specific technique trees
+│   └── TRAINING_INTEGRATION.md  # Sparring matches & mastery loop
 │
 ├── dev/                   # Development (16 files)
 │   ├── README.md          # Dev docs index
@@ -85,6 +102,15 @@ docs/
 
 ## By Category
 
+### Architecture (5) ⭐
+| Document | Content | Lines |
+|----------|---------|-------|
+| [AAA_GAME_LOGIC_ARCHITECTURE.md](Architecture/AAA_GAME_LOGIC_ARCHITECTURE.md) | Game logic audit & recommendations | 1,567 |
+| [AAA_UI_ARCHITECTURE.md](Architecture/AAA_UI_ARCHITECTURE.md) | Complete UI architecture guide | 1,200+ |
+| [PHASE_1_2_SUMMARY.md](Architecture/PHASE_1_2_SUMMARY.md) | Phase 1 & 2 refactoring summary | 446 |
+| [GAME_LOGIC_REFACTORING_CHECKLIST.md](Architecture/GAME_LOGIC_REFACTORING_CHECKLIST.md) | Logic refactoring checklist | 400+ |
+| [UI_REFACTORING_CHECKLIST.md](Architecture/UI_REFACTORING_CHECKLIST.md) | UI refactoring checklist | 300+ |
+
 ### Design (6)
 | Document | Content |
 |----------|---------|
@@ -94,6 +120,13 @@ docs/
 | [TECHNIQUES.md](design/TECHNIQUES.md) | 55+ techniques |
 | [ENEMIES.md](design/ENEMIES.md) | 14 enemies |
 | [FORMULAS.md](design/FORMULAS.md) | All math |
+
+### Systems (3) ⭐
+| Document | Content |
+|----------|---------|
+| [PROGRESSION_SYSTEM.md](systems/PROGRESSION_SYSTEM.md) | Unified progression design |
+| [STARTER_TECHNIQUES.md](systems/STARTER_TECHNIQUES.md) | Path-specific technique trees |
+| [TRAINING_INTEGRATION.md](systems/TRAINING_INTEGRATION.md) | Sparring & mastery loop |
 
 ### Dev (16)
 | Document | Content |
@@ -139,8 +172,9 @@ STORY_STRUCTURE, PROLOGUE, CHAPTER_1, CHAPTER_2, CHAPTER_3, NPC_CAST
 
 | Metric | Count |
 |--------|-------|
-| Folders | 5 |
-| Documents | 47 |
+| Folders | 6 |
+| Documents | 52 |
+| Architecture Docs | 5 (3,900+ lines) |
 | Techniques | 55+ |
 | Enemies | 14 |
 | Story Scenes | 40+ |

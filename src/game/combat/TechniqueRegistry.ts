@@ -59,6 +59,226 @@ const TECHNIQUES: Record<string, Technique> = {
   },
 
   // ---------------------------------------------------------------------------
+  // PATH-SPECIFIC STARTER TECHNIQUES (Unlock through progression)
+  // ---------------------------------------------------------------------------
+
+  // BLADE PATH (Force aspect, 30% Blade + 50 mastery)
+  'shattering-strike': {
+    id: 'shattering-strike',
+    name: 'Shattering Strike',
+    chinese: '破击',
+    stance: 'any',
+    power: 18,
+    chiCost: 8,
+    speed: 0,
+    aspect: 'force',
+    effects: [
+      {
+        type: 'armor-break',
+        value: 15,
+        target: 'enemy',
+        duration: 2,
+        description: '-15% defense for 2 turns',
+      },
+    ],
+    comboRole: 'starter',
+    comboLinks: [{ techniqueId: 'explosive-fist' }],
+    description: 'A powerful strike that breaks through defenses. The first step on the Blade path.',
+    philosophy: 'Force overcomes all obstacles. Break their guard, then break them.',
+    masteryBonuses: [
+      { level: 2, usesRequired: 10, powerBonus: 2, effectBonus: 'Armor break +5%' },
+      { level: 3, usesRequired: 25, powerBonus: 4, effectBonus: 'Armor break +10%' },
+      { level: 4, usesRequired: 50, powerBonus: 6, effectBonus: 'Armor break +15%, +1 turn' },
+      { level: 5, usesRequired: 100, powerBonus: 8, effectBonus: 'Guaranteed armor break' },
+    ],
+    unlockedByDefault: false,
+    unlockRequirements: {
+      pathPercentage: { path: 'blade', min: 30 },
+      aspectRequired: 'force',
+      masteryPoints: 50,
+    },
+  },
+
+  'explosive-fist': {
+    id: 'explosive-fist',
+    name: 'Explosive Fist',
+    chinese: '爆拳',
+    stance: 'any',
+    power: 26,
+    chiCost: 14,
+    speed: -1,
+    isHeavy: true,
+    aspect: 'burst',
+    effects: [],
+    comboRole: 'finisher',
+    comboLinks: [],
+    description: 'Channel chi into a devastating explosive punch. Advanced Blade technique.',
+    philosophy: 'When force meets precision, mountains crumble.',
+    masteryBonuses: [
+      { level: 2, usesRequired: 10, powerBonus: 3 },
+      { level: 3, usesRequired: 25, powerBonus: 5 },
+      { level: 4, usesRequired: 50, powerBonus: 7 },
+      { level: 5, usesRequired: 100, powerBonus: 10, effectBonus: 'AOE damage' },
+    ],
+    unlockedByDefault: false,
+    unlockRequirements: {
+      pathPercentage: { path: 'blade', min: 60 },
+      aspectRequired: 'burst',
+      masteryPoints: 100,
+      techniquePrereq: 'shattering-strike',
+    },
+  },
+
+  // STREAM PATH (Flow aspect, 30% Stream + 50 mastery)
+  'calm-water-palm': {
+    id: 'calm-water-palm',
+    name: 'Calm Water Palm',
+    chinese: '静水掌',
+    stance: 'flowing',
+    power: 14,
+    chiCost: 6,
+    speed: 1,
+    aspect: 'flow',
+    effects: [
+      {
+        type: 'chi-restore',
+        value: 4,
+        target: 'self',
+        description: 'Restore 4 chi on hit',
+      },
+    ],
+    comboRole: 'followup',
+    comboLinks: [{ techniqueId: 'whirlpool-counter' }],
+    description: 'Move like water - calm on the surface, powerful beneath. The foundation of Stream path.',
+    philosophy: 'Still water reflects truth. Flowing water shapes stone. Be both.',
+    masteryBonuses: [
+      { level: 2, usesRequired: 10, powerBonus: 1, effectBonus: 'Chi restore +1' },
+      { level: 3, usesRequired: 25, powerBonus: 2, effectBonus: 'Chi restore +2' },
+      { level: 4, usesRequired: 50, powerBonus: 3, effectBonus: 'Chi restore +3' },
+      { level: 5, usesRequired: 100, powerBonus: 5, effectBonus: 'Chi cost -2' },
+    ],
+    unlockedByDefault: false,
+    unlockRequirements: {
+      pathPercentage: { path: 'stream', min: 30 },
+      aspectRequired: 'flow',
+      masteryPoints: 50,
+    },
+  },
+
+  'whirlpool-counter': {
+    id: 'whirlpool-counter',
+    name: 'Whirlpool Counter',
+    chinese: '涡流反击',
+    stance: 'flowing',
+    power: 20,
+    chiCost: 10,
+    speed: 2,
+    aspect: 'sense',
+    effects: [
+      {
+        type: 'counter-setup',
+        value: 1,
+        target: 'self',
+        duration: 2,
+        description: 'Counter attacks for 2 turns',
+      },
+    ],
+    comboRole: 'followup',
+    comboLinks: [{ techniqueId: 'flowing-strike' }],
+    description: 'Draw the opponent in, then redirect their force. Advanced Stream technique.',
+    philosophy: 'The whirlpool appears calm until you are pulled under.',
+    masteryBonuses: [
+      { level: 2, usesRequired: 10, powerBonus: 2, effectBonus: 'Counter damage +25%' },
+      { level: 3, usesRequired: 25, powerBonus: 4, effectBonus: 'Counter damage +50%' },
+      { level: 4, usesRequired: 50, powerBonus: 6, effectBonus: '+1 counter turn' },
+      { level: 5, usesRequired: 100, powerBonus: 8, effectBonus: 'Perfect counters stun' },
+    ],
+    unlockedByDefault: false,
+    unlockChapter: 1,
+    unlockRequirements: {
+      pathPercentage: { path: 'stream', min: 50 },
+      aspectRequired: 'sense',
+      masteryPoints: 100,
+      techniquePrereq: 'calm-water-palm',
+    },
+  },
+
+  // SHADOW PATH (Precision aspect, 30% Shadow + 50 mastery)
+  'vital-point-strike': {
+    id: 'vital-point-strike',
+    name: 'Vital Point Strike',
+    chinese: '要害击',
+    stance: 'any',
+    power: 16,
+    chiCost: 7,
+    speed: 1,
+    aspect: 'precision',
+    effects: [
+      {
+        type: 'debuff',
+        value: -20,
+        target: 'enemy',
+        duration: 3,
+        description: '-20% attack for 3 turns (vital struck)',
+      },
+    ],
+    comboRole: 'starter',
+    comboLinks: [{ techniqueId: 'mist-step' }],
+    description: 'Strike the enemy\'s vital points with surgical precision. The essence of Shadow path.',
+    philosophy: 'One precise cut ends the battle. A thousand clumsy strikes waste time.',
+    masteryBonuses: [
+      { level: 2, usesRequired: 10, powerBonus: 2, effectBonus: 'Debuff -5%' },
+      { level: 3, usesRequired: 25, powerBonus: 3, effectBonus: 'Debuff -10%, +1 turn' },
+      { level: 4, usesRequired: 50, powerBonus: 5, effectBonus: 'Debuff -15%, +2 turns' },
+      { level: 5, usesRequired: 100, powerBonus: 7, effectBonus: 'Guaranteed critical hit' },
+    ],
+    unlockedByDefault: false,
+    unlockRequirements: {
+      pathPercentage: { path: 'shadow', min: 30 },
+      aspectRequired: 'precision',
+      masteryPoints: 50,
+    },
+  },
+
+  'mist-step': {
+    id: 'mist-step',
+    name: 'Mist Step',
+    chinese: '雾步',
+    stance: 'any',
+    power: 0,
+    chiCost: 8,
+    speed: 3,
+    aspect: 'sense',
+    effects: [
+      {
+        type: 'buff',
+        value: 40,
+        target: 'self',
+        duration: 2,
+        description: '+40% evasion for 2 turns (mist form)',
+      },
+    ],
+    comboRole: 'any',
+    comboLinks: [{ techniqueId: 'vital-point-strike' }],
+    description: 'Move like mist - unseen, untouchable, everywhere. Advanced Shadow technique.',
+    philosophy: 'Strike from the shadows. Vanish before they see you.',
+    masteryBonuses: [
+      { level: 2, usesRequired: 10, powerBonus: 0, effectBonus: 'Evasion +10%' },
+      { level: 3, usesRequired: 25, powerBonus: 0, effectBonus: 'Evasion +20%, +1 turn' },
+      { level: 4, usesRequired: 50, powerBonus: 0, effectBonus: 'Next attack guaranteed crit' },
+      { level: 5, usesRequired: 100, powerBonus: 0, effectBonus: 'Invisibility (2 turns)' },
+    ],
+    unlockedByDefault: false,
+    unlockChapter: 1,
+    unlockRequirements: {
+      pathPercentage: { path: 'shadow', min: 50 },
+      aspectRequired: 'sense',
+      masteryPoints: 100,
+      techniquePrereq: 'vital-point-strike',
+    },
+  },
+
+  // ---------------------------------------------------------------------------
   // CHAPTER 1 TECHNIQUES
   // ---------------------------------------------------------------------------
 

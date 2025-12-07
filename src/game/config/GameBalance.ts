@@ -236,10 +236,10 @@ export const CHI_CONFIG = {
 } as const;
 
 // =============================================================================
-// DIFFICULTY SCALING
+// CHAPTER SCALING
 // =============================================================================
 
-export const DIFFICULTY_CONFIG = {
+export const CHAPTER_SCALING_CONFIG = {
   /**
    * Enemy stat scaling per chapter
    */
@@ -328,6 +328,154 @@ export const TECHNIQUE_DEFAULTS = {
 } as const;
 
 // =============================================================================
+// PATH SYSTEM
+// =============================================================================
+
+export const PATH_CONFIG = {
+  /**
+   * Mapping of paths to their recommended stances
+   * Auto-selected at combat start based on dominant path
+   */
+  stanceMapping: {
+    blade: 'hungry' as const,    // Aggressive: High ATK, Low DEF, High SPD
+    stream: 'flowing' as const,  // Balanced: Equal stats
+    shadow: 'weathered' as const, // Defensive: Low ATK, High DEF, Low SPD
+  },
+
+  /**
+   * Minimum path points required to unlock stance specialization
+   * Below this, defaults to Flowing stance
+   */
+  specializationThreshold: 5,
+} as const;
+
+/**
+ * Determine recommended stance based on character's path alignment
+ * @param pathAlignment - Character's path points {blade, stream, shadow}
+ * @returns Recommended stance type
+ */
+export function getRecommendedStance(pathAlignment: {
+  blade: number;
+  stream: number;
+  shadow: number;
+}): 'flowing' | 'weathered' | 'hungry' {
+  // Find dominant path
+  const paths = [
+    { name: 'blade' as const, points: pathAlignment.blade },
+    { name: 'stream' as const, points: pathAlignment.stream },
+    { name: 'shadow' as const, points: pathAlignment.shadow },
+  ];
+
+  const dominant = paths.reduce((max, path) => (path.points > max.points ? path : max));
+
+  // If below specialization threshold, default to Flowing
+  if (dominant.points < PATH_CONFIG.specializationThreshold) {
+    return 'flowing';
+  }
+
+  // Return stance for dominant path
+  return PATH_CONFIG.stanceMapping[dominant.name];
+}
+
+// =============================================================================
+// DIFFICULTY LEVEL SYSTEM (Easy/Medium/Hard/Hell)
+// =============================================================================
+
+export type DifficultyLevel = 'easy' | 'medium' | 'hard' | 'hell';
+
+export const DIFFICULTY_LEVEL_CONFIG = {
+  /**
+   * AI decision-making quality multipliers
+   */
+  aiQuality: {
+    easy: {
+      reactionTime: 0.5,        // 50% chance to use optimal move
+      mistakeChance: 0.3,       // 30% chance to make suboptimal choice
+      aggressiveness: 0.7,      // Less aggressive
+      defensiveness: 1.3,       // More defensive
+      label: 'Easy',
+      description: 'Forgiving difficulty - enemies make frequent mistakes',
+    },
+    medium: {
+      reactionTime: 0.8,        // 80% chance to use optimal move
+      mistakeChance: 0.15,      // 15% chance to make suboptimal choice
+      aggressiveness: 1.0,      // Normal
+      defensiveness: 1.0,       // Normal
+      label: 'Medium',
+      description: 'Balanced difficulty - standard enemy behavior',
+    },
+    hard: {
+      reactionTime: 1.0,        // Always uses optimal move
+      mistakeChance: 0.05,      // 5% chance to make suboptimal choice
+      aggressiveness: 1.2,      // More aggressive
+      defensiveness: 0.9,       // Less defensive
+      label: 'Hard',
+      description: 'Challenging difficulty - enemies fight optimally',
+    },
+    hell: {
+      reactionTime: 1.0,        // Perfect AI
+      mistakeChance: 0.0,       // No mistakes
+      aggressiveness: 1.5,      // Maximum aggression
+      defensiveness: 0.8,       // Minimal defense
+      label: 'Hell',
+      description: 'Brutal difficulty - enemies are relentless and perfect',
+    },
+  },
+
+  /**
+   * Enemy stat multipliers by difficulty
+   */
+  statMultipliers: {
+    easy: {
+      hp: 0.8,          // 80% HP
+      damage: 0.7,      // 70% damage
+      defense: 0.8,     // 80% defense
+      speed: 0.9,       // 90% speed
+    },
+    medium: {
+      hp: 1.0,          // 100% HP (default)
+      damage: 1.0,      // 100% damage
+      defense: 1.0,     // 100% defense
+      speed: 1.0,       // 100% speed
+    },
+    hard: {
+      hp: 1.2,          // 120% HP
+      damage: 1.3,      // 130% damage
+      defense: 1.1,     // 110% defense
+      speed: 1.1,       // 110% speed
+    },
+    hell: {
+      hp: 1.5,          // 150% HP
+      damage: 1.5,      // 150% damage
+      defense: 1.3,     // 130% defense
+      speed: 1.2,       // 120% speed
+    },
+  },
+
+  /**
+   * Player stat adjustments by difficulty (for balancing)
+   */
+  playerAdjustments: {
+    easy: {
+      damageDealt: 1.2,     // Deal 120% damage
+      damageTaken: 0.8,     // Take 80% damage
+    },
+    medium: {
+      damageDealt: 1.0,     // Normal
+      damageTaken: 1.0,     // Normal
+    },
+    hard: {
+      damageDealt: 0.9,     // Deal 90% damage
+      damageTaken: 1.1,     // Take 110% damage
+    },
+    hell: {
+      damageDealt: 0.8,     // Deal 80% damage
+      damageTaken: 1.3,     // Take 130% damage
+    },
+  },
+} as const;
+
+// =============================================================================
 // MASTERY SYSTEM
 // =============================================================================
 
@@ -375,7 +523,8 @@ export const GAME_BALANCE = {
   multiHit: MULTI_HIT_CONFIG,
   flee: FLEE_CONFIG,
   chi: CHI_CONFIG,
-  difficulty: DIFFICULTY_CONFIG,
+  chapterScaling: CHAPTER_SCALING_CONFIG,   // Chapter progression scaling
+  difficultyLevels: DIFFICULTY_LEVEL_CONFIG, // Easy/Medium/Hard/Hell AI
   techniques: TECHNIQUE_DEFAULTS,
   mastery: MASTERY_CONFIG,
 } as const;

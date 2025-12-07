@@ -36,7 +36,7 @@ import {
   getDefendMessage,
   getChiFocusMessage,
 } from '../../data/combatPhrases';
-import { GAME_BALANCE } from '../config/GameBalance';
+import { GAME_BALANCE, getRecommendedStance } from '../config/GameBalance';
 import {
   tickCharacterStatusEffects,
   tickStatusEffectsForAll,
@@ -67,8 +67,58 @@ export class CombatEngine {
     this.config = { ...DEFAULT_COMBAT_CONFIG, ...config };
     this.onStateChange = onStateChange;
 
+    // Auto-select stance based on path alignment
+    this.autoSelectStance();
+
     // Initialize turn queue
     this.initializeTurnQueue();
+  }
+
+  /**
+   * Auto-select player's stance based on their dominant path
+   * Can be manually overridden by player during combat
+   */
+  private autoSelectStance(): void {
+    // Only auto-select if path alignment exists (player only)
+    if (!this.state.player.pathAlignment) {
+      return;
+    }
+
+    const recommendedStance = getRecommendedStance(this.state.player.pathAlignment);
+    this.state.player.stance = recommendedStance;
+
+    // Add log entry showing stance selection
+    const pathName = this.getDominantPathName();
+    this.addLog(
+      this.state.player.name,
+      `enters ${this.getStanceName(recommendedStance)} (${pathName} path)`,
+      'system'
+    );
+  }
+
+  /**
+   * Get human-readable stance name
+   */
+  private getStanceName(stance: 'flowing' | 'weathered' | 'hungry'): string {
+    const names = {
+      flowing: 'Flowing Stance',
+      weathered: 'Weathered Stance',
+      hungry: 'Hungry Stance',
+    };
+    return names[stance];
+  }
+
+  /**
+   * Get dominant path name for display
+   */
+  private getDominantPathName(): string {
+    if (!this.state.player.pathAlignment) {
+      return 'Balanced';
+    }
+    const { blade, stream, shadow } = this.state.player.pathAlignment;
+    if (blade >= stream && blade >= shadow) return 'Blade';
+    if (stream >= blade && stream >= shadow) return 'Stream';
+    return 'Shadow';
   }
 
   // ---------------------------------------------------------------------------

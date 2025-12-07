@@ -16,8 +16,9 @@ import type {
   EnemyDialogue,
 } from '../../types/index';
 
-import { calculateMaxHp, calculateMaxChi } from '../../types/character';
-import { GAME_BALANCE } from '../config/GameBalance';
+import { calculateMaxHp, calculateMaxChi, DEFAULT_TRAINING_PROGRESS, DEFAULT_ASPECT_LOADOUT } from '../../types/character';
+import { GAME_BALANCE, type DifficultyLevel } from '../config/GameBalance';
+import { initializeAspectLoadout } from '../systems/AspectSystem';
 
 // =============================================================================
 // PLAYER CREATION
@@ -37,7 +38,7 @@ export function createPlayer(): Character {
     inv: 99,  // Maximum inverse potential (unique to Li Wei)
   };
 
-  return {
+  const player: Character = {
     id: 'li-wei',
     name: 'Li Wei',
     hp: calculateMaxHp(stats.end),      // 100
@@ -52,7 +53,20 @@ export function createPlayer(): Character {
     masteryLevels: {},
     statusEffects: [],
     isPlayer: true,
+
+    // Progression systems
+    pathAlignment: {
+      blade: 33.33,
+      stream: 33.33,
+      shadow: 33.34,
+    },
+    trainingProgress: DEFAULT_TRAINING_PROGRESS,
   };
+
+  // Initialize aspect loadout based on starting path alignment
+  player.aspectLoadout = initializeAspectLoadout(player);
+
+  return player;
 }
 
 // =============================================================================
@@ -674,7 +688,7 @@ export function getRandomEnemyByTier(tier: EnemyTier): Enemy {
 export function scaleEnemyForChapter(enemy: Enemy, chapter: number): void {
   // Map chapter number to config key
   const chapterKey = chapter === 1 ? 'chapter1' : chapter === 2 ? 'chapter2' : chapter === 3 ? 'chapter3' : 'prologue';
-  const scaling = GAME_BALANCE.difficulty.chapterScaling[chapterKey];
+  const scaling = GAME_BALANCE.chapterScaling.chapterScaling[chapterKey];
 
   enemy.maxHp = Math.floor(enemy.maxHp * scaling.hpMultiplier);
   enemy.hp = enemy.maxHp;
@@ -682,4 +696,92 @@ export function scaleEnemyForChapter(enemy: Enemy, chapter: number): void {
   // Store damage scale on enemy for combat calculations
   // Note: damageScale is applied during combat damage calculation
   (enemy as Enemy & { damageScale?: number }).damageScale = scaling.damageScale;
+}
+
+/**
+ * Apply difficulty-based scaling to an enemy
+ * Adjusts stats based on Easy/Medium/Hard/Hell difficulty
+ */
+export function applyDifficultyScaling(enemy: Enemy, difficulty: DifficultyLevel): void {
+  const scaling = GAME_BALANCE.difficultyLevels.statMultipliers[difficulty];
+
+  // Scale HP
+  enemy.maxHp = Math.floor(enemy.maxHp * scaling.hp);
+  enemy.hp = enemy.maxHp;
+
+  // Scale stats
+  enemy.stats.str = Math.floor(enemy.stats.str * scaling.damage);
+  enemy.stats.end = Math.floor(enemy.stats.end * scaling.defense);
+  enemy.stats.dex = Math.floor(enemy.stats.dex * scaling.speed);
+
+  // Store AI quality settings on enemy
+  const aiQuality = GAME_BALANCE.difficultyLevels.aiQuality[difficulty];
+  (enemy as Enemy & {
+    aiReactionTime?: number;
+    aiMistakeChance?: number;
+    aiAggressiveness?: number;
+    aiDefensiveness?: number;
+  }).aiReactionTime = aiQuality.reactionTime;
+  (enemy as Enemy & { aiMistakeChance?: number }).aiMistakeChance = aiQuality.mistakeChance;
+  (enemy as Enemy & { aiAggressiveness?: number }).aiAggressiveness = aiQuality.aggressiveness;
+  (enemy as Enemy & { aiDefensiveness?: number }).aiDefensiveness = aiQuality.defensiveness;
+}
+
+// =============================================================================
+// TRAINING DUMMY CREATION
+// =============================================================================
+
+/**
+ * Create a training dummy that mirrors the player
+ * Used for sparring matches in training system
+ */
+export function createTrainingDummy(player: Character, difficulty: DifficultyLevel): Enemy {
+  // Mirror player stats
+  const dummyStats = { ...player.stats };
+
+  // Create as enemy
+  const uniqueId = `training-dummy-${Date.now()}`;
+
+  const dummy: Enemy = {
+    // Character base (mirror player)
+    id: uniqueId,
+    templateId: 'training-dummy',
+    name: 'Training Dummy',
+    hp: player.hp,
+    maxHp: player.maxHp,
+    chi: player.chi,
+    maxChi: player.maxChi,
+    inverseChi: 0,
+    maxInverseChi: 0,
+    stats: dummyStats,
+    stance: player.stance,
+    techniques: [...player.techniques],
+    masteryLevels: {},
+    statusEffects: [],
+    isPlayer: false,
+
+    // Enemy specific
+    faction: 'beggars',
+    tier: 'common',
+    chiAspect: 'flow',
+    aiPattern: {
+      name: 'TRAINING_ADAPTIVE',
+      behavior: 'balanced',
+      rules: [
+        { condition: 'hp < 30%', action: 'defend', priority: 2 },
+        { condition: 'player.defending', action: 'attack', priority: 1 },
+        { condition: 'default', action: 'attack', priority: 0 },
+      ],
+    },
+    drops: [], // No loot from training
+    dialogue: {
+      intro: ['Training dummy ready.'],
+      defeat: ['Training session complete.'],
+    },
+  };
+
+  // Apply difficulty scaling
+  applyDifficultyScaling(dummy, difficulty);
+
+  return dummy;
 }

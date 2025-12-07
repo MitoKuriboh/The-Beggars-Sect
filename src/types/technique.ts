@@ -96,9 +96,15 @@ export interface Technique {
   // Progression
   masteryBonuses: MasteryBonus[];
 
-  // Unlock
+  // Unlock Requirements
   unlockedByDefault: boolean;
   unlockChapter?: number;      // First available in this chapter
+  unlockRequirements?: {
+    pathPercentage?: { path: 'blade' | 'stream' | 'shadow'; min: number };
+    aspectRequired?: ChiAspect; // Must have this aspect equipped
+    masteryPoints?: number;      // Training mastery required
+    techniquePrereq?: string;    // Must know this technique first
+  };
 }
 
 // =============================================================================
@@ -116,6 +122,79 @@ export function getMasteryLevel(uses: number): number {
     }
   }
   return 1;
+}
+
+/**
+ * Check if technique unlock requirements are met
+ */
+export function canUnlockTechnique(
+  technique: Technique,
+  character: {
+    pathAlignment?: { blade: number; stream: number; shadow: number };
+    aspectLoadout?: { primary: ChiAspect; secondary: { slot1: ChiAspect | null; slot2: ChiAspect | null; slot3: ChiAspect | null }; unlocked: ChiAspect[] };
+    trainingProgress?: { masteryPoints: number };
+    techniques: string[];
+  },
+  currentChapter: number
+): { canUnlock: boolean; reason?: string } {
+  // Already unlocked
+  if (technique.unlockedByDefault) {
+    return { canUnlock: true };
+  }
+
+  // Check chapter requirement
+  if (technique.unlockChapter && currentChapter < technique.unlockChapter) {
+    return { canUnlock: false, reason: `Requires Chapter ${technique.unlockChapter}` };
+  }
+
+  // Check specific unlock requirements
+  if (technique.unlockRequirements) {
+    const req = technique.unlockRequirements;
+
+    // Path percentage requirement
+    if (req.pathPercentage && character.pathAlignment) {
+      const pathValue = character.pathAlignment[req.pathPercentage.path];
+      if (pathValue < req.pathPercentage.min) {
+        return {
+          canUnlock: false,
+          reason: `Requires ${req.pathPercentage.min}% ${req.pathPercentage.path.toUpperCase()} path`,
+        };
+      }
+    }
+
+    // Aspect requirement
+    if (req.aspectRequired && character.aspectLoadout) {
+      const hasAspect = character.aspectLoadout.unlocked.includes(req.aspectRequired);
+      if (!hasAspect) {
+        return {
+          canUnlock: false,
+          reason: `Requires ${req.aspectRequired.toUpperCase()} aspect`,
+        };
+      }
+    }
+
+    // Mastery points requirement
+    if (req.masteryPoints && character.trainingProgress) {
+      if (character.trainingProgress.masteryPoints < req.masteryPoints) {
+        return {
+          canUnlock: false,
+          reason: `Requires ${req.masteryPoints} training mastery`,
+        };
+      }
+    }
+
+    // Technique prerequisite
+    if (req.techniquePrereq) {
+      if (!character.techniques.includes(req.techniquePrereq)) {
+        return {
+          canUnlock: false,
+          reason: `Must know prerequisite technique first`,
+        };
+      }
+    }
+  }
+
+  return { canUnlock: true };
 }
 
 /**

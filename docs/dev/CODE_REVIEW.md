@@ -1325,8 +1325,7 @@ These directories exist for future development:
 ```
 src/
 ├── automation/
-│   ├── claude/     # Claude integration (planned)
-│   └── n8n/        # n8n workflows (planned)
+│   └── claude/     # Claude API integration (planned)
 ├── data/
 │   ├── areas/      # Area definitions (planned)
 │   ├── enemies/    # Enemy data files (planned)

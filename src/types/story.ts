@@ -179,11 +179,11 @@ export interface StoryState {
   flags: Record<string, boolean | string | number>;
   /** Relationship values with characters */
   relationships: Record<string, number>;
-  /** Path alignment scores */
-  pathScores: {
-    blade: number;
-    stream: number;
-    shadow: number;
+  /** Path alignment percentages (zero-sum, total = 100) */
+  pathPercentages: {
+    blade: number;    // 0-100%
+    stream: number;   // 0-100%
+    shadow: number;   // 0-100%
   };
   /** Scenes that have been completed */
   completedScenes: string[];
@@ -205,16 +205,76 @@ export function createStoryState(): StoryState {
     contentIndex: 0,
     flags: {},
     relationships: {},
-    pathScores: {
-      blade: 0,
-      stream: 0,
-      shadow: 0,
+    pathPercentages: {
+      blade: 33.33,
+      stream: 33.33,
+      shadow: 33.34,  // Balanced start (totals 100%)
     },
     completedScenes: [],
     choiceHistory: [],
     discoveredItems: [],
     discoveredLore: [],
   };
+}
+
+/**
+ * Apply path shift while maintaining zero-sum (total = 100%)
+ * @param current - Current path percentages
+ * @param path - Path to increase
+ * @param amount - Percentage to add (will be subtracted from others)
+ * @returns New path percentages
+ */
+export function applyPathShift(
+  current: { blade: number; stream: number; shadow: number },
+  path: 'blade' | 'stream' | 'shadow',
+  amount: number
+): { blade: number; stream: number; shadow: number } {
+  const result = { ...current };
+
+  // Increase target path
+  result[path] = Math.min(100, result[path] + amount);
+
+  // Calculate how much to subtract from others
+  const otherPaths = (['blade', 'stream', 'shadow'] as const).filter(p => p !== path);
+  const subtractPerPath = amount / 2;
+
+  // Subtract from other paths proportionally
+  otherPaths.forEach(p => {
+    result[p] = Math.max(0, result[p] - subtractPerPath);
+  });
+
+  // Normalize to ensure exactly 100% (handle rounding)
+  const total = result.blade + result.stream + result.shadow;
+  if (total !== 100) {
+    const correction = 100 - total;
+    result[path] += correction;
+  }
+
+  // Round to 2 decimal places
+  result.blade = Math.round(result.blade * 100) / 100;
+  result.stream = Math.round(result.stream * 100) / 100;
+  result.shadow = Math.round(result.shadow * 100) / 100;
+
+  return result;
+}
+
+/**
+ * Get dominant path from percentages
+ */
+export function getDominantPath(
+  percentages: { blade: number; stream: number; shadow: number }
+): 'blade' | 'stream' | 'shadow' | 'balanced' {
+  const { blade, stream, shadow } = percentages;
+  const max = Math.max(blade, stream, shadow);
+
+  // If within 5% of each other, consider balanced
+  if (max - Math.min(blade, stream, shadow) < 5) {
+    return 'balanced';
+  }
+
+  if (blade === max) return 'blade';
+  if (stream === max) return 'stream';
+  return 'shadow';
 }
 
 // =============================================================================

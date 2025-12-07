@@ -6,6 +6,7 @@
 import type { Character } from './character';
 import type { Inventory } from './item';
 import type { StoryState } from './story';
+import type { DifficultyLevel } from '../game/config/GameBalance';
 
 // =============================================================================
 // STORY PROGRESS
@@ -166,6 +167,9 @@ export interface GameState {
   saveSlot: number;
   createdAt: number;          // Timestamp
   updatedAt: number;          // Last save timestamp
+
+  // Gameplay settings
+  difficulty: DifficultyLevel; // Easy/Medium/Hard/Hell
 
   // Player
   player: Character;
