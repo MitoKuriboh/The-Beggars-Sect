@@ -12,6 +12,12 @@ import type {
 } from '../../types/index';
 
 import { getTechnique } from './TechniqueRegistry';
+import {
+  parseHPCondition,
+  evaluateHPCondition,
+  checkHPCondition,
+} from '../utils/ConditionParser';
+import { evaluateComparison, checkModulo } from '../utils/ComparisonEvaluator';
 
 // =============================================================================
 // AI CONDITION EVALUATOR
@@ -33,18 +39,8 @@ function evaluateCondition(condition: string, ctx: EvalContext): boolean {
   if (condition === 'default') return true;
 
   // HP conditions
-  const hpMatch = condition.match(/hp\s*([<>]=?)\s*(\d+)%/);
-  if (hpMatch && hpMatch[1] && hpMatch[2]) {
-    const operator = hpMatch[1];
-    const threshold = parseInt(hpMatch[2]) / 100;
-    const hpPercent = ctx.enemy.hp / ctx.enemy.maxHp;
-
-    switch (operator) {
-      case '<': return hpPercent < threshold;
-      case '<=': return hpPercent <= threshold;
-      case '>': return hpPercent > threshold;
-      case '>=': return hpPercent >= threshold;
-    }
+  if (condition.includes('hp')) {
+    return checkHPCondition(ctx.enemy, condition);
   }
 
   // Turn-based conditions
@@ -104,18 +100,9 @@ function evaluateCondition(condition: string, ctx: EvalContext): boolean {
   }
 
   // Player HP conditions
-  const playerHpMatch = condition.match(/player\.hp\s*([<>]=?)\s*(\d+)%/);
-  if (playerHpMatch && playerHpMatch[1] && playerHpMatch[2]) {
-    const operator = playerHpMatch[1];
-    const threshold = parseInt(playerHpMatch[2]) / 100;
-    const hpPercent = ctx.player.hp / ctx.player.maxHp;
-
-    switch (operator) {
-      case '<': return hpPercent < threshold;
-      case '<=': return hpPercent <= threshold;
-      case '>': return hpPercent > threshold;
-      case '>=': return hpPercent >= threshold;
-    }
+  if (condition.includes('player.hp')) {
+    const hpCondition = condition.replace('player.hp', 'hp');
+    return checkHPCondition(ctx.player, hpCondition);
   }
 
   // Chi conditions
@@ -123,13 +110,7 @@ function evaluateCondition(condition: string, ctx: EvalContext): boolean {
   if (chiMatch && chiMatch[1] && chiMatch[2]) {
     const operator = chiMatch[1];
     const threshold = parseInt(chiMatch[2]);
-
-    switch (operator) {
-      case '<': return ctx.enemy.chi < threshold;
-      case '<=': return ctx.enemy.chi <= threshold;
-      case '>': return ctx.enemy.chi > threshold;
-      case '>=': return ctx.enemy.chi >= threshold;
-    }
+    return evaluateComparison(operator, ctx.enemy.chi, threshold);
   }
 
   // Self state conditions
