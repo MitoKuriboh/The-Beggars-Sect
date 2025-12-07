@@ -2,7 +2,102 @@
 
 All notable changes to this project will be documented in this file.
 
-**Latest:** Phase 2 Complete - v0.3.6 (2025-12-07)
+**Latest:** v0.3.7 - Unified Progression System (2025-12-07)
+
+---
+
+## [2025-12-07] - v0.3.7: Unified Progression System
+
+### Milestone: Complete Training Loop & Progression
+**Post-Prologue Progression** - Training grounds, mastery system, technique unlocks
+
+### Added
+- **Training Grounds** - Post-prologue sparring matches
+  - Accessible from Stats Screen (🥋 Training Grounds menu)
+  - Training dummy mirrors player stats, scales with difficulty
+  - Complete combat integration (Stats → Training → Sparring → Combat → Training)
+  - Mastery point rewards: Easy (3-8), Medium (5-10), Hard (7-13), Hell (8-15)
+
+- **Mastery Progression System** - `src/game/training/TrainingManager.ts`
+  - Earn mastery points through sparring victories
+  - Progressive unlock milestones (50, 80, 100, 150+ mastery)
+  - Performance-based bonuses (combos, speed, damage)
+  - Difficulty multipliers for point rewards
+
+- **Aspect Loadout System** - `src/game/systems/AspectSystem.ts`
+  - 8 Chi Aspects: Force, Flow, Precision, Burst, Armor, Sense, Will, Inverse
+  - LoL-style rune system (1 primary + 3 secondary slots)
+  - Path-based aspect unlocking
+  - Integrated into StatusMenu as new tab
+
+- **6 Starter Techniques** - Path-specific unlockable techniques
+  - **Blade Path:** Shattering Strike (破击), Explosive Fist (爆拳)
+  - **Stream Path:** Calm Water Palm (静水掌), Whirlpool Counter (漩涡反)
+  - **Shadow Path:** Vital Point Strike (要穴击), Mist Step (雾步)
+  - All gated by path%, aspects, and mastery requirements
+
+- **Unified Unlock System** - `src/types/technique.ts`
+  - Techniques require: path percentage, aspect unlocked, mastery points
+  - Real-time unlock checking with detailed requirement display
+  - Press T in Training Menu to see available/locked techniques
+
+- **Difficulty Selection** - Game start flow
+  - Easy/Medium/Hard/Hell modes
+  - Affects training dummy scaling and mastery point rewards
+  - AI quality and stat modifiers
+
+- **UI Components**
+  - `AspectLoadoutDisplay.tsx` - View/manage aspect loadouts (260 lines)
+  - `TrainingMenu.tsx` - Training hub with progress tracking (290 lines)
+  - Technique unlock preview with toggle (T key)
+  - Progress bars and visual feedback
+
+### Changed
+- **Zero-Sum Path System** - 100% total distributed across Blade/Stream/Shadow
+  - Player starts at 33.33/33.33/33.34 split
+  - Path choices affect technique unlocks
+- **TechniqueRegistry** - Added 6 starter techniques with unlock requirements
+- **CharacterFactory** - Initialize progression systems (aspects, mastery, path alignment)
+- **App.tsx** - Difficulty selection, training navigation, sparring integration
+
+### Documentation
+- **New System Docs** (1,007 lines total)
+  - `docs/systems/PROGRESSION_SYSTEM.md` (327 lines) - Unified progression design
+  - `docs/systems/STARTER_TECHNIQUES.md` (340 lines) - Path-specific technique trees
+  - `docs/systems/TRAINING_INTEGRATION.md` (340 lines) - Training loop implementation
+- **Architecture Reorganization**
+  - Created `docs/Architecture/` folder
+  - Moved AAA architecture docs into dedicated folder
+- **Updated READMEs**
+  - Main README with progression features
+  - docs/README.md with systems section
+
+### Technical
+- Full TypeScript type safety for progression types
+- Centralized unlock logic in AspectSystem
+- Reusable unlock checking functions (`canUnlockTechnique`, `canUnlockAspect`)
+- Clean navigation state management (`returnToTraining`)
+- Zero build errors, all types properly extended
+
+### Released
+- **v0.3.7** - Complete unified progression system
+  - 33 files changed, 5,345 insertions, 197 deletions
+  - 9 new files created (systems, training, UI components)
+  - 15 files modified (progression integration)
+
+### Context
+**Why:** Bridge the gap between Prologue and Chapter 1. Give players meaningful progression and preparation before story continues.
+
+**Impact:** Players can now grind mastery points, unlock techniques, and build their path identity. Complete gameplay loop ready for content expansion.
+
+### Player Experience
+**Progression Flow:**
+1. Complete Prologue → Unlock Training Grounds
+2. Enter Training → View mastery progress (0 points)
+3. Sparring Match → Earn 5-10 mastery points
+4. Press T → See available/locked techniques
+5. Reach 50 mastery → Unlock first path techniques
+6. Continue → Build path identity → Chapter 1 ready
 
 ---
 
