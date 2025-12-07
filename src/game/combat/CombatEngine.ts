@@ -36,6 +36,17 @@ import {
   getDefendMessage,
   getChiFocusMessage,
 } from '../../data/combatPhrases';
+import { GAME_BALANCE } from '../config/GameBalance';
+import {
+  tickCharacterStatusEffects,
+  tickStatusEffectsForAll,
+} from '../utils/StatusEffectUtils';
+import {
+  checkHPCondition,
+  evaluateHPCondition,
+  parseHPCondition,
+} from '../utils/ConditionParser';
+import { evaluateComparison } from '../utils/ComparisonEvaluator';
 
 // =============================================================================
 // COMBAT ENGINE
@@ -137,8 +148,8 @@ export class CombatEngine {
    */
   private getInitialTurnValue(char: Character): number {
     const dex = getEffectiveStat(char, 'dex');
-    // Random variance (reduced to 0-5 for more consistent DEX impact) + DEX bonus
-    return Math.floor(Math.random() * 5) + dex;
+    // Random variance + DEX bonus
+    return Math.floor(Math.random() * GAME_BALANCE.atb.turnVariance) + dex;
   }
 
   /**
@@ -146,8 +157,8 @@ export class CombatEngine {
    */
   private getTurnSpeed(char: Character): number {
     const dex = getEffectiveStat(char, 'dex');
-    // Base 10 + DEX modifier
-    return this.config.baseTickRate + Math.floor(dex / 5);
+    // Base tick rate + DEX modifier
+    return this.config.baseTickRate + Math.floor(dex / GAME_BALANCE.atb.dexSpeedDivisor);
   }
 
   /**
@@ -296,16 +307,10 @@ export class CombatEngine {
 
   private tickStatusEffects(): void {
     // Tick player effects
-    this.state.player.statusEffects = this.state.player.statusEffects
-      .map((e) => ({ ...e, duration: e.duration - 1 }))
-      .filter((e) => e.duration > 0);
+    tickCharacterStatusEffects(this.state.player);
 
     // Tick enemy effects
-    for (const enemy of this.state.enemies) {
-      enemy.statusEffects = enemy.statusEffects
-        .map((e) => ({ ...e, duration: e.duration - 1 }))
-        .filter((e) => e.duration > 0);
-    }
+    tickStatusEffectsForAll(this.state.enemies);
   }
 
   // ---------------------------------------------------------------------------
@@ -526,20 +531,8 @@ export class CombatEngine {
 
       // Check condition if specified
       if (effect.condition && effectTarget) {
-        const hpMatch = effect.condition.match(/hp\s*([<>]=?)\s*(\d+)%/);
-        if (hpMatch && hpMatch[1] && hpMatch[2]) {
-          const operator = hpMatch[1];
-          const threshold = parseInt(hpMatch[2]) / 100;
-          const hpPercent = effectTarget.hp / effectTarget.maxHp;
-
-          let conditionMet = false;
-          switch (operator) {
-            case '<': conditionMet = hpPercent < threshold; break;
-            case '<=': conditionMet = hpPercent <= threshold; break;
-            case '>': conditionMet = hpPercent > threshold; break;
-            case '>=': conditionMet = hpPercent >= threshold; break;
-          }
-          if (!conditionMet) continue;
+        if (!checkHPCondition(effectTarget, effect.condition)) {
+          continue;
         }
       }
 
@@ -547,7 +540,7 @@ export class CombatEngine {
         case 'damage': {
           // Self-damage (recoil) - percentage of max HP
           const selfDamage = Math.floor((actor.maxHp * effect.value) / 100);
-          actor.hp = Math.max(1, actor.hp - selfDamage); // Don't kill self
+          actor.hp = Math.max(GAME_BALANCE.combat.minRecoilHp, actor.hp - selfDamage); // Don't kill self
           effectMessages.push(`${actor.name} takes ${selfDamage} recoil damage!`);
           break;
         }
@@ -614,8 +607,8 @@ export class CombatEngine {
 
         case 'stun': {
           if (effectTarget) {
-            // Stun has a chance based on effect value (or fixed 30% if not specified differently)
-            const stunChance = effect.value > 1 ? effect.value / 100 : 0.3;
+            // Stun has a chance based on effect value (or default if not specified differently)
+            const stunChance = effect.value > 1 ? effect.value / 100 : GAME_BALANCE.statusEffects.defaultStunChance;
             if (Math.random() < stunChance) {
               if (this.applyStatusEffect(effectTarget, { ...STATUS_EFFECTS.STUNNED })) {
                 effectMessages.push(`${effectTarget.name} is stunned!`);
@@ -663,7 +656,7 @@ export class CombatEngine {
           if (target && baseDamage > 0) {
             const extraHits = effect.value - 1;
             for (let i = 0; i < extraHits; i++) {
-              const hitDamage = Math.floor(baseDamage * 0.8); // Subsequent hits do 80%
+              const hitDamage = Math.floor(baseDamage * GAME_BALANCE.multiHit.damageScale);
               target.hp = Math.max(0, target.hp - hitDamage);
               totalDamage += hitDamage;
             }
@@ -699,7 +692,7 @@ export class CombatEngine {
       this.config.maxFleeChance,
       Math.max(
         this.config.minFleeChance,
-        0.5 + (playerDex - enemyDexAvg) * 0.05
+        GAME_BALANCE.flee.baseChance + (playerDex - enemyDexAvg) * GAME_BALANCE.flee.dexAdvantageMultiplier
       )
     );
 
@@ -760,10 +753,10 @@ export class CombatEngine {
 
     // Check for defending status
     const isDefending = defender.statusEffects.some((e) => e.id === 'defending');
-    const defendMod = isDefending ? 0.5 : 1.0;
+    const defendMod = isDefending ? GAME_BALANCE.combat.defendingDamageReduction : 1.0;
 
     // Critical hit check
-    const critChance = getEffectiveStat(attacker, 'dex') * 0.01; // 1% per DEX
+    const critChance = getEffectiveStat(attacker, 'dex') * GAME_BALANCE.combat.critChancePerDex;
     const isCritical = Math.random() < critChance;
     const critMod = isCritical ? this.config.critMultiplier : 1.0;
 
@@ -783,7 +776,7 @@ export class CombatEngine {
 
     // Apply defense
     const defense = defenseStat * defenderStanceMod * defendMod;
-    damage = Math.max(this.config.minDamage, damage - defense * 0.5);
+    damage = Math.max(this.config.minDamage, damage - defense * GAME_BALANCE.combat.defenseEffectiveness);
 
     return {
       total: Math.floor(damage),
@@ -809,14 +802,20 @@ export class CombatEngine {
     } else if (role === 'followup' || role === 'any') {
       // Continue combo
       combo.techniques.push(techniqueId);
-      combo.damageMultiplier = Math.min(1.6, 1.0 + combo.techniques.length * 0.15);
+      combo.damageMultiplier = Math.min(
+        GAME_BALANCE.combos.maxMultiplier,
+        GAME_BALANCE.combos.baseMultiplier + combo.techniques.length * GAME_BALANCE.combos.multiplierPerTechnique
+      );
     } else if (role === 'finisher') {
       // Complete combo
       combo.techniques.push(techniqueId);
-      combo.damageMultiplier = Math.min(1.6, 1.0 + combo.techniques.length * 0.15);
+      combo.damageMultiplier = Math.min(
+        GAME_BALANCE.combos.maxMultiplier,
+        GAME_BALANCE.combos.baseMultiplier + combo.techniques.length * GAME_BALANCE.combos.multiplierPerTechnique
+      );
 
       // Chi refund on successful finisher
-      const chiRefund = Math.floor(combo.techniques.length * 3);
+      const chiRefund = Math.floor(combo.techniques.length * GAME_BALANCE.combos.chiRefundPerTechnique);
       this.state.player.chi = Math.min(
         this.state.player.maxChi,
         this.state.player.chi + chiRefund
