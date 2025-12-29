@@ -3,20 +3,37 @@
  * Main combat UI that orchestrates all combat components
  */
 
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { Box, Text, useInput } from 'ink';
-import type { Character, Enemy, CombatState, Technique, Stance } from '../../types/index';
-import { CombatEngine, AIController, getTechniquesForCharacter, getTechnique } from '../../game/combat';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useMemo,
+} from "react";
+import { Box, Text, useInput } from "ink";
+import type {
+  Character,
+  Enemy,
+  CombatState,
+  Technique,
+  Stance,
+} from "../../types/index";
+import {
+  CombatEngine,
+  AIController,
+  getTechniquesForCharacter,
+  getTechnique,
+} from "../../game/combat";
 
-import { TurnQueue } from './TurnQueue';
-import { CharacterStatus } from './HealthBar';
-import { ActionMenu, ActionType } from './ActionMenu';
-import { TechniqueMenu } from './TechniqueMenu';
-import { StanceMenu } from './StanceMenu';
-import { TargetMenu } from './TargetMenu';
-import { CenteredScreen } from '../components/PolishedBox';
-import { SEMANTIC_DIVIDERS } from '../theme/dividers';
-import { UI_CONFIG } from '../config/constants';
+import { TurnQueue } from "./TurnQueue";
+import { CharacterStatus } from "./HealthBar";
+import { ActionMenu, ActionType } from "./ActionMenu";
+import { TechniqueMenu } from "./TechniqueMenu";
+import { StanceMenu } from "./StanceMenu";
+import { TargetMenu } from "./TargetMenu";
+import { CenteredScreen } from "../components/PolishedBox";
+import { SEMANTIC_DIVIDERS } from "../theme/dividers";
+import { UI_CONFIG } from "../config/constants";
 
 // =============================================================================
 // CONSTANTS
@@ -29,16 +46,16 @@ const { combat: COMBAT_CONFIG } = UI_CONFIG;
 // =============================================================================
 
 type CombatPhase =
-  | 'initial-stance-select' // Initial stance selection before combat
-  | 'action-select'      // Player choosing action
-  | 'technique-select'   // Player choosing technique
-  | 'stance-select'      // Player choosing stance
-  | 'target-select'      // Player choosing target
-  | 'enemy-turn'         // Enemy is acting
-  | 'animating'          // Action animation/delay
-  | 'victory'            // Player won
-  | 'defeat'             // Player lost
-  | 'fled';              // Player escaped
+  | "initial-stance-select" // Initial stance selection before combat
+  | "action-select" // Player choosing action
+  | "technique-select" // Player choosing technique
+  | "stance-select" // Player choosing stance
+  | "target-select" // Player choosing target
+  | "enemy-turn" // Enemy is acting
+  | "animating" // Action animation/delay
+  | "victory" // Player won
+  | "defeat" // Player lost
+  | "fled"; // Player escaped
 
 interface PendingAction {
   type: ActionType;
@@ -48,7 +65,10 @@ interface PendingAction {
 interface CombatScreenProps {
   player: Character;
   enemies: Enemy[];
-  onCombatEnd: (result: 'victory' | 'defeat' | 'fled', updatedPlayer: Character) => void;
+  onCombatEnd: (
+    result: "victory" | "defeat" | "fled",
+    updatedPlayer: Character,
+  ) => void;
 }
 
 // =============================================================================
@@ -64,14 +84,20 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
   const engineRef = useRef<CombatEngine | null>(null);
 
   // Timeout refs for cleanup
-  const enemyActionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const enemyActionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
   const enemyTurnDelayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [combatState, setCombatState] = useState<CombatState | null>(null);
-  const [phase, setPhase] = useState<CombatPhase>('initial-stance-select');
-  const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
-  const [message, setMessage] = useState<string>('');
-  const [messageType, setMessageType] = useState<'normal' | 'damage' | 'heal' | 'status'>('normal');
+  const [phase, setPhase] = useState<CombatPhase>("initial-stance-select");
+  const [pendingAction, setPendingAction] = useState<PendingAction | null>(
+    null,
+  );
+  const [message, setMessage] = useState<string>("");
+  const [messageType, setMessageType] = useState<
+    "normal" | "damage" | "heal" | "status"
+  >("normal");
 
   // Cleanup timeouts on unmount
   useEffect(() => {
@@ -88,7 +114,9 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
   // Initialize combat engine
   useEffect(() => {
     if (enemies.length === 0) {
-      console.error('No enemies provided to combat!');
+      if (process.env.NODE_ENV !== "production") {
+        console.error("No enemies provided to combat!");
+      }
       return;
     }
 
@@ -102,7 +130,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
     const firstEnemy = enemies[0];
     if (firstEnemy?.dialogue.intro?.[0]) {
       setMessage(`${firstEnemy.name}: "${firstEnemy.dialogue.intro[0]}"`);
-      setMessageType('normal');
+      setMessageType("normal");
     }
   }, [player, enemies]);
 
@@ -111,27 +139,32 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
     if (!combatState) return;
 
     // Combat ended - show result screen
-    if (combatState.combatResult === 'victory') {
-      setPhase('victory');
-      const defeatedEnemies = combatState.enemies.filter(e => e.hp === 0);
+    if (combatState.combatResult === "victory") {
+      setPhase("victory");
+      const defeatedEnemies = combatState.enemies.filter((e) => e.hp === 0);
       const lastEnemy = defeatedEnemies[defeatedEnemies.length - 1];
       if (lastEnemy?.dialogue.defeat?.[0]) {
         setMessage(`${lastEnemy.name}: "${lastEnemy.dialogue.defeat[0]}"`);
-        setMessageType('normal');
+        setMessageType("normal");
       }
-    } else if (combatState.combatResult === 'defeat') {
-      setPhase('defeat');
-    } else if (combatState.combatResult === 'fled') {
-      setPhase('fled');
-    } else if (!combatState.isPlayerTurn && phase !== 'enemy-turn' && phase !== 'animating' && phase !== 'initial-stance-select') {
+    } else if (combatState.combatResult === "defeat") {
+      setPhase("defeat");
+    } else if (combatState.combatResult === "fled") {
+      setPhase("fled");
+    } else if (
+      !combatState.isPlayerTurn &&
+      phase !== "enemy-turn" &&
+      phase !== "animating" &&
+      phase !== "initial-stance-select"
+    ) {
       // Switch to enemy turn (but not during initial stance selection)
-      setPhase('enemy-turn');
+      setPhase("enemy-turn");
       handleEnemyTurn();
-    } else if (combatState.isPlayerTurn && phase === 'enemy-turn') {
+    } else if (combatState.isPlayerTurn && phase === "enemy-turn") {
       // Back to player turn
-      setPhase('action-select');
+      setPhase("action-select");
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [combatState?.combatResult, combatState?.isPlayerTurn, phase]);
 
   // Handle enemy turn
@@ -144,7 +177,9 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
     if (livingEnemies.length === 0) return;
 
     // Find the ready enemy
-    const readyEntry = engine.getTurnQueue().find((e) => e.isReady && !e.character.isPlayer);
+    const readyEntry = engine
+      .getTurnQueue()
+      .find((e) => e.isReady && !e.character.isPlayer);
     if (!readyEntry) return;
 
     const enemy = readyEntry.character as Enemy;
@@ -160,9 +195,9 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
     }
 
     // Brief delay for readability
-    setPhase('animating');
+    setPhase("animating");
     setMessage(`${enemy.name} is preparing to act...`);
-    setMessageType('status');
+    setMessageType("status");
 
     enemyActionTimeoutRef.current = setTimeout(() => {
       enemyActionTimeoutRef.current = null;
@@ -170,20 +205,24 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
       const result = engine.executeEnemyTurn(enemy);
       setMessage(result.message);
       // Determine message type based on content
-      if (result.message.includes('damage') || result.message.includes('hits')) {
-        setMessageType('damage');
+      if (
+        result.message.includes("damage") ||
+        result.message.includes("hits")
+      ) {
+        setMessageType("damage");
       } else {
-        setMessageType('normal');
+        setMessageType("normal");
       }
 
       // Check for boss phase transition
-      const { shouldTransition, newPhase } = AIController.checkPhaseTransition(enemy);
+      const { shouldTransition, newPhase } =
+        AIController.checkPhaseTransition(enemy);
       if (shouldTransition) {
         enemy.phase = newPhase;
         const phaseDialogue = AIController.getPhaseDialogue(enemy, newPhase);
         if (phaseDialogue) {
           setMessage(`${enemy.name}: "${phaseDialogue}"`);
-          setMessageType('status');
+          setMessageType("status");
         }
       }
 
@@ -191,9 +230,9 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
       enemyTurnDelayRef.current = setTimeout(() => {
         enemyTurnDelayRef.current = null;
 
-        if (engine.getCombatResult() === 'ongoing') {
+        if (engine.getCombatResult() === "ongoing") {
           if (engine.isPlayerTurn()) {
-            setPhase('action-select');
+            setPhase("action-select");
           } else {
             handleEnemyTurn();
           }
@@ -203,137 +242,152 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
   }, [combatState]);
 
   // Handle player action selection
-  const handleActionSelect = useCallback((action: ActionType) => {
-    if (!engineRef.current || !combatState) return;
+  const handleActionSelect = useCallback(
+    (action: ActionType) => {
+      if (!engineRef.current || !combatState) return;
 
-    const engine = engineRef.current;
-    const livingEnemies = engine.getLivingEnemies();
+      const engine = engineRef.current;
+      const livingEnemies = engine.getLivingEnemies();
 
-    switch (action) {
-      case 'attack':
-        setPendingAction({ type: 'attack' });
+      switch (action) {
+        case "attack":
+          setPendingAction({ type: "attack" });
+          if (livingEnemies.length > 1) {
+            setPhase("target-select");
+          } else {
+            const target = livingEnemies[0];
+            if (target) {
+              const result = engine.executeAction({
+                type: "attack",
+                actor: combatState.player,
+                target,
+              });
+              setMessage(result.message);
+              setMessageType("damage");
+              setPendingAction(null);
+            }
+          }
+          break;
+
+        case "technique":
+          setPhase("technique-select");
+          break;
+
+        case "stance":
+          setPhase("stance-select");
+          break;
+
+        case "flee":
+          const fleeResult = engine.executeAction({
+            type: "flee",
+            actor: combatState.player,
+          });
+          setMessage(fleeResult.message);
+          setMessageType("status");
+          break;
+      }
+    },
+    [combatState],
+  );
+
+  // Handle technique selection
+  const handleTechniqueSelect = useCallback(
+    (technique: Technique) => {
+      if (!engineRef.current || !combatState) return;
+
+      const engine = engineRef.current;
+      const livingEnemies = engine.getLivingEnemies();
+
+      setPendingAction({ type: "technique", technique });
+
+      // If technique needs a target
+      if (technique.power > 0) {
         if (livingEnemies.length > 1) {
-          setPhase('target-select');
+          setPhase("target-select");
         } else {
           const target = livingEnemies[0];
           if (target) {
             const result = engine.executeAction({
-              type: 'attack',
+              type: "technique",
               actor: combatState.player,
               target,
+              technique,
             });
             setMessage(result.message);
-            setMessageType('damage');
+            setMessageType("damage");
             setPendingAction(null);
           }
         }
-        break;
-
-      case 'technique':
-        setPhase('technique-select');
-        break;
-
-      case 'stance':
-        setPhase('stance-select');
-        break;
-
-      case 'flee':
-        const fleeResult = engine.executeAction({
-          type: 'flee',
-          actor: combatState.player,
-        });
-        setMessage(fleeResult.message);
-        setMessageType('status');
-        break;
-    }
-  }, [combatState]);
-
-  // Handle technique selection
-  const handleTechniqueSelect = useCallback((technique: Technique) => {
-    if (!engineRef.current || !combatState) return;
-
-    const engine = engineRef.current;
-    const livingEnemies = engine.getLivingEnemies();
-
-    setPendingAction({ type: 'technique', technique });
-
-    // If technique needs a target
-    if (technique.power > 0) {
-      if (livingEnemies.length > 1) {
-        setPhase('target-select');
       } else {
-        const target = livingEnemies[0];
-        if (target) {
-          const result = engine.executeAction({
-            type: 'technique',
-            actor: combatState.player,
-            target,
-            technique,
-          });
-          setMessage(result.message);
-          setMessageType('damage');
-          setPendingAction(null);
-        }
+        // Self-target technique (buffs, heals, etc.)
+        const result = engine.executeAction({
+          type: "technique",
+          actor: combatState.player,
+          technique,
+        });
+        setMessage(result.message);
+        setMessageType("heal");
+        setPendingAction(null);
       }
-    } else {
-      // Self-target technique (buffs, heals, etc.)
-      const result = engine.executeAction({
-        type: 'technique',
-        actor: combatState.player,
-        technique,
-      });
-      setMessage(result.message);
-      setMessageType('heal');
-      setPendingAction(null);
-    }
-  }, [combatState]);
+    },
+    [combatState],
+  );
 
   // Handle initial stance selection (doesn't consume a turn)
-  const handleInitialStanceSelect = useCallback((stance: Stance) => {
-    if (!engineRef.current || !combatState) return;
+  const handleInitialStanceSelect = useCallback(
+    (stance: Stance) => {
+      if (!engineRef.current || !combatState) return;
 
-    engineRef.current.setPlayerStance(stance);
-    const stanceName = stance.charAt(0).toUpperCase() + stance.slice(1);
-    setMessage(`You assume ${stanceName} Stance.`);
-    setMessageType('status');
-    setPhase('action-select');
-  }, [combatState]);
+      engineRef.current.setPlayerStance(stance);
+      const stanceName = stance.charAt(0).toUpperCase() + stance.slice(1);
+      setMessage(`You assume ${stanceName} Stance.`);
+      setMessageType("status");
+      setPhase("action-select");
+    },
+    [combatState],
+  );
 
   // Handle stance selection (during combat)
-  const handleStanceSelect = useCallback((stance: Stance) => {
-    if (!engineRef.current || !combatState) return;
+  const handleStanceSelect = useCallback(
+    (stance: Stance) => {
+      if (!engineRef.current || !combatState) return;
 
-    const result = engineRef.current.executeAction({
-      type: 'stance',
-      actor: combatState.player,
-      newStance: stance,
-    });
-    setMessage(result.message);
-    setMessageType('status');
-  }, [combatState]);
+      const result = engineRef.current.executeAction({
+        type: "stance",
+        actor: combatState.player,
+        newStance: stance,
+      });
+      setMessage(result.message);
+      setMessageType("status");
+    },
+    [combatState],
+  );
 
   // Handle target selection
-  const handleTargetSelect = useCallback((enemy: Enemy) => {
-    if (!engineRef.current || !combatState || !pendingAction) return;
+  const handleTargetSelect = useCallback(
+    (enemy: Enemy) => {
+      if (!engineRef.current || !combatState || !pendingAction) return;
 
-    const result = engineRef.current.executeAction({
-      type: pendingAction.type,
-      actor: combatState.player,
-      target: enemy,
-      technique: pendingAction.technique,
-    });
-    setMessage(result.message);
-    setMessageType(pendingAction.type === 'technique' ? 'damage' : 'damage');
-    setPendingAction(null);
-  }, [combatState, pendingAction]);
+      const result = engineRef.current.executeAction({
+        type: pendingAction.type,
+        actor: combatState.player,
+        target: enemy,
+        technique: pendingAction.technique,
+      });
+      setMessage(result.message);
+      setMessageType(pendingAction.type === "technique" ? "damage" : "damage");
+      setPendingAction(null);
+    },
+    [combatState, pendingAction],
+  );
 
   // Handle end screen input
   useInput((input, key) => {
-    if (phase === 'victory' || phase === 'defeat' || phase === 'fled') {
+    if (phase === "victory" || phase === "defeat" || phase === "fled") {
       if (key.return) {
         onCombatEnd(
-          phase as 'victory' | 'defeat' | 'fled',
-          engineRef.current?.getPlayer() ?? player
+          phase as "victory" | "defeat" | "fled",
+          engineRef.current?.getPlayer() ?? player,
         );
       }
     }
@@ -347,7 +401,9 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
 
   const turnOrder = useMemo(() => {
     if (!engineRef.current) return [];
-    return engineRef.current.getTurnOrderPreview(COMBAT_CONFIG.turnQueuePreviewLength);
+    return engineRef.current.getTurnOrderPreview(
+      COMBAT_CONFIG.turnQueuePreviewLength,
+    );
   }, [combatState?.turnQueue]);
 
   const livingEnemies = useMemo(() => {
@@ -358,10 +414,14 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
   // Get message color based on type
   const getMessageColor = () => {
     switch (messageType) {
-      case 'damage': return 'red';
-      case 'heal': return 'green';
-      case 'status': return 'cyan';
-      default: return 'white';
+      case "damage":
+        return "red";
+      case "heal":
+        return "green";
+      case "status":
+        return "cyan";
+      default:
+        return "white";
     }
   };
 
@@ -369,11 +429,22 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
   if (!combatState) {
     return (
       <CenteredScreen>
-        <Box flexDirection="column" borderStyle="double" borderColor="yellow" padding={2} alignItems="center" width={84}>
+        <Box
+          flexDirection="column"
+          borderStyle="double"
+          borderColor="yellow"
+          padding={2}
+          alignItems="center"
+          width={84}
+        >
           <Box marginBottom={1}>
-            <Text bold color="yellow">⚔ Preparing for battle...</Text>
+            <Text bold color="yellow">
+              ⚔ Preparing for battle...
+            </Text>
           </Box>
-          <Text dimColor italic>Loading combat system...</Text>
+          <Text dimColor italic>
+            Loading combat system...
+          </Text>
         </Box>
       </CenteredScreen>
     );
@@ -381,206 +452,306 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
 
   return (
     <CenteredScreen>
-      <Box flexDirection="column" borderStyle="double" borderColor="red" paddingX={2} paddingY={0} width={84}>
+      <Box
+        flexDirection="column"
+        borderStyle="double"
+        borderColor="red"
+        paddingX={2}
+        paddingY={0}
+        width={84}
+      >
         {/* Header */}
         <Box marginY={1} justifyContent="center">
-          <Text bold color="red">⚔ COMBAT ⚔</Text>
+          <Text bold color="red">
+            ⚔ COMBAT ⚔
+          </Text>
           {combatState.isBossFight && (
-            <Text color="yellow" bold> [BOSS]</Text>
+            <Text color="yellow" bold>
+              {" "}
+              [BOSS]
+            </Text>
           )}
           {combatState.comboChain.isActive && (
-            <Text color="magenta" bold> [COMBO×{combatState.comboChain.techniques.length}]</Text>
+            <Text color="magenta" bold>
+              {" "}
+              [COMBO×{combatState.comboChain.techniques.length}]
+            </Text>
           )}
         </Box>
 
-      {/* Divider */}
-      <Box justifyContent="center">
-        <Text color="red" dimColor>{SEMANTIC_DIVIDERS.combat}</Text>
-      </Box>
-
-      {/* Combatants */}
-      <Box flexDirection="row" justifyContent="space-between" marginY={1} marginTop={2}>
-        {/* Player Status */}
-        <Box width="47%" borderStyle="round" borderColor="cyan" paddingX={2}>
-          <CharacterStatus
-            name={combatState.player.name}
-            hp={combatState.player.hp}
-            maxHp={combatState.player.maxHp}
-            chi={combatState.player.chi}
-            maxChi={combatState.player.maxChi}
-            stance={combatState.player.stance}
-            isPlayer={true}
-            inverseChi={combatState.player.inverseChi}
-            maxInverseChi={combatState.player.maxInverseChi}
-          />
-        </Box>
-
-        {/* VS */}
-        <Box alignItems="center" justifyContent="center" flexDirection="column" paddingX={1}>
-          <Text bold color="yellow">
-            ⚡
-          </Text>
-          <Text bold color="yellow" dimColor>
-            VS
-          </Text>
-          <Text bold color="yellow">
-            {combatState.isPlayerTurn ? '⇣' : '⇡'}
+        {/* Divider */}
+        <Box justifyContent="center">
+          <Text color="red" dimColor>
+            {SEMANTIC_DIVIDERS.combat}
           </Text>
         </Box>
 
-        {/* Enemy Status */}
-        <Box width="47%" borderStyle="round" borderColor="red" paddingX={2} flexDirection="column">
-          {livingEnemies.map((enemy, index) => (
-            <Box key={enemy.id} marginBottom={index < livingEnemies.length - 1 ? 1 : 0}>
-              <CharacterStatus
-                name={enemy.name}
-                hp={enemy.hp}
-                maxHp={enemy.maxHp}
-                chi={enemy.chi}
-                maxChi={enemy.maxChi}
-                stance={enemy.stance}
-              />
-            </Box>
-          ))}
-        </Box>
-      </Box>
-
-      {/* Divider */}
-      <Box justifyContent="center">
-        <Text color="red" dimColor>{SEMANTIC_DIVIDERS.combat}</Text>
-      </Box>
-
-      {/* Message */}
-      {message.length > 0 && (
-        <Box marginY={1} borderStyle="round" borderColor={getMessageColor()} paddingY={1} paddingX={2}>
-          <Text color={getMessageColor()} wrap="wrap">{message}</Text>
-        </Box>
-      )}
-
-      {/* Action Area */}
-      <Box marginTop={1}>
-        {phase === 'initial-stance-select' && (
-          <Box flexDirection="column" alignItems="center">
-            <Box marginBottom={1}>
-              <Text bold color="yellow">⚡ Choose Your Starting Stance</Text>
-            </Box>
-            <Box marginBottom={1}>
-              <Text dimColor italic>This choice affects your combat style for the entire battle</Text>
-            </Box>
-            <StanceMenu
-              currentStance={combatState.player.stance}
-              onSelect={handleInitialStanceSelect}
-              onBack={() => {}} // No back option on initial selection
+        {/* Combatants */}
+        <Box
+          flexDirection="row"
+          justifyContent="space-between"
+          marginY={1}
+          marginTop={2}
+        >
+          {/* Player Status */}
+          <Box width="47%" borderStyle="round" borderColor="cyan" paddingX={2}>
+            <CharacterStatus
+              name={combatState.player.name}
+              hp={combatState.player.hp}
+              maxHp={combatState.player.maxHp}
+              chi={combatState.player.chi}
+              maxChi={combatState.player.maxChi}
+              stance={combatState.player.stance}
+              isPlayer={true}
+              inverseChi={combatState.player.inverseChi}
+              maxInverseChi={combatState.player.maxInverseChi}
             />
           </Box>
-        )}
 
-        {phase === 'action-select' && (
-          <ActionMenu
-            onSelect={handleActionSelect}
-            canFlee={!combatState.isBossFight}
-            disabled={!combatState.isPlayerTurn}
-          />
-        )}
+          {/* VS */}
+          <Box
+            alignItems="center"
+            justifyContent="center"
+            flexDirection="column"
+            paddingX={1}
+          >
+            <Text bold color="yellow">
+              ⚡
+            </Text>
+            <Text bold color="yellow" dimColor>
+              VS
+            </Text>
+            <Text bold color="yellow">
+              {combatState.isPlayerTurn ? "⇣" : "⇡"}
+            </Text>
+          </Box>
 
-        {phase === 'technique-select' && (
-          <TechniqueMenu
-            techniques={playerTechniques}
-            currentChi={combatState.player.chi}
-            currentStance={combatState.player.stance}
-            comboActive={combatState.comboChain.isActive}
-            comboTechniques={combatState.comboChain.techniques}
-            onSelect={handleTechniqueSelect}
-            onBack={() => setPhase('action-select')}
-          />
-        )}
+          {/* Enemy Status */}
+          <Box
+            width="47%"
+            borderStyle="round"
+            borderColor="red"
+            paddingX={2}
+            flexDirection="column"
+          >
+            {livingEnemies.map((enemy, index) => (
+              <Box
+                key={enemy.id}
+                marginBottom={index < livingEnemies.length - 1 ? 1 : 0}
+              >
+                <CharacterStatus
+                  name={enemy.name}
+                  hp={enemy.hp}
+                  maxHp={enemy.maxHp}
+                  chi={enemy.chi}
+                  maxChi={enemy.maxChi}
+                  stance={enemy.stance}
+                />
+              </Box>
+            ))}
+          </Box>
+        </Box>
 
-        {phase === 'stance-select' && (
-          <StanceMenu
-            currentStance={combatState.player.stance}
-            onSelect={handleStanceSelect}
-            onBack={() => setPhase('action-select')}
-          />
-        )}
+        {/* Divider */}
+        <Box justifyContent="center">
+          <Text color="red" dimColor>
+            {SEMANTIC_DIVIDERS.combat}
+          </Text>
+        </Box>
 
-        {phase === 'target-select' && (
-          <TargetMenu
-            enemies={combatState.enemies}
-            onSelect={handleTargetSelect}
-            onBack={() => setPhase('action-select')}
-          />
-        )}
-
-        {phase === 'enemy-turn' && (
-          <Box borderStyle="round" borderColor="red" padding={1} justifyContent="center">
-            <Text color="red" italic bold>⚔ Enemy Turn</Text>
+        {/* Message */}
+        {message.length > 0 && (
+          <Box
+            marginY={1}
+            borderStyle="round"
+            borderColor={getMessageColor()}
+            paddingY={1}
+            paddingX={2}
+          >
+            <Text color={getMessageColor()} wrap="wrap">
+              {message}
+            </Text>
           </Box>
         )}
 
-        {phase === 'animating' && (
-          <Box borderStyle="round" borderColor="yellow" padding={1} justifyContent="center">
-            <Text color="yellow" bold>⚡ Processing ⚡</Text>
-          </Box>
-        )}
+        {/* Action Area */}
+        <Box marginTop={1}>
+          {phase === "initial-stance-select" && (
+            <Box flexDirection="column" alignItems="center">
+              <Box marginBottom={1}>
+                <Text bold color="yellow">
+                  ⚡ Choose Your Starting Stance
+                </Text>
+              </Box>
+              <Box marginBottom={1}>
+                <Text dimColor italic>
+                  This choice affects your combat style for the entire battle
+                </Text>
+              </Box>
+              <StanceMenu
+                currentStance={combatState.player.stance}
+                onSelect={handleInitialStanceSelect}
+                onBack={() => {}} // No back option on initial selection
+              />
+            </Box>
+          )}
 
-        {phase === 'victory' && (
-          <Box flexDirection="column" borderStyle="double" borderColor="green" paddingX={3} paddingY={2} alignItems="center">
-            <Box marginBottom={1}>
-              <Text bold color="green">
-                ✓ ═══════ VICTORY! ═══════ ✓
+          {phase === "action-select" && (
+            <ActionMenu
+              onSelect={handleActionSelect}
+              canFlee={!combatState.isBossFight}
+              disabled={!combatState.isPlayerTurn}
+            />
+          )}
+
+          {phase === "technique-select" && (
+            <TechniqueMenu
+              techniques={playerTechniques}
+              currentChi={combatState.player.chi}
+              currentStance={combatState.player.stance}
+              comboActive={combatState.comboChain.isActive}
+              comboTechniques={combatState.comboChain.techniques}
+              onSelect={handleTechniqueSelect}
+              onBack={() => setPhase("action-select")}
+            />
+          )}
+
+          {phase === "stance-select" && (
+            <StanceMenu
+              currentStance={combatState.player.stance}
+              onSelect={handleStanceSelect}
+              onBack={() => setPhase("action-select")}
+            />
+          )}
+
+          {phase === "target-select" && (
+            <TargetMenu
+              enemies={combatState.enemies}
+              onSelect={handleTargetSelect}
+              onBack={() => setPhase("action-select")}
+            />
+          )}
+
+          {phase === "enemy-turn" && (
+            <Box
+              borderStyle="round"
+              borderColor="red"
+              padding={1}
+              justifyContent="center"
+            >
+              <Text color="red" italic bold>
+                ⚔ Enemy Turn
               </Text>
             </Box>
-            <Box marginBottom={2}>
-              <Text color="yellow">
-                You defeated {livingEnemies.length === 0 ? combatState.enemies.map(e => e.name).join(', ') : 'your enemies'}!
+          )}
+
+          {phase === "animating" && (
+            <Box
+              borderStyle="round"
+              borderColor="yellow"
+              padding={1}
+              justifyContent="center"
+            >
+              <Text color="yellow" bold>
+                ⚡ Processing ⚡
               </Text>
             </Box>
-            <Box>
-              <Text dimColor italic>Press Enter to continue...</Text>
-            </Box>
-          </Box>
-        )}
+          )}
 
-        {phase === 'defeat' && (
-          <Box flexDirection="column" borderStyle="double" borderColor="red" paddingX={3} paddingY={2} alignItems="center">
-            <Box marginBottom={1}>
-              <Text bold color="red">
-                ✗ ═══════ DEFEAT ═══════ ✗
-              </Text>
+          {phase === "victory" && (
+            <Box
+              flexDirection="column"
+              borderStyle="double"
+              borderColor="green"
+              paddingX={3}
+              paddingY={2}
+              alignItems="center"
+            >
+              <Box marginBottom={1}>
+                <Text bold color="green">
+                  ✓ ═══════ VICTORY! ═══════ ✓
+                </Text>
+              </Box>
+              <Box marginBottom={2}>
+                <Text color="yellow">
+                  You defeated{" "}
+                  {livingEnemies.length === 0
+                    ? combatState.enemies.map((e) => e.name).join(", ")
+                    : "your enemies"}
+                  !
+                </Text>
+              </Box>
+              <Box>
+                <Text dimColor italic>
+                  Press Enter to continue...
+                </Text>
+              </Box>
             </Box>
-            <Box marginBottom={2}>
-              <Text>You have been defeated...</Text>
-            </Box>
-            <Box>
-              <Text dimColor italic>Press Enter to continue...</Text>
-            </Box>
-          </Box>
-        )}
+          )}
 
-        {phase === 'fled' && (
-          <Box flexDirection="column" borderStyle="double" borderColor="yellow" paddingX={3} paddingY={2} alignItems="center">
-            <Box marginBottom={1}>
-              <Text bold color="yellow">
-                ⚠ ═══════ ESCAPED ═══════ ⚠
-              </Text>
+          {phase === "defeat" && (
+            <Box
+              flexDirection="column"
+              borderStyle="double"
+              borderColor="red"
+              paddingX={3}
+              paddingY={2}
+              alignItems="center"
+            >
+              <Box marginBottom={1}>
+                <Text bold color="red">
+                  ✗ ═══════ DEFEAT ═══════ ✗
+                </Text>
+              </Box>
+              <Box marginBottom={2}>
+                <Text>You have been defeated...</Text>
+              </Box>
+              <Box>
+                <Text dimColor italic>
+                  Press Enter to continue...
+                </Text>
+              </Box>
             </Box>
-            <Box marginBottom={2}>
-              <Text>You fled from battle!</Text>
-            </Box>
-            <Box>
-              <Text dimColor italic>Press Enter to continue...</Text>
-            </Box>
-          </Box>
-        )}
-      </Box>
+          )}
 
-      {/* Divider */}
-      <Box justifyContent="center" marginTop={1}>
-        <Text color="red" dimColor>{SEMANTIC_DIVIDERS.combat}</Text>
-      </Box>
+          {phase === "fled" && (
+            <Box
+              flexDirection="column"
+              borderStyle="double"
+              borderColor="yellow"
+              paddingX={3}
+              paddingY={2}
+              alignItems="center"
+            >
+              <Box marginBottom={1}>
+                <Text bold color="yellow">
+                  ⚠ ═══════ ESCAPED ═══════ ⚠
+                </Text>
+              </Box>
+              <Box marginBottom={2}>
+                <Text>You fled from battle!</Text>
+              </Box>
+              <Box>
+                <Text dimColor italic>
+                  Press Enter to continue...
+                </Text>
+              </Box>
+            </Box>
+          )}
+        </Box>
 
-      {/* Turn Queue */}
-      <TurnQueue turnOrder={turnOrder} currentActorId={combatState.player.id} />
+        {/* Divider */}
+        <Box justifyContent="center" marginTop={1}>
+          <Text color="red" dimColor>
+            {SEMANTIC_DIVIDERS.combat}
+          </Text>
+        </Box>
+
+        {/* Turn Queue */}
+        <TurnQueue
+          turnOrder={turnOrder}
+          currentActorId={combatState.player.id}
+        />
       </Box>
     </CenteredScreen>
   );

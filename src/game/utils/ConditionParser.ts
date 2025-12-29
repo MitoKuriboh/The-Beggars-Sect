@@ -8,12 +8,12 @@
  * - AIController.ts:107-118
  */
 
-import type { Character } from '../../types/index';
+import type { Character } from "../../types/index";
 
 /**
  * Comparison operator types
  */
-export type ComparisonOperator = '<' | '<=' | '>' | '>=';
+export type ComparisonOperator = "<" | "<=" | ">" | ">=";
 
 /**
  * Result of parsing an HP condition
@@ -44,7 +44,7 @@ export function parseHPCondition(condition: string): HPCondition | null {
 
   const operator = match[1] as ComparisonOperator;
   const threshold = parseInt(match[2]!, 10);
-  const isPercent = match[3] === '%';
+  const isPercent = match[3] === "%";
 
   return {
     operator,
@@ -64,7 +64,10 @@ export function parseHPCondition(condition: string): HPCondition | null {
  * evaluateHPCondition(character, { operator: '<', threshold: 40, isPercent: true })
  * // Returns true if character HP is less than 40% of max HP
  */
-export function evaluateHPCondition(character: Character, condition: HPCondition): boolean {
+export function evaluateHPCondition(
+  character: Character,
+  condition: HPCondition,
+): boolean {
   let value: number;
 
   if (condition.isPercent) {
@@ -77,13 +80,13 @@ export function evaluateHPCondition(character: Character, condition: HPCondition
 
   // Evaluate the comparison
   switch (condition.operator) {
-    case '<':
+    case "<":
       return value < condition.threshold;
-    case '<=':
+    case "<=":
       return value <= condition.threshold;
-    case '>':
+    case ">":
       return value > condition.threshold;
-    case '>=':
+    case ">=":
       return value >= condition.threshold;
     default:
       return false;
@@ -100,11 +103,16 @@ export function evaluateHPCondition(character: Character, condition: HPCondition
  * @example
  * checkHPCondition(player, "hp < 30%")  // True if player HP < 30%
  */
-export function checkHPCondition(character: Character, conditionString: string): boolean {
+export function checkHPCondition(
+  character: Character,
+  conditionString: string,
+): boolean {
   const condition = parseHPCondition(conditionString);
 
   if (!condition) {
-    console.warn(`Invalid HP condition format: ${conditionString}`);
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(`Invalid HP condition format: ${conditionString}`);
+    }
     return false;
   }
 
@@ -139,7 +147,10 @@ export function isLowHP(character: Character, threshold: number = 30): boolean {
  * @param threshold - HP percentage threshold (default 70%)
  * @returns True if HP is above threshold
  */
-export function isHighHP(character: Character, threshold: number = 70): boolean {
+export function isHighHP(
+  character: Character,
+  threshold: number = 70,
+): boolean {
   return getHPPercent(character) > threshold;
 }
 
@@ -150,6 +161,9 @@ export function isHighHP(character: Character, threshold: number = 70): boolean 
  * @param threshold - HP percentage threshold (default 15%)
  * @returns True if HP is critically low
  */
-export function isCriticalHP(character: Character, threshold: number = 15): boolean {
+export function isCriticalHP(
+  character: Character,
+  threshold: number = 15,
+): boolean {
   return getHPPercent(character) < threshold;
 }

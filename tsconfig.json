@@ -23,6 +23,7 @@
       "@/*": ["src/*"],
       "@game/*": ["src/game/*"],
       "@ui/*": ["src/ui/*"],
+      "@types/*": ["src/types/*"],
       "@data/*": ["src/data/*"],
       "@automation/*": ["src/automation/*"],
       "@utils/*": ["src/utils/*"]

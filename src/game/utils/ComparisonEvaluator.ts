@@ -8,7 +8,7 @@
  * - AIController.ts:113-117
  */
 
-import type { ComparisonOperator } from './ConditionParser';
+import type { ComparisonOperator } from "./ConditionParser";
 
 /**
  * Evaluate a comparison between two numeric values
@@ -26,25 +26,27 @@ import type { ComparisonOperator } from './ConditionParser';
 export function evaluateComparison(
   operator: string,
   actual: number,
-  threshold: number
+  threshold: number,
 ): boolean {
   switch (operator) {
-    case '<':
+    case "<":
       return actual < threshold;
-    case '<=':
+    case "<=":
       return actual <= threshold;
-    case '>':
+    case ">":
       return actual > threshold;
-    case '>=':
+    case ">=":
       return actual >= threshold;
-    case '==':
-    case '===':
+    case "==":
+    case "===":
       return actual === threshold;
-    case '!=':
-    case '!==':
+    case "!=":
+    case "!==":
       return actual !== threshold;
     default:
-      console.warn(`Unknown comparison operator: ${operator}`);
+      if (process.env.NODE_ENV !== "production") {
+        console.warn(`Unknown comparison operator: ${operator}`);
+      }
       return false;
   }
 }
@@ -98,7 +100,11 @@ export function clamp(value: number, min: number, max: number): number {
  * checkModulo(9, 3, 0)  // true (9 % 3 === 0, every 3rd turn)
  * checkModulo(10, 3, 1) // true (10 % 3 === 1)
  */
-export function checkModulo(value: number, divisor: number, remainder: number = 0): boolean {
+export function checkModulo(
+  value: number,
+  divisor: number,
+  remainder: number = 0,
+): boolean {
   return value % divisor === remainder;
 }
 
@@ -113,7 +119,10 @@ export function checkModulo(value: number, divisor: number, remainder: number = 
  * checkChance(75)      // 75% chance to return true
  * checkChance(0.75, true)  // 75% chance to return true
  */
-export function checkChance(chance: number, useDecimal: boolean = false): boolean {
+export function checkChance(
+  chance: number,
+  useDecimal: boolean = false,
+): boolean {
   const threshold = useDecimal ? chance : chance / 100;
   return Math.random() < threshold;
 }
@@ -126,7 +135,11 @@ export function checkChance(chance: number, useDecimal: boolean = false): boolea
  * @param tolerance - Maximum difference to consider equal (default 0.0001)
  * @returns True if values are within tolerance
  */
-export function approximatelyEqual(a: number, b: number, tolerance: number = 0.0001): boolean {
+export function approximatelyEqual(
+  a: number,
+  b: number,
+  tolerance: number = 0.0001,
+): boolean {
   return Math.abs(a - b) < tolerance;
 }
 
@@ -141,11 +154,16 @@ export function approximatelyEqual(a: number, b: number, tolerance: number = 0.0
  * evaluateComparisonString("< 50", 30)   // true
  * evaluateComparisonString(">= 100", 150) // true
  */
-export function evaluateComparisonString(comparisonString: string, value: number): boolean {
+export function evaluateComparisonString(
+  comparisonString: string,
+  value: number,
+): boolean {
   const match = comparisonString.match(/([<>=!]+)\s*(\d+(?:\.\d+)?)/);
 
   if (!match) {
-    console.warn(`Invalid comparison string format: ${comparisonString}`);
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(`Invalid comparison string format: ${comparisonString}`);
+    }
     return false;
   }
 
