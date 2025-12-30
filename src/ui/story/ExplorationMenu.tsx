@@ -1,14 +1,17 @@
 /**
  * Exploration Menu
- * Allows player to explore different areas in a scene
+ * Allows player to explore different areas in a scene with wuxia atmosphere
  */
 
-import React, { useState, useCallback } from 'react';
-import { Box, Text, useInput } from 'ink';
-import SelectInput from 'ink-select-input';
-import type { ExplorationArea } from '../../types/index';
-import { ContentBlock } from './ContentRenderer';
+import React, { useState, useCallback } from "react";
+import { Box, Text, useInput } from "ink";
+import SelectInput from "ink-select-input";
+import type { ExplorationArea } from "../../types/index";
+import { ContentBlock } from "./ContentRenderer";
+import { STORY_DECORATIONS, SYMBOLS } from "../theme/decorations";
+import { atmosphericColors } from "../theme/colors";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ink-select-input has conflicting CJS/ESM exports
 const SelectInputComponent = (SelectInput as any).default || SelectInput;
 
 interface ExplorationMenuItem {
@@ -31,29 +34,25 @@ export const ExplorationMenu: React.FC<ExplorationMenuProps> = ({
 
   // Check if all required areas are visited
   const requiredAreas = areas.filter((a) => a.required);
-  const allRequiredVisited = requiredAreas.every((a) =>
-    visitedAreas.has(a.id)
-  );
+  const allRequiredVisited = requiredAreas.every((a) => visitedAreas.has(a.id));
 
   // Build menu items
   const items: ExplorationMenuItem[] = areas.map((area) => ({
-    label: visitedAreas.has(area.id)
-      ? `✓ ${area.name}`
-      : `• ${area.name}`,
+    label: visitedAreas.has(area.id) ? `✓ ${area.name}` : `• ${area.name}`,
     value: area.id,
   }));
 
   // Add continue option if available
   if (allRequiredVisited) {
     items.push({
-      label: '→ Continue',
-      value: '__continue__',
+      label: "→ Continue",
+      value: "__continue__",
     });
   }
 
   const handleSelect = useCallback(
     (item: ExplorationMenuItem) => {
-      if (item.value === '__continue__') {
+      if (item.value === "__continue__") {
         onComplete();
         return;
       }
@@ -65,12 +64,12 @@ export const ExplorationMenu: React.FC<ExplorationMenuProps> = ({
         setVisitedAreas((prev) => new Set(prev).add(area.id));
       }
     },
-    [areas, onComplete]
+    [areas, onComplete],
   );
 
   // Handle input when viewing area content
   useInput((input, key) => {
-    if (showingContent && (key.return || input === ' ' || key.escape)) {
+    if (showingContent && (key.return || input === " " || key.escape)) {
       setShowingContent(false);
       setCurrentArea(null);
     }
@@ -80,18 +79,50 @@ export const ExplorationMenu: React.FC<ExplorationMenuProps> = ({
   if (showingContent && currentArea) {
     return (
       <Box flexDirection="column">
-        <Text bold color="cyan">
-          {currentArea.name}
-        </Text>
-        <Text dimColor italic>
-          {currentArea.description}
-        </Text>
-        <Box marginTop={1}>
+        {/* Header flourish */}
+        <Box marginBottom={1} justifyContent="center">
+          <Text color={atmosphericColors.menuAccent} dimColor>
+            ─────────── {SYMBOLS.diamond} ───────────
+          </Text>
+        </Box>
+
+        {/* Area name */}
+        <Box justifyContent="center" marginBottom={1}>
+          <Text bold color="cyan">
+            {SYMBOLS.star} {currentArea.name.toUpperCase()} {SYMBOLS.star}
+          </Text>
+        </Box>
+
+        {/* Description */}
+        <Box justifyContent="center" marginBottom={1}>
+          <Text dimColor italic>
+            {currentArea.description}
+          </Text>
+        </Box>
+
+        {/* Divider */}
+        <Box marginBottom={1} justifyContent="center">
+          <Text color={atmosphericColors.menuAccent} dimColor>
+            ─────────── {SYMBOLS.yinYang} ───────────
+          </Text>
+        </Box>
+
+        {/* Content */}
+        <Box marginY={1} paddingX={2}>
           <ContentBlock lines={currentArea.content} showAll />
         </Box>
-        <Box marginTop={1}>
-          <Text dimColor>
-            Press [SPACE] to return...
+
+        {/* Bottom flourish */}
+        <Box marginTop={1} justifyContent="center">
+          <Text color={atmosphericColors.menuAccent} dimColor>
+            ─────────── {SYMBOLS.diamond} ───────────
+          </Text>
+        </Box>
+
+        {/* Return prompt */}
+        <Box marginTop={1} justifyContent="center">
+          <Text color="cyan">
+            {SYMBOLS.bullet} Press SPACE to return {SYMBOLS.bulletHollow}
           </Text>
         </Box>
       </Box>
@@ -101,24 +132,57 @@ export const ExplorationMenu: React.FC<ExplorationMenuProps> = ({
   // Show exploration menu
   return (
     <Box flexDirection="column">
-      <Text bold color="yellow">
-        Explore the area:
-      </Text>
-      <Text dimColor>
-        (Optional areas can be skipped)
-      </Text>
+      {/* Header flourish */}
+      <Box marginBottom={1} justifyContent="center">
+        <Text color={atmosphericColors.menuAccent} dimColor>
+          ─────────── {SYMBOLS.yinYang} ───────────
+        </Text>
+      </Box>
 
-      <Box marginTop={1}>
+      {/* Header */}
+      <Box justifyContent="center" marginBottom={1}>
+        <Text bold color="yellow">
+          {STORY_DECORATIONS.explorationHeader}
+        </Text>
+      </Box>
+
+      {/* Subtitle */}
+      <Box justifyContent="center" marginBottom={1}>
+        <Text dimColor italic>
+          "Observe carefully. Every detail holds meaning."
+        </Text>
+      </Box>
+
+      {/* Divider */}
+      <Box marginBottom={1} justifyContent="center">
+        <Text color={atmosphericColors.menuAccent} dimColor>
+          ─────────── {SYMBOLS.diamond} ───────────
+        </Text>
+      </Box>
+
+      {/* Menu */}
+      <Box marginY={1} flexDirection="column" alignItems="center">
         <SelectInputComponent items={items} onSelect={handleSelect} />
       </Box>
 
+      {/* Required areas message */}
       {!allRequiredVisited && requiredAreas.length > 0 && (
-        <Box marginTop={1}>
-          <Text color="gray">
-            Visit required areas before continuing.
+        <Box marginTop={1} justifyContent="center">
+          <Text color="gray" italic>
+            {SYMBOLS.bullet} Visit required areas before continuing
           </Text>
         </Box>
       )}
+
+      {/* Progress indicator */}
+      <Box marginTop={1} justifyContent="center">
+        <Text dimColor>
+          Explored: {visitedAreas.size}/{areas.length}
+          {allRequiredVisited && (
+            <Text color="green"> {SYMBOLS.star} Ready to continue</Text>
+          )}
+        </Text>
+      </Box>
     </Box>
   );
 };

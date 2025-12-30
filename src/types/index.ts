@@ -4,19 +4,22 @@
  */
 
 // Character types
-export * from './character';
+export * from "./character";
 
 // Technique types
-export * from './technique';
+export * from "./technique";
 
 // Combat types
-export * from './combat';
+export * from "./combat";
 
 // Item types
-export * from './item';
+export * from "./item";
 
 // Game state types
-export * from './game';
+export * from "./game";
 
 // Story types
-export * from './story';
+export * from "./story";
+
+// UI types
+export * from "./ui";

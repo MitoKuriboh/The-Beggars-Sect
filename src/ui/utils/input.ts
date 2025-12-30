@@ -8,6 +8,8 @@
  * - Consistent navigation feel
  */
 
+import type { KeyEvent } from "../../types/ui";
+
 /**
  * Navigate vertically through a list with wrap-around support
  *
@@ -26,10 +28,10 @@
 export function handleVerticalNavigation(
   current: number,
   total: number,
-  direction: 'up' | 'down',
-  circular: boolean = true
+  direction: "up" | "down",
+  circular: boolean = true,
 ): number {
-  if (direction === 'up') {
+  if (direction === "up") {
     if (circular) {
       return current > 0 ? current - 1 : total - 1;
     } else {
@@ -56,10 +58,10 @@ export function handleVerticalNavigation(
 export function handleHorizontalNavigation(
   current: number,
   total: number,
-  direction: 'left' | 'right',
-  circular: boolean = true
+  direction: "left" | "right",
+  circular: boolean = true,
 ): number {
-  if (direction === 'left') {
+  if (direction === "left") {
     if (circular) {
       return current > 0 ? current - 1 : total - 1;
     } else {
@@ -93,8 +95,8 @@ export function clamp(value: number, min: number, max: number): number {
  * @param key - Key object from useInput
  * @returns True if selection key
  */
-export function isSelectionKey(input: string, key: any): boolean {
-  return key.return || input === ' ';
+export function isSelectionKey(input: string, key: KeyEvent): boolean {
+  return key.return || input === " ";
 }
 
 /**
@@ -103,7 +105,7 @@ export function isSelectionKey(input: string, key: any): boolean {
  * @param key - Key object from useInput
  * @returns True if cancel key
  */
-export function isCancelKey(key: any): boolean {
+export function isCancelKey(key: KeyEvent): boolean {
   return key.escape;
 }
 
@@ -113,7 +115,7 @@ export function isCancelKey(key: any): boolean {
  * @param key - Key object from useInput
  * @returns Object indicating which arrow keys are pressed
  */
-export function getNavigationKeys(key: any): {
+export function getNavigationKeys(key: KeyEvent): {
   up: boolean;
   down: boolean;
   left: boolean;
@@ -143,7 +145,7 @@ export function getNavigationKeys(key: any): {
  */
 export function validateInput(
   input: string,
-  allowedPattern: RegExp | 'alphanumeric' | 'alpha' | 'numeric' | 'filename'
+  allowedPattern: RegExp | "alphanumeric" | "alpha" | "numeric" | "filename",
 ): boolean {
   let pattern: RegExp;
 
@@ -151,16 +153,16 @@ export function validateInput(
     pattern = allowedPattern;
   } else {
     switch (allowedPattern) {
-      case 'alphanumeric':
+      case "alphanumeric":
         pattern = /^[a-zA-Z0-9]+$/;
         break;
-      case 'alpha':
+      case "alpha":
         pattern = /^[a-zA-Z]+$/;
         break;
-      case 'numeric':
+      case "numeric":
         pattern = /^[0-9]+$/;
         break;
-      case 'filename':
+      case "filename":
         pattern = /^[a-zA-Z0-9_\-. ]+$/;
         break;
       default:
@@ -179,8 +181,8 @@ export function validateInput(
  */
 export function sanitizeFilename(input: string): string {
   return input
-    .replace(/[^a-zA-Z0-9_\-. ]/g, '') // Remove invalid chars
-    .replace(/\s+/g, '_') // Replace spaces with underscores
+    .replace(/[^a-zA-Z0-9_\-. ]/g, "") // Remove invalid chars
+    .replace(/\s+/g, "_") // Replace spaces with underscores
     .substring(0, 50); // Limit length
 }
 
@@ -191,9 +193,10 @@ export function sanitizeFilename(input: string): string {
  * @param delay - Delay in milliseconds
  * @returns Debounced function
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- generic function type requires any for proper inference
 export function debounce<T extends (...args: any[]) => any>(
   func: T,
-  delay: number
+  delay: number,
 ): (...args: Parameters<T>) => void {
   let timeoutId: NodeJS.Timeout;
 
@@ -210,9 +213,10 @@ export function debounce<T extends (...args: any[]) => any>(
  * @param limit - Minimum time between calls (ms)
  * @returns Throttled function
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- generic function type requires any for proper inference
 export function throttle<T extends (...args: any[]) => any>(
   func: T,
-  limit: number
+  limit: number,
 ): (...args: Parameters<T>) => void {
   let inThrottle: boolean;
 

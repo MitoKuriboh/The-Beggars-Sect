@@ -22,7 +22,6 @@ import {
   CombatEngine,
   AIController,
   getTechniquesForCharacter,
-  getTechnique,
 } from "../../game/combat";
 
 import { TurnQueue } from "./TurnQueue";
@@ -32,7 +31,8 @@ import { TechniqueMenu } from "./TechniqueMenu";
 import { StanceMenu } from "./StanceMenu";
 import { TargetMenu } from "./TargetMenu";
 import { CenteredScreen } from "../components/PolishedBox";
-import { SEMANTIC_DIVIDERS } from "../theme/dividers";
+import { COMBAT_DECORATIONS, COMBAT_QUOTES } from "../theme/decorations";
+import { atmosphericColors } from "../theme/colors";
 import { UI_CONFIG } from "../config/constants";
 
 // =============================================================================
@@ -40,6 +40,12 @@ import { UI_CONFIG } from "../config/constants";
 // =============================================================================
 
 const { combat: COMBAT_CONFIG } = UI_CONFIG;
+
+// Get a random combat quote for atmosphere
+function getRandomCombatQuote(): string {
+  const index = Math.floor(Math.random() * COMBAT_QUOTES.length);
+  return COMBAT_QUOTES[index] ?? COMBAT_QUOTES[0]!;
+}
 
 // =============================================================================
 // TYPES
@@ -62,12 +68,24 @@ interface PendingAction {
   technique?: Technique;
 }
 
+// Combat performance metrics for challenge evaluation
+export interface CombatPerformanceMetrics {
+  won: boolean;
+  turns: number;
+  damageTaken: number;
+  damageDealt: number;
+  combosExecuted: number;
+  stanceSwitches: number;
+  techniquesUsed: number;
+}
+
 interface CombatScreenProps {
   player: Character;
   enemies: Enemy[];
   onCombatEnd: (
     result: "victory" | "defeat" | "fled",
     updatedPlayer: Character,
+    performance?: CombatPerformanceMetrics,
   ) => void;
 }
 
@@ -98,6 +116,22 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
   const [messageType, setMessageType] = useState<
     "normal" | "damage" | "heal" | "status"
   >("normal");
+  // Atmospheric combat quote - set once on mount
+  const [combatQuote] = useState(getRandomCombatQuote);
+
+  // Track which enemies have said their lowHp dialogue (only say once)
+  const lowHpDialogueShown = useRef<Set<string>>(new Set());
+
+  // Performance tracking for challenges
+  const performanceRef = useRef({
+    startingHp: player.hp,
+    damageTaken: 0,
+    damageDealt: 0,
+    combosExecuted: 0,
+    stanceSwitches: 0,
+    techniquesUsed: new Set<string>(),
+    lastPlayerStance: player.stance,
+  });
 
   // Cleanup timeouts on unmount
   useEffect(() => {
@@ -149,6 +183,12 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
       }
     } else if (combatState.combatResult === "defeat") {
       setPhase("defeat");
+      // Show enemy victory dialogue
+      const livingEnemy = combatState.enemies.find((e) => e.hp > 0);
+      if (livingEnemy?.dialogue.victory?.[0]) {
+        setMessage(`${livingEnemy.name}: "${livingEnemy.dialogue.victory[0]}"`);
+        setMessageType("normal");
+      }
     } else if (combatState.combatResult === "fled") {
       setPhase("fled");
     } else if (
@@ -166,6 +206,62 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [combatState?.combatResult, combatState?.isPlayerTurn, phase]);
+
+  // Check for low HP dialogue triggers (below 30%)
+  useEffect(() => {
+    if (!combatState || combatState.combatResult) return;
+
+    for (const enemy of combatState.enemies) {
+      const hpPercent = (enemy.hp / enemy.maxHp) * 100;
+      const hasLowHpDialogue = enemy.dialogue.lowHp?.[0];
+      const alreadyShown = lowHpDialogueShown.current.has(enemy.id);
+
+      if (
+        hpPercent > 0 &&
+        hpPercent <= 30 &&
+        hasLowHpDialogue &&
+        !alreadyShown
+      ) {
+        lowHpDialogueShown.current.add(enemy.id);
+        setMessage(`${enemy.name}: "${enemy.dialogue.lowHp![0]}"`);
+        setMessageType("status");
+        break; // Only show one dialogue at a time
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- Intentionally only trigger on enemies array changes
+  }, [combatState?.enemies]);
+
+  // Track performance metrics for challenges
+  useEffect(() => {
+    if (!combatState) return;
+    const perf = performanceRef.current;
+
+    // Track damage taken by player
+    const currentHp = combatState.player.hp;
+    const expectedHp = perf.startingHp - perf.damageTaken;
+    if (currentHp < expectedHp) {
+      perf.damageTaken += expectedHp - currentHp;
+    }
+
+    // Track stance switches
+    if (combatState.player.stance !== perf.lastPlayerStance) {
+      perf.stanceSwitches++;
+      perf.lastPlayerStance = combatState.player.stance;
+    }
+
+    // Track combos (when a combo is completed/broken, it resets)
+    if (combatState.comboChain.techniques.length >= 2) {
+      // This is an active combo; we'll count it when it breaks or combat ends
+    }
+
+    // Track damage dealt to enemies (sum up missing HP from all enemies)
+    let totalEnemyDamage = 0;
+    for (const enemy of combatState.enemies) {
+      totalEnemyDamage += enemy.maxHp - enemy.hp;
+    }
+    perf.damageDealt = totalEnemyDamage;
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- Track on state changes
+  }, [combatState]);
 
   // Handle enemy turn
   const handleEnemyTurn = useCallback(() => {
@@ -277,7 +373,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
           setPhase("stance-select");
           break;
 
-        case "flee":
+        case "flee": {
           const fleeResult = engine.executeAction({
             type: "flee",
             actor: combatState.player,
@@ -285,6 +381,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
           setMessage(fleeResult.message);
           setMessageType("status");
           break;
+        }
       }
     },
     [combatState],
@@ -385,9 +482,31 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
   useInput((input, key) => {
     if (phase === "victory" || phase === "defeat" || phase === "fled") {
       if (key.return) {
+        const perf = performanceRef.current;
+        const currentState = engineRef.current?.getState();
+
+        // Count completed combos from combat log
+        const comboEntries =
+          currentState?.combatLog.filter(
+            (entry) =>
+              entry.message.toLowerCase().includes("combo complete") &&
+              entry.type === "system",
+          ) ?? [];
+
+        const performance: CombatPerformanceMetrics = {
+          won: phase === "victory",
+          turns: currentState?.round ?? 0,
+          damageTaken: perf.damageTaken,
+          damageDealt: perf.damageDealt,
+          combosExecuted: Math.max(perf.combosExecuted, comboEntries.length),
+          stanceSwitches: perf.stanceSwitches,
+          techniquesUsed: perf.techniquesUsed.size,
+        };
+
         onCombatEnd(
           phase as "victory" | "defeat" | "fled",
           engineRef.current?.getPlayer() ?? player,
+          performance,
         );
       }
     }
@@ -397,6 +516,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
   const playerTechniques = useMemo(() => {
     if (!combatState) return [];
     return getTechniquesForCharacter(combatState.player.techniques);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only re-compute when techniques change
   }, [combatState?.player.techniques]);
 
   const turnOrder = useMemo(() => {
@@ -404,11 +524,13 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
     return engineRef.current.getTurnOrderPreview(
       COMBAT_CONFIG.turnQueuePreviewLength,
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- turnQueue triggers recalc
   }, [combatState?.turnQueue]);
 
   const livingEnemies = useMemo(() => {
     if (!combatState) return [];
     return combatState.enemies.filter((e) => e.hp > 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only re-compute when enemies change
   }, [combatState?.enemies]);
 
   // Get message color based on type
@@ -460,6 +582,15 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
         paddingY={0}
         width={84}
       >
+        {/* Atmospheric Header Flourish */}
+        <Box justifyContent="center" marginTop={1}>
+          <Text color={atmosphericColors.menuAccent} dimColor>
+            {combatState.isBossFight
+              ? COMBAT_DECORATIONS.headerBoss
+              : COMBAT_DECORATIONS.headerFlourish}
+          </Text>
+        </Box>
+
         {/* Header */}
         <Box marginY={1} justifyContent="center">
           <Text bold color="red">
@@ -479,10 +610,17 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
           )}
         </Box>
 
+        {/* Combat Quote */}
+        <Box justifyContent="center" marginBottom={1}>
+          <Text dimColor italic>
+            "{combatQuote}"
+          </Text>
+        </Box>
+
         {/* Divider */}
         <Box justifyContent="center">
           <Text color="red" dimColor>
-            {SEMANTIC_DIVIDERS.combat}
+            {COMBAT_DECORATIONS.combatDividerWide}
           </Text>
         </Box>
 
@@ -555,7 +693,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
         {/* Divider */}
         <Box justifyContent="center">
           <Text color="red" dimColor>
-            {SEMANTIC_DIVIDERS.combat}
+            {COMBAT_DECORATIONS.combatDividerWide}
           </Text>
         </Box>
 
@@ -659,20 +797,25 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
           )}
 
           {phase === "victory" && (
-            <Box
-              flexDirection="column"
-              borderStyle="double"
-              borderColor="green"
-              paddingX={3}
-              paddingY={2}
-              alignItems="center"
-            >
-              <Box marginBottom={1}>
-                <Text bold color="green">
-                  ✓ ═══════ VICTORY! ═══════ ✓
+            <Box flexDirection="column" alignItems="center" paddingY={1}>
+              {/* Victory Banner */}
+              <Text color="green">{COMBAT_DECORATIONS.victoryBanner.top}</Text>
+              <Text bold color="greenBright">
+                {COMBAT_DECORATIONS.victoryBanner.title}
+              </Text>
+              <Text color="green">
+                {COMBAT_DECORATIONS.victoryBanner.bottom}
+              </Text>
+
+              {/* Decorative flourish */}
+              <Box marginY={1}>
+                <Text color={atmosphericColors.menuAccent} dimColor>
+                  ═══════════════ ☯ ═══════════════
                 </Text>
               </Box>
-              <Box marginBottom={2}>
+
+              {/* Victory message */}
+              <Box marginBottom={1}>
                 <Text color="yellow">
                   You defeated{" "}
                   {livingEnemies.length === 0
@@ -681,69 +824,93 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                   !
                 </Text>
               </Box>
-              <Box>
+
+              {/* Cultivation wisdom */}
+              <Box marginBottom={2}>
                 <Text dimColor italic>
-                  Press Enter to continue...
+                  "Victory belongs to the patient."
                 </Text>
+              </Box>
+
+              <Box>
+                <Text color="cyan">▸ Press Enter to continue ◂</Text>
               </Box>
             </Box>
           )}
 
           {phase === "defeat" && (
-            <Box
-              flexDirection="column"
-              borderStyle="double"
-              borderColor="red"
-              paddingX={3}
-              paddingY={2}
-              alignItems="center"
-            >
-              <Box marginBottom={1}>
-                <Text bold color="red">
-                  ✗ ═══════ DEFEAT ═══════ ✗
+            <Box flexDirection="column" alignItems="center" paddingY={1}>
+              {/* Defeat Banner */}
+              <Text color="red">{COMBAT_DECORATIONS.defeatBanner.top}</Text>
+              <Text bold color="redBright">
+                {COMBAT_DECORATIONS.defeatBanner.title}
+              </Text>
+              <Text color="red">{COMBAT_DECORATIONS.defeatBanner.bottom}</Text>
+
+              {/* Decorative flourish */}
+              <Box marginY={1}>
+                <Text color="red" dimColor>
+                  ═══════════════ ✗ ═══════════════
                 </Text>
               </Box>
-              <Box marginBottom={2}>
+
+              {/* Defeat message */}
+              <Box marginBottom={1}>
                 <Text>You have been defeated...</Text>
               </Box>
-              <Box>
+
+              {/* Cultivation wisdom */}
+              <Box marginBottom={2}>
                 <Text dimColor italic>
-                  Press Enter to continue...
+                  "Defeat is the first teacher on the path."
                 </Text>
+              </Box>
+
+              <Box>
+                <Text color="cyan">▸ Press Enter to continue ◂</Text>
               </Box>
             </Box>
           )}
 
           {phase === "fled" && (
-            <Box
-              flexDirection="column"
-              borderStyle="double"
-              borderColor="yellow"
-              paddingX={3}
-              paddingY={2}
-              alignItems="center"
-            >
-              <Box marginBottom={1}>
-                <Text bold color="yellow">
-                  ⚠ ═══════ ESCAPED ═══════ ⚠
+            <Box flexDirection="column" alignItems="center" paddingY={1}>
+              {/* Escape Banner */}
+              <Text color="yellow">{COMBAT_DECORATIONS.fleeBanner.top}</Text>
+              <Text bold color="yellowBright">
+                {COMBAT_DECORATIONS.fleeBanner.title}
+              </Text>
+              <Text color="yellow">{COMBAT_DECORATIONS.fleeBanner.bottom}</Text>
+
+              {/* Decorative flourish */}
+              <Box marginY={1}>
+                <Text color="yellow" dimColor>
+                  ═══════════════ ⚡ ═══════════════
                 </Text>
               </Box>
-              <Box marginBottom={2}>
+
+              {/* Escape message */}
+              <Box marginBottom={1}>
                 <Text>You fled from battle!</Text>
               </Box>
-              <Box>
+
+              {/* Cultivation wisdom */}
+              <Box marginBottom={2}>
                 <Text dimColor italic>
-                  Press Enter to continue...
+                  "To flee is not cowardice—it is wisdom."
                 </Text>
+              </Box>
+
+              <Box>
+                <Text color="cyan">▸ Press Enter to continue ◂</Text>
               </Box>
             </Box>
           )}
         </Box>
 
-        {/* Divider */}
+        {/* Bottom Flourish */}
         <Box justifyContent="center" marginTop={1}>
-          <Text color="red" dimColor>
-            {SEMANTIC_DIVIDERS.combat}
+          <Text color={atmosphericColors.menuAccent} dimColor>
+            {COMBAT_DECORATIONS.combatDividerWide}
           </Text>
         </Box>
 

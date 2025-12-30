@@ -20,57 +20,57 @@ export interface BoxStyle {
 export const BOX_STYLES = {
   /** Rounded corners - modern, soft aesthetic */
   rounded: {
-    name: 'rounded',
-    topLeft: '╭',
-    topRight: '╮',
-    bottomLeft: '╰',
-    bottomRight: '╯',
-    horizontal: '─',
-    vertical: '│',
+    name: "rounded",
+    topLeft: "╭",
+    topRight: "╮",
+    bottomLeft: "╰",
+    bottomRight: "╯",
+    horizontal: "─",
+    vertical: "│",
   },
 
   /** Double lines - emphasis, important sections */
   double: {
-    name: 'double',
-    topLeft: '╔',
-    topRight: '╗',
-    bottomLeft: '╚',
-    bottomRight: '╝',
-    horizontal: '═',
-    vertical: '║',
+    name: "double",
+    topLeft: "╔",
+    topRight: "╗",
+    bottomLeft: "╚",
+    bottomRight: "╝",
+    horizontal: "═",
+    vertical: "║",
   },
 
   /** Single lines - standard boxes */
   single: {
-    name: 'single',
-    topLeft: '┌',
-    topRight: '┐',
-    bottomLeft: '└',
-    bottomRight: '┘',
-    horizontal: '─',
-    vertical: '│',
+    name: "single",
+    topLeft: "┌",
+    topRight: "┐",
+    bottomLeft: "└",
+    bottomRight: "┘",
+    horizontal: "─",
+    vertical: "│",
   },
 
   /** Heavy lines - strong emphasis */
   heavy: {
-    name: 'heavy',
-    topLeft: '┏',
-    topRight: '┓',
-    bottomLeft: '┗',
-    bottomRight: '┛',
-    horizontal: '━',
-    vertical: '┃',
+    name: "heavy",
+    topLeft: "┏",
+    topRight: "┓",
+    bottomLeft: "┗",
+    bottomRight: "┛",
+    horizontal: "━",
+    vertical: "┃",
   },
 
   /** Dotted lines - subtle, background elements */
   dotted: {
-    name: 'dotted',
-    topLeft: '┌',
-    topRight: '┐',
-    bottomLeft: '└',
-    bottomRight: '┘',
-    horizontal: '┈',
-    vertical: '┊',
+    name: "dotted",
+    topLeft: "┌",
+    topRight: "┐",
+    bottomLeft: "└",
+    bottomRight: "┘",
+    horizontal: "┈",
+    vertical: "┊",
   },
 } as const;
 
@@ -81,7 +81,11 @@ export const BOX_STYLES = {
 /**
  * Create a simple box header
  */
-export function createBoxHeader(text: string, width: number, style: BoxStyle = BOX_STYLES.rounded): string {
+export function createBoxHeader(
+  text: string,
+  width: number,
+  style: BoxStyle = BOX_STYLES.rounded,
+): string {
   const padding = Math.max(0, width - text.length - 2);
   const leftPad = Math.floor(padding / 2);
   const rightPad = padding - leftPad;
@@ -89,7 +93,9 @@ export function createBoxHeader(text: string, width: number, style: BoxStyle = B
   return (
     style.topLeft +
     style.horizontal.repeat(leftPad) +
-    ' ' + text + ' ' +
+    " " +
+    text +
+    " " +
     style.horizontal.repeat(rightPad) +
     style.topRight
   );
@@ -98,32 +104,36 @@ export function createBoxHeader(text: string, width: number, style: BoxStyle = B
 /**
  * Create a box footer
  */
-export function createBoxFooter(width: number, style: BoxStyle = BOX_STYLES.rounded): string {
+export function createBoxFooter(
+  width: number,
+  style: BoxStyle = BOX_STYLES.rounded,
+): string {
   return (
-    style.bottomLeft +
-    style.horizontal.repeat(width - 2) +
-    style.bottomRight
+    style.bottomLeft + style.horizontal.repeat(width - 2) + style.bottomRight
   );
 }
 
 /**
  * Create a horizontal divider within a box
  */
-export function createBoxDivider(width: number, style: BoxStyle = BOX_STYLES.rounded): string {
+export function createBoxDivider(
+  width: number,
+  style: BoxStyle = BOX_STYLES.rounded,
+): string {
   // Use appropriate intersection characters
-  let left = '├';
-  let right = '┤';
-  let horiz = style.horizontal;
+  let left = "├";
+  let right = "┤";
+  const horiz = style.horizontal;
 
-  if (style.name === 'rounded') {
-    left = '├';
-    right = '┤';
-  } else if (style.name === 'double') {
-    left = '╠';
-    right = '╣';
-  } else if (style.name === 'heavy') {
-    left = '┣';
-    right = '┫';
+  if (style.name === "rounded") {
+    left = "├";
+    right = "┤";
+  } else if (style.name === "double") {
+    left = "╠";
+    right = "╣";
+  } else if (style.name === "heavy") {
+    left = "┣";
+    right = "┫";
   }
 
   return left + horiz.repeat(width - 2) + right;
@@ -132,11 +142,15 @@ export function createBoxDivider(width: number, style: BoxStyle = BOX_STYLES.rou
 /**
  * Wrap text in box borders
  */
-export function createBoxLine(text: string, width: number, style: BoxStyle = BOX_STYLES.rounded): string {
+export function createBoxLine(
+  text: string,
+  width: number,
+  style: BoxStyle = BOX_STYLES.rounded,
+): string {
   const contentWidth = width - 2; // Account for borders
   const padding = Math.max(0, contentWidth - text.length);
 
-  return style.vertical + ' ' + text + ' '.repeat(padding) + style.vertical;
+  return style.vertical + " " + text + " ".repeat(padding) + style.vertical;
 }
 
 // =============================================================================

@@ -3,20 +3,24 @@
  * UI for managing save files
  */
 
-import React, { useState, useCallback } from 'react';
-import { Box, Text, useInput } from 'ink';
-import { GameStore } from '../game/state/GameStore';
-import type { SaveSlot } from '../game/state/SaveManager';
-import { CenteredScreen, PolishedBox, MessageBox, ConfirmationBox } from './components/PolishedBox';
-import { SelectMenu } from './components/Menu';
-import type { MenuItem } from './components/Menu';
+import React, { useState, useCallback, useRef, useEffect } from "react";
+import { Box, Text } from "ink";
+import { GameStore } from "../game/state/GameStore";
+import {
+  CenteredScreen,
+  PolishedBox,
+  MessageBox,
+  ConfirmationBox,
+} from "./components/PolishedBox";
+import { SelectMenu } from "./components/Menu";
+import type { MenuItem } from "./components/Menu";
 
 // =============================================================================
 // TYPES
 // =============================================================================
 
-type Mode = 'save' | 'load';
-type InternalMode = 'normal' | 'delete';
+type Mode = "save" | "load";
+type InternalMode = "normal" | "delete";
 
 interface SaveLoadScreenProps {
   mode: Mode;
@@ -24,18 +28,17 @@ interface SaveLoadScreenProps {
   onBack: () => void;
 }
 
-
 // =============================================================================
 // HELPERS
 // =============================================================================
 
 function formatDate(timestamp: number): string {
   const date = new Date(timestamp);
-  return date.toLocaleString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
+  return date.toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 }
 
@@ -57,11 +60,25 @@ export const SaveLoadScreen: React.FC<SaveLoadScreenProps> = ({
   onComplete,
   onBack,
 }) => {
-  const [internalMode, setInternalMode] = useState<InternalMode>('normal');
+  const [internalMode, setInternalMode] = useState<InternalMode>("normal");
   const [message, setMessage] = useState<string | null>(null);
-  const [messageType, setMessageType] = useState<'success' | 'error'>('success');
+  const [messageType, setMessageType] = useState<"success" | "error">(
+    "success",
+  );
   const [confirmSlot, setConfirmSlot] = useState<number | null>(null);
   const [confirmDeleteAll, setConfirmDeleteAll] = useState(false);
+
+  // Timeout refs for cleanup on unmount
+  const completeTimeoutRef = useRef<NodeJS.Timeout>();
+  const messageTimeoutRef = useRef<NodeJS.Timeout>();
+
+  // Cleanup timeouts on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      if (completeTimeoutRef.current) clearTimeout(completeTimeoutRef.current);
+      if (messageTimeoutRef.current) clearTimeout(messageTimeoutRef.current);
+    };
+  }, []);
 
   const slots = GameStore.getSaveSlots();
 
@@ -70,12 +87,12 @@ export const SaveLoadScreen: React.FC<SaveLoadScreenProps> = ({
     const items: MenuItem[] = [];
 
     // Delete mode - show delete options
-    if (internalMode === 'delete') {
+    if (internalMode === "delete") {
       // Add "Delete All" option if there are saves
-      if (slots.filter(s => s.slot >= 1 && s.slot <= 3).length > 0) {
+      if (slots.filter((s) => s.slot >= 1 && s.slot <= 3).length > 0) {
         items.push({
-          label: '⚠️  Delete ALL Saves (permanent!)',
-          value: 'delete-all',
+          label: "⚠️  Delete ALL Saves (permanent!)",
+          value: "delete-all",
         });
       }
 
@@ -90,18 +107,18 @@ export const SaveLoadScreen: React.FC<SaveLoadScreenProps> = ({
         }
       }
 
-      items.push({ label: 'Back', value: 'back' });
+      items.push({ label: "Back", value: "back" });
       return items;
     }
 
     // Normal mode
     // Add auto-save option for load mode only (not deletable from main menu)
-    if (mode === 'load' && internalMode === 'normal') {
+    if (mode === "load" && internalMode === "normal") {
       const autoSave = slots.find((s) => s.slot === 0);
       if (autoSave) {
         items.push({
           label: `[Auto] ${autoSave.chapter} - ${formatDate(autoSave.savedAt)}`,
-          value: 'auto',
+          value: "auto",
         });
       }
     }
@@ -114,7 +131,7 @@ export const SaveLoadScreen: React.FC<SaveLoadScreenProps> = ({
           label: `Slot ${i}: ${slot.name} - ${slot.chapter} (${formatPlaytime(slot.playtime)})`,
           value: `slot-${i}`,
         });
-      } else if (mode === 'save') {
+      } else if (mode === "save") {
         items.push({
           label: `Slot ${i}: [Empty]`,
           value: `slot-${i}`,
@@ -123,57 +140,60 @@ export const SaveLoadScreen: React.FC<SaveLoadScreenProps> = ({
     }
 
     // Add delete option for load mode
-    if (mode === 'load' && slots.filter(s => s.slot >= 1 && s.slot <= 3).length > 0) {
-      items.push({ label: 'Delete Save', value: 'delete-mode' });
+    if (
+      mode === "load" &&
+      slots.filter((s) => s.slot >= 1 && s.slot <= 3).length > 0
+    ) {
+      items.push({ label: "Delete Save", value: "delete-mode" });
     }
 
     // Add back option
-    items.push({ label: 'Back', value: 'back' });
+    items.push({ label: "Back", value: "back" });
 
     return items;
   };
 
   const handleSelect = useCallback(
     (item: MenuItem) => {
-      if (item.value === 'back') {
-        if (internalMode === 'delete') {
-          setInternalMode('normal');
+      if (item.value === "back") {
+        if (internalMode === "delete") {
+          setInternalMode("normal");
         } else {
           onBack();
         }
         return;
       }
 
-      if (item.value === 'delete-mode') {
-        setInternalMode('delete');
+      if (item.value === "delete-mode") {
+        setInternalMode("delete");
         return;
       }
 
-      if (item.value === 'delete-all') {
+      if (item.value === "delete-all") {
         setConfirmDeleteAll(true);
         return;
       }
 
-      if (item.value === 'auto') {
+      if (item.value === "auto") {
         // Load auto-save
         const result = GameStore.loadAutoSave();
         if (result.success) {
-          setMessage('Auto-save loaded!');
-          setMessageType('success');
-          setTimeout(onComplete, 1000);
+          setMessage("Auto-save loaded!");
+          setMessageType("success");
+          completeTimeoutRef.current = setTimeout(onComplete, 1000);
         } else {
-          setMessage(result.error || 'Failed to load');
-          setMessageType('error');
+          setMessage(result.error || "Failed to load");
+          setMessageType("error");
         }
         return;
       }
 
       // Parse slot number
-      const slotNum = parseInt(item.value.replace('slot-', ''), 10);
+      const slotNum = parseInt(item.value.replace("slot-", ""), 10);
 
-      if (internalMode === 'delete') {
+      if (internalMode === "delete") {
         setConfirmSlot(slotNum);
-      } else if (mode === 'save') {
+      } else if (mode === "save") {
         // Check if slot has existing save
         const existing = slots.find((s) => s.slot === slotNum);
         if (existing) {
@@ -185,18 +205,19 @@ export const SaveLoadScreen: React.FC<SaveLoadScreenProps> = ({
         performLoad(slotNum);
       }
     },
-    [mode, internalMode, slots, onBack, onComplete]
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- performLoad/performSave are stable
+    [mode, internalMode, slots, onBack, onComplete],
   );
 
   const performSave = (slot: number) => {
     const result = GameStore.saveToSlot(slot);
     if (result.success) {
       setMessage(`Saved to Slot ${slot}!`);
-      setMessageType('success');
-      setTimeout(onComplete, 1000);
+      setMessageType("success");
+      completeTimeoutRef.current = setTimeout(onComplete, 1000);
     } else {
-      setMessage(result.error || 'Failed to save');
-      setMessageType('error');
+      setMessage(result.error || "Failed to save");
+      setMessageType("error");
     }
     setConfirmSlot(null);
   };
@@ -205,11 +226,11 @@ export const SaveLoadScreen: React.FC<SaveLoadScreenProps> = ({
     const result = GameStore.loadFromSlot(slot);
     if (result.success) {
       setMessage(`Loaded from Slot ${slot}!`);
-      setMessageType('success');
-      setTimeout(onComplete, 1000);
+      setMessageType("success");
+      completeTimeoutRef.current = setTimeout(onComplete, 1000);
     } else {
-      setMessage(result.error || 'Failed to load');
-      setMessageType('error');
+      setMessage(result.error || "Failed to load");
+      setMessageType("error");
     }
   };
 
@@ -217,15 +238,15 @@ export const SaveLoadScreen: React.FC<SaveLoadScreenProps> = ({
     const result = GameStore.deleteSlot(slot);
     if (result.success) {
       setMessage(`Deleted Slot ${slot}!`);
-      setMessageType('success');
-      setTimeout(() => {
+      setMessageType("success");
+      messageTimeoutRef.current = setTimeout(() => {
         setMessage(null);
-        setInternalMode('normal');
+        setInternalMode("normal");
       }, 1500);
     } else {
-      setMessage(result.error || 'Failed to delete');
-      setMessageType('error');
-      setTimeout(() => setMessage(null), 2000);
+      setMessage(result.error || "Failed to delete");
+      setMessageType("error");
+      messageTimeoutRef.current = setTimeout(() => setMessage(null), 2000);
     }
     setConfirmSlot(null);
   };
@@ -240,46 +261,50 @@ export const SaveLoadScreen: React.FC<SaveLoadScreenProps> = ({
     }
 
     if (allSuccess) {
-      setMessage('All saves deleted!');
-      setMessageType('success');
-      setTimeout(() => {
+      setMessage("All saves deleted!");
+      setMessageType("success");
+      messageTimeoutRef.current = setTimeout(() => {
         setMessage(null);
-        setInternalMode('normal');
+        setInternalMode("normal");
       }, 1500);
     } else {
-      setMessage('Some saves could not be deleted');
-      setMessageType('error');
-      setTimeout(() => setMessage(null), 2000);
+      setMessage("Some saves could not be deleted");
+      setMessageType("error");
+      messageTimeoutRef.current = setTimeout(() => setMessage(null), 2000);
     }
     setConfirmDeleteAll(false);
   };
 
   // Handle confirmation selections
   const handleDeleteAllConfirm = useCallback((item: MenuItem) => {
-    if (item.value === 'yes') {
+    if (item.value === "yes") {
       performDeleteAll();
     } else {
       setConfirmDeleteAll(false);
     }
   }, []);
 
-  const handleSlotConfirm = useCallback((item: MenuItem) => {
-    if (item.value === 'yes') {
-      if (internalMode === 'delete') {
-        performDelete(confirmSlot!);
+  const handleSlotConfirm = useCallback(
+    (item: MenuItem) => {
+      if (item.value === "yes") {
+        if (internalMode === "delete") {
+          performDelete(confirmSlot!);
+        } else {
+          performSave(confirmSlot!);
+        }
       } else {
-        performSave(confirmSlot!);
+        setConfirmSlot(null);
       }
-    } else {
-      setConfirmSlot(null);
-    }
-  }, [internalMode, confirmSlot]);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- performSave/performDelete are stable
+    [internalMode, confirmSlot],
+  );
 
   // Delete all confirmation
   if (confirmDeleteAll) {
     const confirmItems: MenuItem[] = [
-      { label: 'Yes, Delete All', value: 'yes' },
-      { label: 'No, Cancel', value: 'no' },
+      { label: "Yes, Delete All", value: "yes" },
+      { label: "No, Cancel", value: "no" },
     ];
     return (
       <ConfirmationBox
@@ -295,14 +320,14 @@ export const SaveLoadScreen: React.FC<SaveLoadScreenProps> = ({
   // Slot confirmation dialog
   if (confirmSlot !== null) {
     const confirmItems: MenuItem[] = [
-      { label: 'Yes, Confirm', value: 'yes' },
-      { label: 'No, Cancel', value: 'no' },
+      { label: "Yes, Confirm", value: "yes" },
+      { label: "No, Cancel", value: "no" },
     ];
     return (
       <ConfirmationBox
-        title={internalMode === 'delete' ? '⚠ DELETE SAVE?' : 'OVERWRITE SAVE?'}
+        title={internalMode === "delete" ? "⚠ DELETE SAVE?" : "OVERWRITE SAVE?"}
         message={
-          internalMode === 'delete'
+          internalMode === "delete"
             ? `Permanently delete Slot ${confirmSlot}? This cannot be undone.`
             : `Slot ${confirmSlot} already has a save. Overwrite it?`
         }
@@ -320,13 +345,19 @@ export const SaveLoadScreen: React.FC<SaveLoadScreenProps> = ({
 
   const menuItems = buildMenuItems();
 
-  const icon = internalMode === 'delete' ? '🗑' : mode === 'save' ? '💾' : '📂';
-  const title = internalMode === 'delete' ? 'DELETE SAVE' : mode === 'save' ? 'SAVE GAME' : 'LOAD GAME';
-  const subtitle = internalMode === 'delete'
-    ? 'Select a save to delete'
-    : mode === 'save'
-    ? 'Select a slot to save your progress'
-    : 'Select a save to load';
+  const icon = internalMode === "delete" ? "🗑" : mode === "save" ? "💾" : "📂";
+  const title =
+    internalMode === "delete"
+      ? "DELETE SAVE"
+      : mode === "save"
+        ? "SAVE GAME"
+        : "LOAD GAME";
+  const subtitle =
+    internalMode === "delete"
+      ? "Select a save to delete"
+      : mode === "save"
+        ? "Select a slot to save your progress"
+        : "Select a save to load";
 
   return (
     <CenteredScreen>
@@ -338,7 +369,7 @@ export const SaveLoadScreen: React.FC<SaveLoadScreenProps> = ({
       >
         <SelectMenu items={menuItems} onSelect={handleSelect} />
 
-        {mode === 'load' && slots.length === 0 && (
+        {mode === "load" && slots.length === 0 && (
           <Box marginTop={1}>
             <Text color="gray">No saves found.</Text>
           </Box>

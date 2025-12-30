@@ -3,9 +3,9 @@
  * Central state management for the game
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
-import * as os from 'os';
+import * as fs from "fs";
+import * as path from "path";
+import * as os from "os";
 
 import type {
   GameState,
@@ -16,9 +16,8 @@ import type {
   SaveData,
   Character,
   Inventory,
-  NPCRelationship,
   GameSettings,
-} from '../../types/index';
+} from "../../types/index";
 
 import {
   DEFAULT_STORY_PROGRESS,
@@ -26,10 +25,10 @@ import {
   DEFAULT_STATS,
   DEFAULT_SETTINGS,
   generateChecksum,
-} from '../../types/game';
+} from "../../types/game";
 
-import { createInventory } from '../../types/item';
-import { SaveManager, SaveSlot } from './SaveManager';
+import { createInventory } from "../../types/item";
+import { SaveManager, SaveSlot } from "./SaveManager";
 
 // =============================================================================
 // GAME STORE
@@ -40,7 +39,11 @@ import { SaveManager, SaveSlot } from './SaveManager';
  * Manages all persistent game data
  */
 class GameStoreClass {
-  private static readonly SETTINGS_PATH = path.join(os.homedir(), '.beggars-sect', 'settings.json');
+  private static readonly SETTINGS_PATH = path.join(
+    os.homedir(),
+    ".beggars-sect",
+    "settings.json",
+  );
 
   private state: GameState | null = null;
   private settings: GameSettings = { ...DEFAULT_SETTINGS };
@@ -60,7 +63,7 @@ class GameStoreClass {
   private loadSettings(): void {
     try {
       if (fs.existsSync(GameStoreClass.SETTINGS_PATH)) {
-        const data = fs.readFileSync(GameStoreClass.SETTINGS_PATH, 'utf-8');
+        const data = fs.readFileSync(GameStoreClass.SETTINGS_PATH, "utf-8");
         const loadedSettings = JSON.parse(data) as GameSettings;
         this.settings = { ...DEFAULT_SETTINGS, ...loadedSettings };
       }
@@ -78,7 +81,11 @@ class GameStoreClass {
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
       }
-      fs.writeFileSync(GameStoreClass.SETTINGS_PATH, JSON.stringify(this.settings, null, 2), 'utf-8');
+      fs.writeFileSync(
+        GameStoreClass.SETTINGS_PATH,
+        JSON.stringify(this.settings, null, 2),
+        "utf-8",
+      );
     } catch (error) {
       // Silent fail
     }
@@ -91,10 +98,13 @@ class GameStoreClass {
   /**
    * Initialize new game with player character
    */
-  initializeNewGame(player: Character, difficulty: 'easy' | 'medium' | 'hard' | 'hell' = 'medium'): void {
+  initializeNewGame(
+    player: Character,
+    difficulty: "easy" | "medium" | "hard" | "hell" = "medium",
+  ): void {
     this.state = {
       // Meta
-      version: '1.0.0',
+      version: "1.0.0",
       saveSlot: 0,
       createdAt: Date.now(),
       updatedAt: Date.now(),
@@ -108,12 +118,12 @@ class GameStoreClass {
 
       // Progression
       storyProgress: { ...DEFAULT_STORY_PROGRESS },
-      currentLocation: 'lower-streets-alley',
+      currentLocation: "lower-streets-alley",
 
       // Unlocks
       discoveredTechniques: [...player.techniques],
       discoveredCombos: [],
-      discoveredLocations: ['lower-streets-alley'],
+      discoveredLocations: ["lower-streets-alley"],
 
       // Relationships
       npcRelationships: [],
@@ -144,7 +154,7 @@ class GameStoreClass {
    */
   getState(): GameState {
     if (!this.state) {
-      throw new Error('Game not initialized. Call initializeNewGame() first.');
+      throw new Error("Game not initialized. Call initializeNewGame() first.");
     }
     return this.state;
   }
@@ -381,8 +391,8 @@ class GameStoreClass {
    * Increment a stat
    */
   incrementStat(
-    key: keyof Omit<GameStats, 'enemyTypesDefeated'>,
-    amount: number = 1
+    key: keyof Omit<GameStats, "enemyTypesDefeated">,
+    amount: number = 1,
   ): void {
     const state = this.getState();
     (state.stats[key] as number) += amount;
@@ -440,13 +450,13 @@ class GameStoreClass {
    */
   updateNpcRelationship(npcId: string, affinityChange: number): void {
     const state = this.getState();
-    let relationship = state.npcRelationships.find(r => r.npcId === npcId);
+    let relationship = state.npcRelationships.find((r) => r.npcId === npcId);
 
     if (!relationship) {
       relationship = {
         npcId,
         affinity: 0,
-        dialogueState: 'initial',
+        dialogueState: "initial",
         questsCompleted: [],
         flags: {},
       };
@@ -455,7 +465,7 @@ class GameStoreClass {
 
     relationship.affinity = Math.max(
       -100,
-      Math.min(100, relationship.affinity + affinityChange)
+      Math.min(100, relationship.affinity + affinityChange),
     );
 
     state.updatedAt = Date.now();
@@ -483,10 +493,13 @@ class GameStoreClass {
     // Also update simplified storyProgress for UI display
     state.storyProgress.scene = storyState.currentScene;
     state.storyProgress.completedScenes = storyState.completedScenes;
-    state.storyProgress.choices = storyState.choiceHistory.reduce((acc, ch) => {
-      acc[ch.sceneId] = ch.choiceId;
-      return acc;
-    }, {} as Record<string, string>);
+    state.storyProgress.choices = storyState.choiceHistory.reduce(
+      (acc, ch) => {
+        acc[ch.sceneId] = ch.choiceId;
+        return acc;
+      },
+      {} as Record<string, string>,
+    );
 
     state.updatedAt = Date.now();
     this.notifyListeners();
@@ -518,14 +531,17 @@ class GameStoreClass {
       // Validate checksum
       const expectedChecksum = generateChecksum(saveData.state);
       if (saveData.checksum !== expectedChecksum) {
-        return { success: false, error: 'Save file corrupted (checksum mismatch)' };
+        return {
+          success: false,
+          error: "Save file corrupted (checksum mismatch)",
+        };
       }
 
       this.state = saveData.state;
       this.notifyListeners();
       return { success: true };
     } catch (e) {
-      return { success: false, error: 'Invalid save data format' };
+      return { success: false, error: "Invalid save data format" };
     }
   }
 
@@ -544,13 +560,16 @@ class GameStoreClass {
   /**
    * Save game to a file slot
    */
-  saveToSlot(slot: number, name?: string): { success: boolean; error?: string } {
+  saveToSlot(
+    slot: number,
+    name?: string,
+  ): { success: boolean; error?: string } {
     if (!this.state) {
-      return { success: false, error: 'No game in progress' };
+      return { success: false, error: "No game in progress" };
     }
 
     const data = this.save();
-    const meta: Omit<SaveSlot, 'slot'> = {
+    const meta: Omit<SaveSlot, "slot"> = {
       name: name || `Save ${slot}`,
       chapter: `Chapter ${this.state.storyProgress.chapter}`,
       scene: this.state.storyProgress.scene,
@@ -567,7 +586,7 @@ class GameStoreClass {
   loadFromSlot(slot: number): { success: boolean; error?: string } {
     const result = SaveManager.load(slot);
     if (!result.success || !result.data) {
-      return { success: false, error: result.error || 'Failed to load' };
+      return { success: false, error: result.error || "Failed to load" };
     }
 
     return this.load(result.data);
@@ -578,11 +597,11 @@ class GameStoreClass {
    */
   autoSave(): { success: boolean; error?: string } {
     if (!this.state) {
-      return { success: false, error: 'No game in progress' };
+      return { success: false, error: "No game in progress" };
     }
 
     const data = this.save();
-    const meta: Omit<SaveSlot, 'slot' | 'name'> = {
+    const meta: Omit<SaveSlot, "slot" | "name"> = {
       chapter: `Chapter ${this.state.storyProgress.chapter}`,
       scene: this.state.storyProgress.scene,
       playtime: this.state.stats.playTime,
@@ -598,7 +617,7 @@ class GameStoreClass {
   loadAutoSave(): { success: boolean; error?: string } {
     const result = SaveManager.loadAutoSave();
     if (!result.success || !result.data) {
-      return { success: false, error: result.error || 'No auto-save found' };
+      return { success: false, error: result.error || "No auto-save found" };
     }
 
     return this.load(result.data);
@@ -641,7 +660,7 @@ class GameStoreClass {
    * Notify all listeners of state change
    */
   private notifyListeners(): void {
-    this.listeners.forEach(listener => listener());
+    this.listeners.forEach((listener) => listener());
   }
 }
 

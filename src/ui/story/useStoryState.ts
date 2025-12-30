@@ -11,17 +11,17 @@
  * by encapsulating related state into logical groups.
  */
 
-import { useState, useCallback } from 'react';
-import { useStateWithRef } from '../hooks/useStateWithRef';
-import type { ContentLine, Choice } from '../../types/index';
+import { useCallback } from "react";
+import { useStateWithRef } from "../hooks/useStateWithRef";
+import type { ContentLine, Choice } from "../../types/index";
 
 export type StoryPhase =
-  | 'content'
-  | 'choice'
-  | 'exploration'
-  | 'chapter-end'
-  | 'game-end'
-  | 'combat';
+  | "content"
+  | "choice"
+  | "exploration"
+  | "chapter-end"
+  | "game-end"
+  | "combat";
 
 export interface StoryUIState {
   phase: StoryPhase;
@@ -63,7 +63,7 @@ export interface UseStoryStateReturn {
 }
 
 const INITIAL_STATE: StoryUIState = {
-  phase: 'content',
+  phase: "content",
   content: [],
   contentIndex: 0,
   isTyping: false,
@@ -100,7 +100,8 @@ const INITIAL_STATE: StoryUIState = {
  * ```
  */
 export function useStoryState(): UseStoryStateReturn {
-  const [state, setState, stateRef] = useStateWithRef<StoryUIState>(INITIAL_STATE);
+  const [state, setState, stateRef] =
+    useStateWithRef<StoryUIState>(INITIAL_STATE);
 
   /**
    * Set the current story phase
@@ -109,7 +110,7 @@ export function useStoryState(): UseStoryStateReturn {
     (phase: StoryPhase) => {
       setState((prev: StoryUIState) => ({ ...prev, phase }));
     },
-    [setState]
+    [setState],
   );
 
   /**
@@ -123,7 +124,7 @@ export function useStoryState(): UseStoryStateReturn {
         contentIndex: 0, // Reset index when content changes
       }));
     },
-    [setState]
+    [setState],
   );
 
   /**
@@ -133,10 +134,11 @@ export function useStoryState(): UseStoryStateReturn {
     (index: number | ((prev: number) => number)) => {
       setState((prev: StoryUIState) => ({
         ...prev,
-        contentIndex: typeof index === 'function' ? index(prev.contentIndex) : index,
+        contentIndex:
+          typeof index === "function" ? index(prev.contentIndex) : index,
       }));
     },
-    [setState]
+    [setState],
   );
 
   /**
@@ -169,7 +171,7 @@ export function useStoryState(): UseStoryStateReturn {
     (typing: boolean) => {
       setState((prev: StoryUIState) => ({ ...prev, isTyping: typing }));
     },
-    [setState]
+    [setState],
   );
 
   /**
@@ -179,7 +181,7 @@ export function useStoryState(): UseStoryStateReturn {
     (paused: boolean) => {
       setState((prev: StoryUIState) => ({ ...prev, isPaused: paused }));
     },
-    [setState]
+    [setState],
   );
 
   /**
@@ -190,10 +192,10 @@ export function useStoryState(): UseStoryStateReturn {
       setState((prev: StoryUIState) => ({
         ...prev,
         choices,
-        phase: 'choice', // Auto-transition to choice phase
+        phase: "choice", // Auto-transition to choice phase
       }));
     },
-    [setState]
+    [setState],
   );
 
   /**
@@ -210,7 +212,7 @@ export function useStoryState(): UseStoryStateReturn {
     (canAdvance: boolean) => {
       setState((prev: StoryUIState) => ({ ...prev, canAdvance }));
     },
-    [setState]
+    [setState],
   );
 
   /**

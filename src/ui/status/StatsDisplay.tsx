@@ -3,9 +3,9 @@
  * Shows player character stats
  */
 
-import React from 'react';
-import { Box, Text } from 'ink';
-import type { Character } from '../../types/index';
+import React from "react";
+import { Box, Text } from "ink";
+import type { Character } from "../../types/index";
 
 interface StatsDisplayProps {
   player: Character;
@@ -17,11 +17,11 @@ interface StatInfo {
 }
 
 const STAT_INFO: Record<string, StatInfo> = {
-  str: { label: 'Strength', color: 'red' },
-  end: { label: 'Endurance', color: 'green' },
-  dex: { label: 'Dexterity', color: 'yellow' },
-  wis: { label: 'Wisdom', color: 'cyan' },
-  chi: { label: 'Chi', color: 'magenta' },
+  str: { label: "Strength", color: "red" },
+  end: { label: "Endurance", color: "green" },
+  dex: { label: "Dexterity", color: "yellow" },
+  wis: { label: "Wisdom", color: "cyan" },
+  chi: { label: "Chi", color: "magenta" },
 };
 
 export const StatsDisplay: React.FC<StatsDisplayProps> = ({ player }) => {
@@ -30,7 +30,9 @@ export const StatsDisplay: React.FC<StatsDisplayProps> = ({ player }) => {
   return (
     <Box flexDirection="column">
       <Box marginBottom={1}>
-        <Text bold color="yellow">力 ATTRIBUTES</Text>
+        <Text bold color="yellow">
+          力 ATTRIBUTES
+        </Text>
       </Box>
 
       <Box flexDirection="column">
@@ -42,7 +44,14 @@ export const StatsDisplay: React.FC<StatsDisplayProps> = ({ player }) => {
         </Box>
 
         {/* Health and Chi */}
-        <Box marginBottom={1} flexDirection="column" borderStyle="round" borderColor="gray" paddingX={2} paddingY={1}>
+        <Box
+          marginBottom={1}
+          flexDirection="column"
+          borderStyle="round"
+          borderColor="gray"
+          paddingX={2}
+          paddingY={1}
+        >
           <Box>
             <Text color="red">❤ Health: </Text>
             <Text bold>
@@ -58,7 +67,13 @@ export const StatsDisplay: React.FC<StatsDisplayProps> = ({ player }) => {
         </Box>
 
         {/* Stats Grid */}
-        <Box borderStyle="single" borderColor="gray" paddingX={1} paddingY={1} flexDirection="column">
+        <Box
+          borderStyle="single"
+          borderColor="gray"
+          paddingX={1}
+          paddingY={1}
+          flexDirection="column"
+        >
           {statKeys.map((key) => {
             const stat = STAT_INFO[key];
             if (!stat) return null;
@@ -66,6 +81,7 @@ export const StatsDisplay: React.FC<StatsDisplayProps> = ({ player }) => {
 
             return (
               <Box key={key}>
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any -- ink color type is stricter than our dynamic colors */}
                 <Text color={stat.color as any} dimColor>
                   {stat.label.padEnd(12)}
                 </Text>

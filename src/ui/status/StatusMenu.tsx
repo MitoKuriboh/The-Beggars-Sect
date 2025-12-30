@@ -4,17 +4,16 @@
  * Can be triggered in-scene with keyboard shortcut
  */
 
-import React, { useState } from 'react';
-import { Box, Text, useInput } from 'ink';
-import type { Character, StoryState } from '../../types/index';
-import { PathDisplay } from './PathDisplay';
-import { StatsDisplay } from './StatsDisplay';
-import { RelationshipsDisplay } from './RelationshipsDisplay';
-import { AspectLoadoutDisplay } from './AspectLoadoutDisplay';
-import { SaveLoadTab } from './SaveLoadTab';
-import { CenteredScreen, useTerminalHeight } from '../components/PolishedBox';
-import { Header } from '../components/Decorative';
-import { SEMANTIC_DIVIDERS } from '../theme/dividers';
+import React, { useState } from "react";
+import { Box, Text, useInput } from "ink";
+import type { Character, StoryState } from "../../types/index";
+import { PathDisplay } from "./PathDisplay";
+import { StatsDisplay } from "./StatsDisplay";
+import { RelationshipsDisplay } from "./RelationshipsDisplay";
+import { AspectLoadoutDisplay } from "./AspectLoadoutDisplay";
+import { SaveLoadTab } from "./SaveLoadTab";
+import { useTerminalHeight } from "../components/PolishedBox";
+import { SEMANTIC_DIVIDERS } from "../theme/dividers";
 
 interface StatusMenuProps {
   player: Character;
@@ -24,7 +23,13 @@ interface StatusMenuProps {
   onQuitToMenu?: () => void;
 }
 
-type TabKey = 'stats' | 'paths' | 'aspects' | 'relationships' | 'progress' | 'saveload';
+type TabKey =
+  | "stats"
+  | "paths"
+  | "aspects"
+  | "relationships"
+  | "progress"
+  | "saveload";
 
 interface Tab {
   key: TabKey;
@@ -33,17 +38,23 @@ interface Tab {
 }
 
 const TABS: Tab[] = [
-  { key: 'stats', label: 'Stats', shortcut: '1' },
-  { key: 'paths', label: 'Paths', shortcut: '2' },
-  { key: 'aspects', label: 'Aspects', shortcut: '3' },
-  { key: 'relationships', label: 'Relationships', shortcut: '4' },
-  { key: 'progress', label: 'Progress', shortcut: '5' },
-  { key: 'saveload', label: 'Save/Load', shortcut: '6' },
+  { key: "stats", label: "Stats", shortcut: "1" },
+  { key: "paths", label: "Paths", shortcut: "2" },
+  { key: "aspects", label: "Aspects", shortcut: "3" },
+  { key: "relationships", label: "Relationships", shortcut: "4" },
+  { key: "progress", label: "Progress", shortcut: "5" },
+  { key: "saveload", label: "Save/Load", shortcut: "6" },
 ];
 
-export const StatusMenu: React.FC<StatusMenuProps> = ({ player, storyState, onClose, onSaveLoad, onQuitToMenu }) => {
-  const [activeTab, setActiveTab] = useState<TabKey>('paths');
-  const terminalHeight = useTerminalHeight();
+export const StatusMenu: React.FC<StatusMenuProps> = ({
+  player,
+  storyState,
+  onClose,
+  onSaveLoad,
+  onQuitToMenu,
+}) => {
+  const [activeTab, setActiveTab] = useState<TabKey>("paths");
+  const _terminalHeight = useTerminalHeight();
 
   const handleSaveLoadComplete = () => {
     onSaveLoad?.();
@@ -63,18 +74,25 @@ export const StatusMenu: React.FC<StatusMenuProps> = ({ player, storyState, onCl
 
     // Tab navigation with left/right arrows
     if (key.leftArrow) {
-      const currentIndex = TABS.findIndex(t => t.key === activeTab);
+      const currentIndex = TABS.findIndex((t) => t.key === activeTab);
       const prevIndex = currentIndex > 0 ? currentIndex - 1 : TABS.length - 1;
       setActiveTab(TABS[prevIndex]!.key);
     } else if (key.rightArrow) {
-      const currentIndex = TABS.findIndex(t => t.key === activeTab);
+      const currentIndex = TABS.findIndex((t) => t.key === activeTab);
       const nextIndex = currentIndex < TABS.length - 1 ? currentIndex + 1 : 0;
       setActiveTab(TABS[nextIndex]!.key);
     }
   });
 
   return (
-    <Box flexDirection="column" borderStyle="double" borderColor="yellow" paddingX={2} paddingY={0} width={74}>
+    <Box
+      flexDirection="column"
+      borderStyle="double"
+      borderColor="yellow"
+      paddingX={2}
+      paddingY={0}
+      width={74}
+    >
       {/* Header */}
       <Box marginY={1} justifyContent="center">
         <Text bold color="yellow">
@@ -84,7 +102,9 @@ export const StatusMenu: React.FC<StatusMenuProps> = ({ player, storyState, onCl
 
       {/* Divider */}
       <Box justifyContent="center">
-        <Text color="yellow" dimColor>{SEMANTIC_DIVIDERS.status}</Text>
+        <Text color="yellow" dimColor>
+          {SEMANTIC_DIVIDERS.status}
+        </Text>
       </Box>
 
       {/* Tab Navigation */}
@@ -93,7 +113,7 @@ export const StatusMenu: React.FC<StatusMenuProps> = ({ player, storyState, onCl
           <Text
             key={tab.key}
             bold={activeTab === tab.key}
-            color={activeTab === tab.key ? 'cyan' : 'white'}
+            color={activeTab === tab.key ? "cyan" : "white"}
             dimColor={activeTab === tab.key ? false : true}
           >
             {tab.label}
@@ -103,28 +123,31 @@ export const StatusMenu: React.FC<StatusMenuProps> = ({ player, storyState, onCl
 
       {/* Divider */}
       <Box justifyContent="center">
-        <Text color="yellow" dimColor>{SEMANTIC_DIVIDERS.status}</Text>
+        <Text color="yellow" dimColor>
+          {SEMANTIC_DIVIDERS.status}
+        </Text>
       </Box>
 
       {/* Tab Content */}
-      <Box
-        minHeight={22}
-        paddingX={1}
-        paddingY={1}
-        flexDirection="column"
-      >
-        {activeTab === 'stats' && <StatsDisplay player={player} />}
-        {activeTab === 'paths' && <PathDisplay pathScores={storyState.pathPercentages} />}
-        {activeTab === 'aspects' && (
+      <Box minHeight={22} paddingX={1} paddingY={1} flexDirection="column">
+        {activeTab === "stats" && <StatsDisplay player={player} />}
+        {activeTab === "paths" && (
+          <PathDisplay pathScores={storyState.pathPercentages} />
+        )}
+        {activeTab === "aspects" && (
           <AspectLoadoutDisplay
             player={player}
-            currentChapter={parseInt(storyState.currentChapter.replace('prologue', '0').replace('chapter-', ''))}
+            currentChapter={parseInt(
+              storyState.currentChapter
+                .replace("prologue", "0")
+                .replace("chapter-", ""),
+            )}
           />
         )}
-        {activeTab === 'relationships' && (
+        {activeTab === "relationships" && (
           <RelationshipsDisplay relationships={storyState.relationships} />
         )}
-        {activeTab === 'progress' && (
+        {activeTab === "progress" && (
           <Box flexDirection="column">
             <Box marginBottom={1} justifyContent="center">
               <Text bold color="cyan">
@@ -134,7 +157,9 @@ export const StatusMenu: React.FC<StatusMenuProps> = ({ player, storyState, onCl
             <Box flexDirection="column" paddingX={2}>
               <Box marginBottom={1}>
                 <Text dimColor>Chapter: </Text>
-                <Text color="cyan" bold>{storyState.currentChapter.toUpperCase()}</Text>
+                <Text color="cyan" bold>
+                  {storyState.currentChapter.toUpperCase()}
+                </Text>
               </Box>
               <Box marginBottom={1}>
                 <Text dimColor>Scenes: </Text>
@@ -159,7 +184,7 @@ export const StatusMenu: React.FC<StatusMenuProps> = ({ player, storyState, onCl
             </Box>
           </Box>
         )}
-        {activeTab === 'saveload' && (
+        {activeTab === "saveload" && (
           <SaveLoadTab
             onSaveComplete={handleSaveLoadComplete}
             onLoadComplete={handleSaveLoadComplete}
@@ -170,12 +195,16 @@ export const StatusMenu: React.FC<StatusMenuProps> = ({ player, storyState, onCl
 
       {/* Divider */}
       <Box justifyContent="center">
-        <Text color="yellow" dimColor>{SEMANTIC_DIVIDERS.status}</Text>
+        <Text color="yellow" dimColor>
+          {SEMANTIC_DIVIDERS.status}
+        </Text>
       </Box>
 
       {/* Footer */}
       <Box marginY={1} justifyContent="center">
-        <Text dimColor italic>← → switch tabs  •  ESC to close</Text>
+        <Text dimColor italic>
+          ← → switch tabs • ESC to close
+        </Text>
       </Box>
     </Box>
   );

@@ -1,13 +1,13 @@
-import { useState, useRef, useCallback, MutableRefObject } from 'react';
+import { useState, useRef, useCallback, MutableRefObject } from "react";
 
 export function useStateWithRef<T>(
-  initialValue: T
+  initialValue: T,
 ): [T, (value: T | ((prev: T) => T)) => void, MutableRefObject<T>] {
   const [state, _setState] = useState<T>(initialValue);
   const stateRef = useRef<T>(initialValue);
 
   const setState = useCallback((value: T | ((prev: T) => T)) => {
-    if (typeof value === 'function') {
+    if (typeof value === "function") {
       _setState((prev) => {
         const newValue = (value as (prev: T) => T)(prev);
         stateRef.current = newValue;
@@ -22,30 +22,17 @@ export function useStateWithRef<T>(
   return [state, setState, stateRef];
 }
 
-export function useMultiStateWithRef<T extends Record<string, any>>(
-  initialStates: T
-): any {
-  const result: any = {};
-
-  Object.keys(initialStates).forEach((key) => {
-    const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
-    const [state, setState, stateRef] = useStateWithRef(initialStates[key]);
-
-    result[key] = state;
-    result[`set${capitalizedKey}`] = setState;
-    result[`${key}Ref`] = stateRef;
-  });
-
-  return result;
-}
+// NOTE: useMultiStateWithRef was removed because calling hooks inside loops
+// violates React's rules of hooks. If you need multiple states with refs,
+// call useStateWithRef separately for each state variable.
 
 export function useBooleanStateWithRef(
-  initialValue: boolean
+  initialValue: boolean,
 ): [
   boolean,
   (value: boolean | ((prev: boolean) => boolean)) => void,
   MutableRefObject<boolean>,
-  () => void
+  () => void,
 ] {
   const [state, setState, stateRef] = useStateWithRef(initialValue);
 

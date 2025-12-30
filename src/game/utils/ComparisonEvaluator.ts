@@ -8,7 +8,7 @@
  * - AIController.ts:113-117
  */
 
-import type { ComparisonOperator } from "./ConditionParser";
+import type { ComparisonOperator } from "./ConditionParser"; // eslint-disable-line @typescript-eslint/no-unused-vars -- Type used in JSDoc
 
 /**
  * Evaluate a comparison between two numeric values

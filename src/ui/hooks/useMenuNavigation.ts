@@ -13,8 +13,9 @@
  * - Support for circular/bounded navigation
  */
 
-import { useState, useCallback } from 'react';
-import { useInput } from 'ink';
+import { useState, useCallback } from "react";
+import { useInput } from "ink";
+import type { KeyEvent } from "../../types/ui";
 
 export interface UseMenuNavigationOptions {
   /** Total number of items in the menu */
@@ -42,7 +43,7 @@ export interface UseMenuNavigationOptions {
   disabled?: boolean;
 
   /** Custom key handler for additional inputs */
-  onCustomKey?: (input: string, key: any) => void;
+  onCustomKey?: (input: string, key: KeyEvent) => void;
 }
 
 export interface UseMenuNavigationReturn {
@@ -69,7 +70,7 @@ export interface UseMenuNavigationReturn {
  * Custom hook for menu keyboard navigation
  */
 export function useMenuNavigation(
-  options: UseMenuNavigationOptions
+  options: UseMenuNavigationOptions,
 ): UseMenuNavigationReturn {
   const {
     itemCount,
@@ -93,7 +94,7 @@ export function useMenuNavigation(
         return Math.max(0, currentIndex - 1);
       }
     },
-    [circular, itemCount]
+    [circular, itemCount],
   );
 
   const defaultDownNavigation = useCallback(
@@ -104,18 +105,18 @@ export function useMenuNavigation(
         return Math.min(itemCount - 1, currentIndex + 1);
       }
     },
-    [circular, itemCount]
+    [circular, itemCount],
   );
 
   const navigateUp = useCallback(() => {
     setSelectedIndex((prev) =>
-      onUpArrow ? onUpArrow(prev) : defaultUpNavigation(prev)
+      onUpArrow ? onUpArrow(prev) : defaultUpNavigation(prev),
     );
   }, [onUpArrow, defaultUpNavigation]);
 
   const navigateDown = useCallback(() => {
     setSelectedIndex((prev) =>
-      onDownArrow ? onDownArrow(prev) : defaultDownNavigation(prev)
+      onDownArrow ? onDownArrow(prev) : defaultDownNavigation(prev),
     );
   }, [onDownArrow, defaultDownNavigation]);
 
@@ -150,7 +151,7 @@ export function useMenuNavigation(
         return;
       }
 
-      if (key.return || input === ' ') {
+      if (key.return || input === " ") {
         selectCurrent();
         return;
       }
@@ -159,7 +160,7 @@ export function useMenuNavigation(
         onCustomKey(input, key);
       }
     },
-    { isActive: !disabled }
+    { isActive: !disabled },
   );
 
   return {
@@ -175,7 +176,7 @@ export function useMenuNavigation(
 export function useSimpleMenuNavigation(
   itemCount: number,
   onSelect: (index: number) => void,
-  onBack?: () => void
+  onBack?: () => void,
 ): number {
   const { selectedIndex } = useMenuNavigation({
     itemCount,

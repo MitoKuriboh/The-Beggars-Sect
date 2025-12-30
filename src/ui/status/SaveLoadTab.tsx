@@ -3,13 +3,13 @@
  * Integrated save/load functionality within the status menu
  */
 
-import React, { useState, useCallback } from 'react';
-import { Box, Text, useInput } from 'ink';
-import SelectInput from 'ink-select-input';
+import React, { useState, useCallback, useRef, useEffect } from "react";
+import { Box, Text } from "ink";
+import SelectInput from "ink-select-input";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const SelectInputComponent = (SelectInput as any).default || SelectInput;
 
-import { GameStore } from '../../game/state/GameStore';
-import type { SaveSlot } from '../../game/state/SaveManager';
+import { GameStore } from "../../game/state/GameStore";
 
 interface SaveLoadTabProps {
   onSaveComplete?: () => void;
@@ -17,7 +17,7 @@ interface SaveLoadTabProps {
   onQuitToMenu?: () => void;
 }
 
-type Mode = 'menu' | 'save' | 'load' | 'delete';
+type Mode = "menu" | "save" | "load" | "delete";
 
 interface MenuItem {
   label: string;
@@ -26,11 +26,11 @@ interface MenuItem {
 
 function formatDate(timestamp: number): string {
   const date = new Date(timestamp);
-  return date.toLocaleString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
+  return date.toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 }
 
@@ -48,23 +48,40 @@ export const SaveLoadTab: React.FC<SaveLoadTabProps> = ({
   onLoadComplete,
   onQuitToMenu,
 }) => {
-  const [mode, setMode] = useState<Mode>('menu');
+  const [mode, setMode] = useState<Mode>("menu");
   const [message, setMessage] = useState<string | null>(null);
-  const [messageType, setMessageType] = useState<'success' | 'error'>('success');
+  const [messageType, setMessageType] = useState<"success" | "error">(
+    "success",
+  );
   const [confirmSlot, setConfirmSlot] = useState<number | null>(null);
   const [confirmQuit, setConfirmQuit] = useState(false);
+
+  // Timeout refs for cleanup on unmount
+  const completeTimeoutRef = useRef<NodeJS.Timeout>();
+  const messageTimeoutRef = useRef<NodeJS.Timeout>();
+
+  // Cleanup timeouts on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      if (completeTimeoutRef.current) clearTimeout(completeTimeoutRef.current);
+      if (messageTimeoutRef.current) clearTimeout(messageTimeoutRef.current);
+    };
+  }, []);
 
   const slots = GameStore.getSaveSlots();
 
   // Build save/load menu items
-  const buildSlotItems = (forSave: boolean, forDelete: boolean = false): MenuItem[] => {
+  const buildSlotItems = (
+    forSave: boolean,
+    forDelete: boolean = false,
+  ): MenuItem[] => {
     const items: MenuItem[] = [];
 
     // Add "Delete All" option for delete mode
     if (forDelete && slots.length > 0) {
       items.push({
-        label: '⚠️  Delete ALL Saves (permanent!)',
-        value: 'delete-all',
+        label: "⚠️  Delete ALL Saves (permanent!)",
+        value: "delete-all",
       });
     }
 
@@ -74,7 +91,7 @@ export const SaveLoadTab: React.FC<SaveLoadTabProps> = ({
       if (autoSave) {
         items.push({
           label: `[Auto] ${autoSave.chapter} - ${formatDate(autoSave.savedAt)}`,
-          value: 'auto',
+          value: "auto",
         });
       }
     }
@@ -95,87 +112,88 @@ export const SaveLoadTab: React.FC<SaveLoadTabProps> = ({
       }
     }
 
-    items.push({ label: 'Back', value: 'back' });
+    items.push({ label: "Back", value: "back" });
     return items;
   };
 
   const handleModeSelect = useCallback((item: MenuItem) => {
-    if (item.value === 'save') {
-      setMode('save');
-    } else if (item.value === 'load') {
-      setMode('load');
-    } else if (item.value === 'delete') {
-      setMode('delete');
-    } else if (item.value === 'quit') {
+    if (item.value === "save") {
+      setMode("save");
+    } else if (item.value === "load") {
+      setMode("load");
+    } else if (item.value === "delete") {
+      setMode("delete");
+    } else if (item.value === "quit") {
       setConfirmQuit(true);
     }
   }, []);
 
   const handleSlotSelect = useCallback(
     (item: MenuItem) => {
-      if (item.value === 'back') {
-        setMode('menu');
+      if (item.value === "back") {
+        setMode("menu");
         setMessage(null);
         return;
       }
 
-      if (item.value === 'delete-all') {
+      if (item.value === "delete-all") {
         // Confirm delete all
         setConfirmSlot(-1); // Use -1 to indicate "delete all"
         return;
       }
 
-      if (item.value === 'auto') {
+      if (item.value === "auto") {
         // Load auto-save
         const result = GameStore.loadAutoSave();
         if (result.success) {
-          setMessage('Auto-save loaded!');
-          setMessageType('success');
-          setTimeout(() => {
+          setMessage("Auto-save loaded!");
+          setMessageType("success");
+          completeTimeoutRef.current = setTimeout(() => {
             onLoadComplete?.();
           }, 1500);
         } else {
-          setMessage(result.error || 'Failed to load');
-          setMessageType('error');
-          setTimeout(() => setMessage(null), 2000);
+          setMessage(result.error || "Failed to load");
+          setMessageType("error");
+          messageTimeoutRef.current = setTimeout(() => setMessage(null), 2000);
         }
         return;
       }
 
       // Parse slot number
-      const slotNum = parseInt(item.value.replace('slot-', ''), 10);
+      const slotNum = parseInt(item.value.replace("slot-", ""), 10);
 
-      if (mode === 'save') {
+      if (mode === "save") {
         const existing = slots.find((s) => s.slot === slotNum);
         if (existing) {
           setConfirmSlot(slotNum);
         } else {
           performSave(slotNum);
         }
-      } else if (mode === 'load') {
+      } else if (mode === "load") {
         performLoad(slotNum);
-      } else if (mode === 'delete') {
+      } else if (mode === "delete") {
         // Confirm delete
         setConfirmSlot(slotNum);
       }
     },
-    [mode, slots, onLoadComplete]
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- performLoad/performSave are stable
+    [mode, slots, onLoadComplete],
   );
 
   const performSave = (slot: number) => {
     const result = GameStore.saveToSlot(slot);
     if (result.success) {
       setMessage(`Saved to Slot ${slot}!`);
-      setMessageType('success');
-      setTimeout(() => {
+      setMessageType("success");
+      completeTimeoutRef.current = setTimeout(() => {
         setMessage(null);
-        setMode('menu');
+        setMode("menu");
         onSaveComplete?.();
       }, 1500);
     } else {
-      setMessage(result.error || 'Failed to save');
-      setMessageType('error');
-      setTimeout(() => setMessage(null), 2000);
+      setMessage(result.error || "Failed to save");
+      setMessageType("error");
+      messageTimeoutRef.current = setTimeout(() => setMessage(null), 2000);
     }
     setConfirmSlot(null);
   };
@@ -184,14 +202,14 @@ export const SaveLoadTab: React.FC<SaveLoadTabProps> = ({
     const result = GameStore.loadFromSlot(slot);
     if (result.success) {
       setMessage(`Loaded from Slot ${slot}!`);
-      setMessageType('success');
-      setTimeout(() => {
+      setMessageType("success");
+      completeTimeoutRef.current = setTimeout(() => {
         onLoadComplete?.();
       }, 1500);
     } else {
-      setMessage(result.error || 'Failed to load');
-      setMessageType('error');
-      setTimeout(() => setMessage(null), 2000);
+      setMessage(result.error || "Failed to load");
+      setMessageType("error");
+      messageTimeoutRef.current = setTimeout(() => setMessage(null), 2000);
     }
   };
 
@@ -199,15 +217,15 @@ export const SaveLoadTab: React.FC<SaveLoadTabProps> = ({
     const result = GameStore.deleteSlot(slot);
     if (result.success) {
       setMessage(`Deleted Slot ${slot}!`);
-      setMessageType('success');
-      setTimeout(() => {
+      setMessageType("success");
+      messageTimeoutRef.current = setTimeout(() => {
         setMessage(null);
-        setMode('menu');
+        setMode("menu");
       }, 1500);
     } else {
-      setMessage(result.error || 'Failed to delete');
-      setMessageType('error');
-      setTimeout(() => setMessage(null), 2000);
+      setMessage(result.error || "Failed to delete");
+      setMessageType("error");
+      messageTimeoutRef.current = setTimeout(() => setMessage(null), 2000);
     }
     setConfirmSlot(null);
   };
@@ -223,61 +241,71 @@ export const SaveLoadTab: React.FC<SaveLoadTabProps> = ({
     }
 
     if (allSuccess) {
-      setMessage('All saves deleted!');
-      setMessageType('success');
-      setTimeout(() => {
+      setMessage("All saves deleted!");
+      setMessageType("success");
+      messageTimeoutRef.current = setTimeout(() => {
         setMessage(null);
-        setMode('menu');
+        setMode("menu");
       }, 1500);
     } else {
-      setMessage('Some saves could not be deleted');
-      setMessageType('error');
-      setTimeout(() => setMessage(null), 2000);
+      setMessage("Some saves could not be deleted");
+      setMessageType("error");
+      messageTimeoutRef.current = setTimeout(() => setMessage(null), 2000);
     }
     setConfirmSlot(null);
   };
 
   // Handle confirmation selections
-  const handleQuitConfirm = useCallback((item: MenuItem) => {
-    if (item.value === 'yes') {
-      onQuitToMenu?.();
-    } else {
-      setConfirmQuit(false);
-    }
-  }, [onQuitToMenu]);
-
-  const handleSlotConfirm = useCallback((item: MenuItem) => {
-    if (item.value === 'yes') {
-      if (confirmSlot === -1) {
-        performDeleteAll();
-      } else if (confirmSlot !== null) {
-        if (mode === 'delete') {
-          performDelete(confirmSlot);
-        } else {
-          performSave(confirmSlot);
-        }
+  const handleQuitConfirm = useCallback(
+    (item: MenuItem) => {
+      if (item.value === "yes") {
+        onQuitToMenu?.();
+      } else {
+        setConfirmQuit(false);
       }
-    } else {
-      setConfirmSlot(null);
-    }
-  }, [confirmSlot, mode]);
+    },
+    [onQuitToMenu],
+  );
+
+  const handleSlotConfirm = useCallback(
+    (item: MenuItem) => {
+      if (item.value === "yes") {
+        if (confirmSlot === -1) {
+          performDeleteAll();
+        } else if (confirmSlot !== null) {
+          if (mode === "delete") {
+            performDelete(confirmSlot);
+          } else {
+            performSave(confirmSlot);
+          }
+        }
+      } else {
+        setConfirmSlot(null);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- performSave/performDelete are stable
+    [confirmSlot, mode],
+  );
 
   // Quit confirmation dialog
   if (confirmQuit) {
     const confirmItems: MenuItem[] = [
-      { label: 'Yes, Quit to Menu', value: 'yes' },
-      { label: 'No, Cancel', value: 'no' },
+      { label: "Yes, Quit to Menu", value: "yes" },
+      { label: "No, Cancel", value: "no" },
     ];
     return (
       <Box flexDirection="column">
         <Text bold color="yellow">
-          ⚠  QUIT TO MAIN MENU?
+          ⚠ QUIT TO MAIN MENU?
         </Text>
         <Box marginTop={1}>
           <Text>Any unsaved progress will be lost!</Text>
         </Box>
         <Box marginTop={1}>
-          <SelectInputComponent items={confirmItems} onSelect={handleQuitConfirm} />
+          <SelectInputComponent
+            items={confirmItems}
+            onSelect={handleQuitConfirm}
+          />
         </Box>
       </Box>
     );
@@ -286,29 +314,32 @@ export const SaveLoadTab: React.FC<SaveLoadTabProps> = ({
   // Slot confirmation dialog
   if (confirmSlot !== null) {
     const confirmItems: MenuItem[] = [
-      { label: 'Yes, Confirm', value: 'yes' },
-      { label: 'No, Cancel', value: 'no' },
+      { label: "Yes, Confirm", value: "yes" },
+      { label: "No, Cancel", value: "no" },
     ];
     return (
       <Box flexDirection="column">
         <Text bold color="yellow">
           {confirmSlot === -1
-            ? '⚠ ⚠ ⚠  DELETE ALL SAVES? ⚠ ⚠ ⚠'
-            : mode === 'delete'
-            ? '⚠ DELETE SAVE?'
-            : '⚠ OVERWRITE SAVE?'}
+            ? "⚠ ⚠ ⚠  DELETE ALL SAVES? ⚠ ⚠ ⚠"
+            : mode === "delete"
+              ? "⚠ DELETE SAVE?"
+              : "⚠ OVERWRITE SAVE?"}
         </Text>
         <Box marginTop={1}>
           <Text>
             {confirmSlot === -1
-              ? 'Permanently delete ALL save files? This CANNOT be undone!'
-              : mode === 'delete'
-              ? `Permanently delete Slot ${confirmSlot}? This cannot be undone.`
-              : `Slot ${confirmSlot} already has a save. Overwrite it?`}
+              ? "Permanently delete ALL save files? This CANNOT be undone!"
+              : mode === "delete"
+                ? `Permanently delete Slot ${confirmSlot}? This cannot be undone.`
+                : `Slot ${confirmSlot} already has a save. Overwrite it?`}
           </Text>
         </Box>
         <Box marginTop={1}>
-          <SelectInputComponent items={confirmItems} onSelect={handleSlotConfirm} />
+          <SelectInputComponent
+            items={confirmItems}
+            onSelect={handleSlotConfirm}
+          />
         </Box>
       </Box>
     );
@@ -318,7 +349,7 @@ export const SaveLoadTab: React.FC<SaveLoadTabProps> = ({
   if (message) {
     return (
       <Box flexDirection="column" alignItems="center" justifyContent="center">
-        <Text bold color={messageType === 'success' ? 'green' : 'red'}>
+        <Text bold color={messageType === "success" ? "green" : "red"}>
           {message}
         </Text>
       </Box>
@@ -326,12 +357,12 @@ export const SaveLoadTab: React.FC<SaveLoadTabProps> = ({
   }
 
   // Main mode selection menu
-  if (mode === 'menu') {
+  if (mode === "menu") {
     const modeItems: MenuItem[] = [
-      { label: 'Save Game', value: 'save' },
-      { label: 'Load Game', value: 'load' },
-      { label: 'Delete Save', value: 'delete' },
-      { label: 'Quit to Main Menu', value: 'quit' },
+      { label: "Save Game", value: "save" },
+      { label: "Load Game", value: "load" },
+      { label: "Delete Save", value: "delete" },
+      { label: "Quit to Main Menu", value: "quit" },
     ];
 
     return (
@@ -343,9 +374,7 @@ export const SaveLoadTab: React.FC<SaveLoadTabProps> = ({
         </Box>
         <Box flexDirection="column">
           <Box marginBottom={1}>
-            <Text dimColor>
-              Save your progress or load a previous save
-            </Text>
+            <Text dimColor>Save your progress or load a previous save</Text>
           </Box>
           <SelectInputComponent items={modeItems} onSelect={handleModeSelect} />
         </Box>
@@ -354,23 +383,27 @@ export const SaveLoadTab: React.FC<SaveLoadTabProps> = ({
   }
 
   // Save/Load/Delete slot selection
-  const slotItems = buildSlotItems(mode === 'save', mode === 'delete');
+  const slotItems = buildSlotItems(mode === "save", mode === "delete");
 
   return (
     <Box flexDirection="column">
       <Box marginBottom={1}>
         <Text bold color="yellow">
-          {mode === 'save' ? '💾 SAVE GAME' : mode === 'load' ? '📂 LOAD GAME' : '🗑️  DELETE SAVE'}
+          {mode === "save"
+            ? "💾 SAVE GAME"
+            : mode === "load"
+              ? "📂 LOAD GAME"
+              : "🗑️  DELETE SAVE"}
         </Text>
       </Box>
       <Box flexDirection="column">
         <Box marginBottom={1}>
           <Text dimColor>
-            {mode === 'save'
-              ? 'Select a slot to save your progress'
-              : mode === 'load'
-              ? 'Select a save to load'
-              : 'Select a save to delete'}
+            {mode === "save"
+              ? "Select a slot to save your progress"
+              : mode === "load"
+                ? "Select a save to load"
+                : "Select a save to delete"}
           </Text>
         </Box>
         {slotItems.length > 1 ? (

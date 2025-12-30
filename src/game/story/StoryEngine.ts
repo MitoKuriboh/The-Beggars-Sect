@@ -6,17 +6,15 @@
 import type {
   Chapter,
   Scene,
-  SceneBlock,
   ContentLine,
   Choice,
   ChoiceEffect,
   StoryState,
   StoryResult,
-  ExplorationArea,
-} from '../../types/index';
+} from "../../types/index";
 
-import { createStoryState, applyPathShift } from '../../types/story';
-import { GameStore } from '../state/GameStore';
+import { createStoryState, applyPathShift } from "../../types/story";
+import { GameStore } from "../state/GameStore";
 
 // =============================================================================
 // STORY ENGINE
@@ -50,7 +48,9 @@ export class StoryEngine {
     // Validate scene references
     const errors = this.validateChapter(chapter);
     if (errors.length > 0) {
-      console.warn(`[StoryEngine] Chapter "${chapter.id}" has validation warnings:`);
+      console.warn(
+        `[StoryEngine] Chapter "${chapter.id}" has validation warnings:`,
+      );
       errors.forEach((err) => console.warn(`  - ${err}`));
     }
   }
@@ -77,15 +77,19 @@ export class StoryEngine {
     // Check each scene's nextScene reference
     for (const scene of chapter.scenes) {
       if (scene.nextScene && !sceneIds.has(scene.nextScene)) {
-        errors.push(`Scene "${scene.id}" references unknown nextScene "${scene.nextScene}"`);
+        errors.push(
+          `Scene "${scene.id}" references unknown nextScene "${scene.nextScene}"`,
+        );
       }
 
       // Check choice nextScene references
       for (const block of scene.content) {
-        if (block.type === 'choice') {
+        if (block.type === "choice") {
           for (const choice of block.choices) {
             if (choice.nextScene && !sceneIds.has(choice.nextScene)) {
-              errors.push(`Choice "${choice.id}" in scene "${scene.id}" references unknown nextScene "${choice.nextScene}"`);
+              errors.push(
+                `Choice "${choice.id}" in scene "${scene.id}" references unknown nextScene "${choice.nextScene}"`,
+              );
             }
           }
         }
@@ -201,8 +205,8 @@ export class StoryEngine {
 
     // Find the choice block and the selected choice
     const block = scene.content[this.state.contentIndex];
-    if (!block || block.type !== 'choice') {
-      throw new Error('Not at a choice block');
+    if (!block || block.type !== "choice") {
+      throw new Error("Not at a choice block");
     }
 
     const choice = block.choices.find((c: { id: string }) => c.id === choiceId);
@@ -230,7 +234,7 @@ export class StoryEngine {
       this.notifyStateChange();
       // Return the response content to display
       return {
-        action: 'continue',
+        action: "continue",
         state: this.getState(),
         content: choice.response,
       };
@@ -258,8 +262,8 @@ export class StoryEngine {
     }
 
     const block = scene.content[this.state.contentIndex];
-    if (!block || block.type !== 'combat') {
-      throw new Error('Not at a combat block');
+    if (!block || block.type !== "combat") {
+      throw new Error("Not at a combat block");
     }
 
     if (!victory && block.loseScene) {
@@ -305,73 +309,77 @@ export class StoryEngine {
     }
 
     switch (block.type) {
-      case 'content':
+      case "content":
         return {
-          action: 'continue',
+          action: "continue",
           state: this.getState(),
           content: block.lines,
         };
 
-      case 'choice':
+      case "choice": {
         // Filter choices based on conditions
         const availableChoices = block.choices.filter((c) =>
-          this.checkChoiceCondition(c)
+          this.checkChoiceCondition(c),
         );
         return {
-          action: 'choice',
+          action: "choice",
           state: this.getState(),
           content: block.prompt
-            ? [{ type: 'system', text: block.prompt }]
+            ? [{ type: "system", text: block.prompt }]
             : undefined,
           choices: availableChoices,
         };
+      }
 
-      case 'combat':
+      case "combat":
         return {
-          action: 'combat',
+          action: "combat",
           state: this.getState(),
           enemies: block.enemies,
           canLose: block.canLose !== false, // Default to true if not specified
         };
 
-      case 'exploration':
+      case "exploration":
         return {
-          action: 'exploration',
+          action: "exploration",
           state: this.getState(),
           areas: block.areas,
         };
 
-      case 'montage':
+      case "montage": {
         // For montage, we flatten all days into content
         const montageContent: ContentLine[] = [];
         for (const day of block.days) {
-          montageContent.push({ type: 'divider', label: day.label });
+          montageContent.push({ type: "divider", label: day.label });
           montageContent.push(...day.content);
 
           // Handle autoCombat - add narrative content for the fight
           if (day.autoCombat) {
             const outcome = day.autoCombat.outcome;
-            if (outcome === 'win') {
+            if (outcome === "win") {
               montageContent.push({
-                type: 'system',
+                type: "system",
                 text: `[Combat resolved: Victory]`,
               });
             } else {
               montageContent.push({
-                type: 'system',
+                type: "system",
                 text: `[Combat resolved: Defeat]`,
               });
             }
           }
         }
         return {
-          action: 'continue',
+          action: "continue",
           state: this.getState(),
           content: montageContent,
         };
+      }
 
       default:
-        throw new Error(`Unknown block type: ${(block as any).type}`);
+        throw new Error(
+          `Unknown block type: ${(block as { type: string }).type}`,
+        );
     }
   }
 
@@ -410,14 +418,14 @@ export class StoryEngine {
     if (currentIndex >= chapterIds.length - 1) {
       // This was the last chapter
       return {
-        action: 'game-end',
+        action: "game-end",
         state: this.getState(),
       };
     }
 
     const nextChapterId = chapterIds[currentIndex + 1];
     if (!nextChapterId) {
-      throw new Error('No next chapter available');
+      throw new Error("No next chapter available");
     }
     const nextChapter = this.chapters.get(nextChapterId);
 
@@ -426,7 +434,7 @@ export class StoryEngine {
     }
 
     return {
-      action: 'chapter-end',
+      action: "chapter-end",
       state: this.getState(),
       nextChapter: nextChapterId,
     };
@@ -445,22 +453,25 @@ export class StoryEngine {
     const cond = choice.condition;
 
     switch (cond.type) {
-      case 'flag':
+      case "flag":
         return this.state.flags[cond.flag] === cond.value;
 
-      case 'relationship':
+      case "relationship": {
         const rel = this.state.relationships[cond.character] ?? 0;
         if (cond.min !== undefined && rel < cond.min) return false;
         if (cond.max !== undefined && rel > cond.max) return false;
         return true;
+      }
 
-      case 'path':
+      case "path": {
         const pathPercentage = this.state.pathPercentages[cond.path];
         return cond.min !== undefined ? pathPercentage >= cond.min : true;
+      }
 
-      case 'item':
+      case "item": {
         const hasItem = this.state.discoveredItems.includes(cond.itemId);
         return hasItem === cond.has;
+      }
 
       default:
         return true;
@@ -473,32 +484,32 @@ export class StoryEngine {
   private applyChoiceEffects(effects: ChoiceEffect[]): void {
     for (const effect of effects) {
       switch (effect.type) {
-        case 'relationship':
+        case "relationship":
           this.state.relationships[effect.character] =
             (this.state.relationships[effect.character] ?? 0) + effect.delta;
           break;
 
-        case 'flag':
+        case "flag":
           this.state.flags[effect.flag] = effect.value;
           break;
 
-        case 'path':
+        case "path":
           // Apply zero-sum path shift
           this.state.pathPercentages = applyPathShift(
             this.state.pathPercentages,
             effect.path,
-            effect.delta
+            effect.delta,
           );
           break;
 
-        case 'item':
-          if (effect.action === 'add') {
+        case "item":
+          if (effect.action === "add") {
             if (!this.state.discoveredItems.includes(effect.itemId)) {
               this.state.discoveredItems.push(effect.itemId);
             }
           } else {
             this.state.discoveredItems = this.state.discoveredItems.filter(
-              (id) => id !== effect.itemId
+              (id) => id !== effect.itemId,
             );
           }
           break;
@@ -547,16 +558,16 @@ export class StoryEngine {
   /**
    * Get the dominant path based on scores
    */
-  getDominantPath(): 'blade' | 'stream' | 'shadow' | 'balanced' {
+  getDominantPath(): "blade" | "stream" | "shadow" | "balanced" {
     const { blade, stream, shadow } = this.state.pathPercentages;
 
     if (blade === stream && stream === shadow) {
-      return 'balanced';
+      return "balanced";
     }
 
-    if (blade >= stream && blade >= shadow) return 'blade';
-    if (stream >= blade && stream >= shadow) return 'stream';
-    return 'shadow';
+    if (blade >= stream && blade >= shadow) return "blade";
+    if (stream >= blade && stream >= shadow) return "stream";
+    return "shadow";
   }
 
   /**

@@ -16,7 +16,7 @@ import type {
   LogEntry,
   TechniqueEffect,
   StatusEffect,
-} from '../../types/index';
+} from "../../types/index";
 
 import {
   createCombatState,
@@ -25,28 +25,26 @@ import {
   checkCombatEnd,
   getLivingEnemies,
   getAllCombatants,
-} from '../../types/combat';
+} from "../../types/combat";
 
-import { getEffectiveStat, STANCE_MODIFIERS, STATUS_EFFECTS, type Stance } from '../../types/character';
-import { AIController } from './AIController';
+import {
+  getEffectiveStat,
+  STANCE_MODIFIERS,
+  STATUS_EFFECTS,
+  type Stance,
+} from "../../types/character";
+import { AIController } from "./AIController";
 import {
   getAttackMessage,
   getTechniqueMessage,
   getStanceMessage,
-  getDefendMessage,
-  getChiFocusMessage,
-} from '../../data/combatPhrases';
-import { GAME_BALANCE, getRecommendedStance } from '../config/GameBalance';
+} from "../../data/combatPhrases";
+import { GAME_BALANCE, getRecommendedStance } from "../config/GameBalance";
 import {
   tickCharacterStatusEffects,
   tickStatusEffectsForAll,
-} from '../utils/StatusEffectUtils';
-import {
-  checkHPCondition,
-  evaluateHPCondition,
-  parseHPCondition,
-} from '../utils/ConditionParser';
-import { evaluateComparison } from '../utils/ComparisonEvaluator';
+} from "../utils/StatusEffectUtils";
+import { checkHPCondition } from "../utils/ConditionParser";
 
 // =============================================================================
 // COMBAT ENGINE
@@ -61,7 +59,7 @@ export class CombatEngine {
     player: Character,
     enemies: Enemy[],
     config: Partial<CombatConfig> = {},
-    onStateChange?: (state: CombatState) => void
+    onStateChange?: (state: CombatState) => void,
   ) {
     this.state = createCombatState(player, enemies);
     this.config = { ...DEFAULT_COMBAT_CONFIG, ...config };
@@ -84,7 +82,9 @@ export class CombatEngine {
       return;
     }
 
-    const recommendedStance = getRecommendedStance(this.state.player.pathAlignment);
+    const recommendedStance = getRecommendedStance(
+      this.state.player.pathAlignment,
+    );
     this.state.player.stance = recommendedStance;
 
     // Add log entry showing stance selection
@@ -92,18 +92,18 @@ export class CombatEngine {
     this.addLog(
       this.state.player.name,
       `enters ${this.getStanceName(recommendedStance)} (${pathName} path)`,
-      'system'
+      "system",
     );
   }
 
   /**
    * Get human-readable stance name
    */
-  private getStanceName(stance: 'flowing' | 'weathered' | 'hungry'): string {
+  private getStanceName(stance: "flowing" | "weathered" | "hungry"): string {
     const names = {
-      flowing: 'Flowing Stance',
-      weathered: 'Weathered Stance',
-      hungry: 'Hungry Stance',
+      flowing: "Flowing Stance",
+      weathered: "Weathered Stance",
+      hungry: "Hungry Stance",
     };
     return names[stance];
   }
@@ -113,12 +113,12 @@ export class CombatEngine {
    */
   private getDominantPathName(): string {
     if (!this.state.player.pathAlignment) {
-      return 'Balanced';
+      return "Balanced";
     }
     const { blade, stream, shadow } = this.state.player.pathAlignment;
-    if (blade >= stream && blade >= shadow) return 'Blade';
-    if (stream >= blade && stream >= shadow) return 'Stream';
-    return 'Shadow';
+    if (blade >= stream && blade >= shadow) return "Blade";
+    if (stream >= blade && stream >= shadow) return "Stream";
+    return "Shadow";
   }
 
   // ---------------------------------------------------------------------------
@@ -197,7 +197,7 @@ export class CombatEngine {
    * Get initial turn value based on DEX (higher DEX = starts closer to acting)
    */
   private getInitialTurnValue(char: Character): number {
-    const dex = getEffectiveStat(char, 'dex');
+    const dex = getEffectiveStat(char, "dex");
     // Random variance + DEX bonus
     return Math.floor(Math.random() * GAME_BALANCE.atb.turnVariance) + dex;
   }
@@ -206,9 +206,12 @@ export class CombatEngine {
    * Get turn speed (how fast the character accumulates turn points)
    */
   private getTurnSpeed(char: Character): number {
-    const dex = getEffectiveStat(char, 'dex');
+    const dex = getEffectiveStat(char, "dex");
     // Base tick rate + DEX modifier
-    return this.config.baseTickRate + Math.floor(dex / GAME_BALANCE.atb.dexSpeedDivisor);
+    return (
+      this.config.baseTickRate +
+      Math.floor(dex / GAME_BALANCE.atb.dexSpeedDivisor)
+    );
   }
 
   /**
@@ -218,7 +221,7 @@ export class CombatEngine {
     // Check if effect is stackable
     if (!effect.stackable) {
       // Check if target already has this effect
-      const existing = target.statusEffects.find(e => e.name === effect.name);
+      const existing = target.statusEffects.find((e) => e.name === effect.name);
       if (existing) {
         // Refresh duration if new effect has longer duration
         if (effect.duration > existing.duration) {
@@ -239,7 +242,7 @@ export class CombatEngine {
   private advanceToNextTurn(): void {
     // Remove dead characters from queue
     this.state.turnQueue = this.state.turnQueue.filter(
-      (entry) => entry.character.hp > 0
+      (entry) => entry.character.hp > 0,
     );
 
     if (this.state.turnQueue.length === 0) return;
@@ -293,7 +296,7 @@ export class CombatEngine {
 
     // Check for combat end
     const result = checkCombatEnd(this.state);
-    if (result !== 'ongoing') {
+    if (result !== "ongoing") {
       this.state.combatResult = result;
       this.notifyStateChange();
       return;
@@ -382,29 +385,30 @@ export class CombatEngine {
     let result: ActionResult;
 
     switch (action.type) {
-      case 'attack':
+      case "attack":
         result = this.executeBasicAttack(action);
         break;
-      case 'technique':
+      case "technique":
         result = this.executeTechnique(action);
         break;
-      case 'flee':
+      case "flee":
         result = this.executeFlee(action);
         break;
-      case 'stance':
+      case "stance":
         result = this.executeStanceChange(action);
         break;
       default:
         result = {
           type: action.type,
           success: false,
-          message: 'Unknown action type',
+          message: "Unknown action type",
         };
     }
 
     // Log the action (include techniqueId if using technique)
-    const techniqueId = action.type === 'technique' ? action.technique?.id : undefined;
-    this.addLog(action.actor.name, result.message, 'action', techniqueId);
+    const techniqueId =
+      action.type === "technique" ? action.technique?.id : undefined;
+    this.addLog(action.actor.name, result.message, "action", techniqueId);
 
     // Complete turn if action was successful
     if (result.success) {
@@ -419,14 +423,14 @@ export class CombatEngine {
    */
   executeEnemyTurn(enemy: Enemy): ActionResult {
     // Check if stunned
-    const isStunned = enemy.statusEffects.some((e) => e.id === 'stunned');
+    const isStunned = enemy.statusEffects.some((e) => e.id === "stunned");
     if (isStunned) {
       const result: ActionResult = {
-        type: 'attack',
+        type: "attack",
         success: true,
         message: `${enemy.name} is stunned and cannot act!`,
       };
-      this.addLog(enemy.name, result.message, 'status');
+      this.addLog(enemy.name, result.message, "status");
       this.completeTurn();
       return result;
     }
@@ -437,22 +441,23 @@ export class CombatEngine {
     let result: ActionResult;
 
     switch (action.type) {
-      case 'attack':
+      case "attack":
         result = this.executeBasicAttack(action);
         break;
-      case 'technique':
+      case "technique":
         result = this.executeTechnique(action);
         break;
       default:
         result = this.executeBasicAttack({
-          type: 'attack',
+          type: "attack",
           actor: enemy,
           target: this.state.player,
         });
     }
 
-    const techniqueId = action.type === 'technique' ? action.technique?.id : undefined;
-    this.addLog(enemy.name, result.message, 'action', techniqueId);
+    const techniqueId =
+      action.type === "technique" ? action.technique?.id : undefined;
+    this.addLog(enemy.name, result.message, "action", techniqueId);
     this.completeTurn();
 
     return result;
@@ -466,7 +471,7 @@ export class CombatEngine {
     const { actor, target } = action;
 
     if (!target) {
-      return { type: 'attack', success: false, message: 'No target specified' };
+      return { type: "attack", success: false, message: "No target specified" };
     }
 
     // Calculate damage
@@ -481,9 +486,15 @@ export class CombatEngine {
     }
 
     return {
-      type: 'attack',
+      type: "attack",
       success: true,
-      message: getAttackMessage(actor.name, target.name, damage.total, target.maxHp, damage.isCritical),
+      message: getAttackMessage(
+        actor.name,
+        target.name,
+        damage.total,
+        target.maxHp,
+        damage.isCritical,
+      ),
       damage: damage.total,
       isCritical: damage.isCritical,
       targetHpAfter: target.hp,
@@ -495,13 +506,17 @@ export class CombatEngine {
     const { actor, target, technique } = action;
 
     if (!technique) {
-      return { type: 'technique', success: false, message: 'No technique specified' };
+      return {
+        type: "technique",
+        success: false,
+        message: "No technique specified",
+      };
     }
 
     // Check chi cost
     if (actor.chi < technique.chiCost) {
       return {
-        type: 'technique',
+        type: "technique",
         success: false,
         message: `Not enough chi! Need ${technique.chiCost}, have ${actor.chi}`,
       };
@@ -527,13 +542,18 @@ export class CombatEngine {
     // Apply technique effects (buffs, debuffs, heals, multi-hit, etc.)
     let effectMessages: string[] = [];
     if (technique.effects && technique.effects.length > 0) {
-      const effectResult = this.applyEffects(technique.effects, actor, target, damage.total);
+      const effectResult = this.applyEffects(
+        technique.effects,
+        actor,
+        target,
+        damage.total,
+      );
       damage.total = effectResult.totalDamage;
       effectMessages = effectResult.effectMessages;
 
       // Log effect messages
       for (const msg of effectMessages) {
-        this.addLog('System', msg, 'status');
+        this.addLog("System", msg, "status");
       }
 
       // Check if target defeated after multi-hit
@@ -544,15 +564,22 @@ export class CombatEngine {
 
     // Track mastery
     if (actor.isPlayer) {
-      actor.masteryLevels[technique.id] = (actor.masteryLevels[technique.id] || 0) + 1;
+      actor.masteryLevels[technique.id] =
+        (actor.masteryLevels[technique.id] || 0) + 1;
     }
 
-    const message = damage.total > 0 && target
-      ? `${getTechniqueMessage(actor.name, target.name, technique.name, technique.id)} for ${damage.total} damage!`
-      : getTechniqueMessage(actor.name, target?.name || '', technique.name, technique.id);
+    const message =
+      damage.total > 0 && target
+        ? `${getTechniqueMessage(actor.name, target.name, technique.name, technique.id)} for ${damage.total} damage!`
+        : getTechniqueMessage(
+            actor.name,
+            target?.name || "",
+            technique.name,
+            technique.id,
+          );
 
     return {
-      type: 'technique',
+      type: "technique",
       success: true,
       message,
       damage: damage.total || undefined,
@@ -570,14 +597,14 @@ export class CombatEngine {
     effects: TechniqueEffect[],
     actor: Character | Enemy,
     target: Character | Enemy | undefined,
-    baseDamage: number
+    baseDamage: number,
   ): { totalDamage: number; effectMessages: string[] } {
     let totalDamage = baseDamage;
     const effectMessages: string[] = [];
 
     for (const effect of effects) {
-      const effectTarget = effect.target === 'self' ? actor : target;
-      if (!effectTarget && effect.target !== 'self') continue;
+      const effectTarget = effect.target === "self" ? actor : target;
+      if (!effectTarget && effect.target !== "self") continue;
 
       // Check condition if specified
       if (effect.condition && effectTarget) {
@@ -587,80 +614,108 @@ export class CombatEngine {
       }
 
       switch (effect.type) {
-        case 'damage': {
+        case "damage": {
           // Self-damage (recoil) - percentage of max HP
           const selfDamage = Math.floor((actor.maxHp * effect.value) / 100);
-          actor.hp = Math.max(GAME_BALANCE.combat.minRecoilHp, actor.hp - selfDamage); // Don't kill self
-          effectMessages.push(`${actor.name} takes ${selfDamage} recoil damage!`);
+          actor.hp = Math.max(
+            GAME_BALANCE.combat.minRecoilHp,
+            actor.hp - selfDamage,
+          ); // Don't kill self
+          effectMessages.push(
+            `${actor.name} takes ${selfDamage} recoil damage!`,
+          );
           break;
         }
 
-        case 'heal': {
+        case "heal": {
           if (effectTarget) {
             // Percentage-based healing
-            const healAmount = Math.floor((effectTarget.maxHp * effect.value) / 100);
-            const actualHeal = Math.min(healAmount, effectTarget.maxHp - effectTarget.hp);
+            const healAmount = Math.floor(
+              (effectTarget.maxHp * effect.value) / 100,
+            );
+            const actualHeal = Math.min(
+              healAmount,
+              effectTarget.maxHp - effectTarget.hp,
+            );
             effectTarget.hp += actualHeal;
             if (actualHeal > 0) {
-              effectMessages.push(`${effectTarget.name} heals for ${actualHeal} HP!`);
+              effectMessages.push(
+                `${effectTarget.name} heals for ${actualHeal} HP!`,
+              );
             }
           }
           break;
         }
 
-        case 'chi-restore': {
+        case "chi-restore": {
           if (effectTarget) {
-            const restoreAmount = Math.min(effect.value, effectTarget.maxChi - effectTarget.chi);
+            const restoreAmount = Math.min(
+              effect.value,
+              effectTarget.maxChi - effectTarget.chi,
+            );
             effectTarget.chi += restoreAmount;
             if (restoreAmount > 0) {
-              effectMessages.push(`${effectTarget.name} restores ${restoreAmount} chi!`);
+              effectMessages.push(
+                `${effectTarget.name} restores ${restoreAmount} chi!`,
+              );
             }
           }
           break;
         }
 
-        case 'buff': {
+        case "buff": {
           if (effectTarget) {
             const buffEffect: StatusEffect = {
               id: `buff-${Date.now()}`,
               name: effect.description,
-              type: 'buff',
+              type: "buff",
               modifier: effect.value,
               duration: effect.duration || 3,
               stackable: false,
               description: effect.description,
             };
             if (this.applyStatusEffect(effectTarget, buffEffect)) {
-              effectMessages.push(`${effectTarget.name} gains ${effect.description}!`);
+              effectMessages.push(
+                `${effectTarget.name} gains ${effect.description}!`,
+              );
             }
           }
           break;
         }
 
-        case 'debuff': {
+        case "debuff": {
           if (effectTarget) {
             const debuffEffect: StatusEffect = {
               id: `debuff-${Date.now()}`,
               name: effect.description,
-              type: 'debuff',
+              type: "debuff",
               modifier: effect.value,
               duration: effect.duration || 3,
               stackable: false,
               description: effect.description,
             };
             if (this.applyStatusEffect(effectTarget, debuffEffect)) {
-              effectMessages.push(`${effectTarget.name} suffers ${effect.description}!`);
+              effectMessages.push(
+                `${effectTarget.name} suffers ${effect.description}!`,
+              );
             }
           }
           break;
         }
 
-        case 'stun': {
+        case "stun": {
           if (effectTarget) {
             // Stun has a chance based on effect value (or default if not specified differently)
-            const stunChance = effect.value > 1 ? effect.value / 100 : GAME_BALANCE.statusEffects.defaultStunChance;
+            const stunChance =
+              effect.value > 1
+                ? effect.value / 100
+                : GAME_BALANCE.statusEffects.defaultStunChance;
             if (Math.random() < stunChance) {
-              if (this.applyStatusEffect(effectTarget, { ...STATUS_EFFECTS.STUNNED })) {
+              if (
+                this.applyStatusEffect(effectTarget, {
+                  ...STATUS_EFFECTS.STUNNED,
+                })
+              ) {
                 effectMessages.push(`${effectTarget.name} is stunned!`);
               }
             }
@@ -668,7 +723,7 @@ export class CombatEngine {
           break;
         }
 
-        case 'armor-break': {
+        case "armor-break": {
           if (effectTarget) {
             const armorBreakEffect = {
               ...STATUS_EFFECTS.ARMOR_BROKEN,
@@ -682,16 +737,16 @@ export class CombatEngine {
           break;
         }
 
-        case 'counter-setup': {
+        case "counter-setup": {
           if (effectTarget) {
             const counterEffect: StatusEffect = {
-              id: 'counter',
-              name: 'Counter Stance',
-              type: 'buff',
+              id: "counter",
+              name: "Counter Stance",
+              type: "buff",
               modifier: 0,
               duration: effect.duration || 1,
               stackable: false,
-              description: 'Will counter next attack',
+              description: "Will counter next attack",
             };
             if (this.applyStatusEffect(effectTarget, counterEffect)) {
               effectMessages.push(`${effectTarget.name} prepares to counter!`);
@@ -700,13 +755,15 @@ export class CombatEngine {
           break;
         }
 
-        case 'multi-hit': {
+        case "multi-hit": {
           // Multi-hit multiplies damage (effect.value = number of hits)
           // First hit already calculated, add extra hits
           if (target && baseDamage > 0) {
             const extraHits = effect.value - 1;
             for (let i = 0; i < extraHits; i++) {
-              const hitDamage = Math.floor(baseDamage * GAME_BALANCE.multiHit.damageScale);
+              const hitDamage = Math.floor(
+                baseDamage * GAME_BALANCE.multiHit.damageScale,
+              );
               target.hp = Math.max(0, target.hp - hitDamage);
               totalDamage += hitDamage;
             }
@@ -720,11 +777,11 @@ export class CombatEngine {
     return { totalDamage, effectMessages };
   }
 
-  private executeFlee(action: CombatAction): ActionResult {
+  private executeFlee(_action: CombatAction): ActionResult {
     // Can't flee boss fights
     if (this.state.isBossFight && !this.config.canFleeBoss) {
       return {
-        type: 'flee',
+        type: "flee",
         success: false,
         message: "You can't run from this fight!",
         fleeSuccess: false,
@@ -732,35 +789,37 @@ export class CombatEngine {
     }
 
     // Calculate flee chance based on player DEX vs average enemy DEX
-    const playerDex = getEffectiveStat(this.state.player, 'dex');
-    const enemyDexAvg = this.getLivingEnemies().reduce(
-      (sum, e) => sum + getEffectiveStat(e, 'dex'),
-      0
-    ) / Math.max(1, this.getLivingEnemies().length);
+    const playerDex = getEffectiveStat(this.state.player, "dex");
+    const enemyDexAvg =
+      this.getLivingEnemies().reduce(
+        (sum, e) => sum + getEffectiveStat(e, "dex"),
+        0,
+      ) / Math.max(1, this.getLivingEnemies().length);
 
     const fleeChance = Math.min(
       this.config.maxFleeChance,
       Math.max(
         this.config.minFleeChance,
-        GAME_BALANCE.flee.baseChance + (playerDex - enemyDexAvg) * GAME_BALANCE.flee.dexAdvantageMultiplier
-      )
+        GAME_BALANCE.flee.baseChance +
+          (playerDex - enemyDexAvg) * GAME_BALANCE.flee.dexAdvantageMultiplier,
+      ),
     );
 
     const success = Math.random() < fleeChance;
 
     if (success) {
-      this.state.combatResult = 'fled';
+      this.state.combatResult = "fled";
       this.notifyStateChange();
       return {
-        type: 'flee',
+        type: "flee",
         success: true,
-        message: 'You escaped!',
+        message: "You escaped!",
         fleeSuccess: true,
       };
     }
 
     return {
-      type: 'flee',
+      type: "flee",
       success: true, // Action succeeded, but flee failed
       message: "Couldn't escape!",
       fleeSuccess: false,
@@ -771,14 +830,13 @@ export class CombatEngine {
     const { actor, newStance } = action;
 
     if (!newStance) {
-      return { type: 'stance', success: false, message: 'No stance specified' };
+      return { type: "stance", success: false, message: "No stance specified" };
     }
 
-    const oldStance = actor.stance;
     actor.stance = newStance;
 
     return {
-      type: 'stance',
+      type: "stance",
       success: true,
       message: getStanceMessage(actor.name, newStance),
     };
@@ -791,31 +849,39 @@ export class CombatEngine {
   private calculateDamage(
     attacker: Character,
     defender: Character,
-    basePower: number
+    basePower: number,
   ): { total: number; isCritical: boolean } {
     // Get effective stats
-    const attackStat = getEffectiveStat(attacker, 'str');
-    const defenseStat = getEffectiveStat(defender, 'end');
+    const attackStat = getEffectiveStat(attacker, "str");
+    const defenseStat = getEffectiveStat(defender, "end");
 
     // Stance modifiers
     const attackerStanceMod = STANCE_MODIFIERS[attacker.stance].attack;
     const defenderStanceMod = STANCE_MODIFIERS[defender.stance].defense;
 
     // Check for defending status
-    const isDefending = defender.statusEffects.some((e) => e.id === 'defending');
-    const defendMod = isDefending ? GAME_BALANCE.combat.defendingDamageReduction : 1.0;
+    const isDefending = defender.statusEffects.some(
+      (e) => e.id === "defending",
+    );
+    const defendMod = isDefending
+      ? GAME_BALANCE.combat.defendingDamageReduction
+      : 1.0;
 
     // Critical hit check
-    const critChance = getEffectiveStat(attacker, 'dex') * GAME_BALANCE.combat.critChancePerDex;
+    const critChance =
+      getEffectiveStat(attacker, "dex") * GAME_BALANCE.combat.critChancePerDex;
     const isCritical = Math.random() < critChance;
     const critMod = isCritical ? this.config.critMultiplier : 1.0;
 
     // Damage variance
-    const variance = this.config.varianceMin +
+    const variance =
+      this.config.varianceMin +
       Math.random() * (this.config.varianceMax - this.config.varianceMin);
 
     // Combo bonus
-    const comboMod = attacker.isPlayer ? this.state.comboChain.damageMultiplier : 1.0;
+    const comboMod = attacker.isPlayer
+      ? this.state.comboChain.damageMultiplier
+      : 1.0;
 
     // Calculate raw damage
     let damage = basePower + attackStat;
@@ -826,7 +892,10 @@ export class CombatEngine {
 
     // Apply defense
     const defense = defenseStat * defenderStanceMod * defendMod;
-    damage = Math.max(this.config.minDamage, damage - defense * GAME_BALANCE.combat.defenseEffectiveness);
+    damage = Math.max(
+      this.config.minDamage,
+      damage - defense * GAME_BALANCE.combat.defenseEffectiveness,
+    );
 
     return {
       total: Math.floor(damage),
@@ -841,7 +910,7 @@ export class CombatEngine {
   private updateCombo(techniqueId: string, role: string): void {
     const combo = this.state.comboChain;
 
-    if (role === 'starter' || !combo.isActive) {
+    if (role === "starter" || !combo.isActive) {
       // Start new combo
       this.state.comboChain = {
         techniques: [techniqueId],
@@ -849,26 +918,37 @@ export class CombatEngine {
         chiRefund: 0,
         isActive: true,
       };
-    } else if (role === 'followup' || role === 'any') {
+    } else if (role === "followup" || role === "any") {
       // Continue combo
       combo.techniques.push(techniqueId);
       combo.damageMultiplier = Math.min(
         GAME_BALANCE.combos.maxMultiplier,
-        GAME_BALANCE.combos.baseMultiplier + combo.techniques.length * GAME_BALANCE.combos.multiplierPerTechnique
+        GAME_BALANCE.combos.baseMultiplier +
+          combo.techniques.length * GAME_BALANCE.combos.multiplierPerTechnique,
       );
-    } else if (role === 'finisher') {
+    } else if (role === "finisher") {
       // Complete combo
       combo.techniques.push(techniqueId);
       combo.damageMultiplier = Math.min(
         GAME_BALANCE.combos.maxMultiplier,
-        GAME_BALANCE.combos.baseMultiplier + combo.techniques.length * GAME_BALANCE.combos.multiplierPerTechnique
+        GAME_BALANCE.combos.baseMultiplier +
+          combo.techniques.length * GAME_BALANCE.combos.multiplierPerTechnique,
       );
 
       // Chi refund on successful finisher
-      const chiRefund = Math.floor(combo.techniques.length * GAME_BALANCE.combos.chiRefundPerTechnique);
+      const chiRefund = Math.floor(
+        combo.techniques.length * GAME_BALANCE.combos.chiRefundPerTechnique,
+      );
       this.state.player.chi = Math.min(
         this.state.player.maxChi,
-        this.state.player.chi + chiRefund
+        this.state.player.chi + chiRefund,
+      );
+
+      // Log combo completion
+      this.addLog(
+        "System",
+        `Combo complete! (${combo.techniques.length} hits, +${chiRefund} chi)`,
+        "system",
       );
 
       // Reset after finisher
@@ -878,7 +958,7 @@ export class CombatEngine {
 
   private breakCombo(): void {
     if (this.state.comboChain.isActive) {
-      this.addLog('System', 'Combo broken!', 'system');
+      this.addLog("System", "Combo broken!", "system");
     }
     this.state.comboChain = { ...EMPTY_COMBO };
   }
@@ -896,7 +976,12 @@ export class CombatEngine {
   // LOGGING
   // ---------------------------------------------------------------------------
 
-  private addLog(actorName: string, message: string, type: LogEntry['type'], techniqueId?: string): void {
+  private addLog(
+    actorName: string,
+    message: string,
+    type: LogEntry["type"],
+    techniqueId?: string,
+  ): void {
     this.state.combatLog.push({
       round: this.state.round,
       turn: this.state.currentTurn,

@@ -1,25 +1,26 @@
 #!/usr/bin/env node
-import React from 'react';
-import { render } from 'ink';
-import { App } from './ui/App';
+import React from "react";
+import { render } from "ink";
+import { App } from "./ui/App";
 
 // Enable alternative screen buffer to prevent flickering
 // This creates a separate screen that we can swap to/from cleanly
-process.stdout.write('\x1b[?1049h'); // Enable alternative buffer
+process.stdout.write("\x1b[?1049h"); // Enable alternative buffer
 
 // Hide cursor during rendering to reduce flicker
-process.stdout.write('\x1b[?25l'); // Hide cursor
+process.stdout.write("\x1b[?25l"); // Hide cursor
 
 // Clear console before rendering to avoid duplicate display
+// eslint-disable-next-line no-console -- intentional CLI screen clear
 console.clear();
 
 // Enable stdout buffering to reduce write syscalls and flickering
 // Cork buffering - all writes are batched in memory
-if (typeof process.stdout.cork === 'function') {
+if (typeof process.stdout.cork === "function") {
   process.stdout.cork();
   // Uncork after initial render to flush buffered data
   setImmediate(() => {
-    if (typeof process.stdout.uncork === 'function') {
+    if (typeof process.stdout.uncork === "function") {
       process.stdout.uncork();
     }
   });
@@ -42,10 +43,10 @@ const { waitUntilExit } = render(<App />, {
 // Cleanup and restore terminal state on exit
 waitUntilExit().then(() => {
   // Show cursor again
-  process.stdout.write('\x1b[?25h'); // Show cursor
+  process.stdout.write("\x1b[?25h"); // Show cursor
 
   // Disable alternative buffer (return to normal screen)
-  process.stdout.write('\x1b[?1049l'); // Disable alternative buffer
+  process.stdout.write("\x1b[?1049l"); // Disable alternative buffer
 
   process.exit(0);
 });

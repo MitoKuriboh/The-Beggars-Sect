@@ -71,8 +71,8 @@ export function evaluateHPCondition(
   let value: number;
 
   if (condition.isPercent) {
-    // Calculate HP percentage
-    value = (character.hp / character.maxHp) * 100;
+    // Calculate HP percentage (guard against division by zero)
+    value = character.maxHp > 0 ? (character.hp / character.maxHp) * 100 : 0;
   } else {
     // Use raw HP value
     value = character.hp;
@@ -126,6 +126,8 @@ export function checkHPCondition(
  * @returns HP percentage (0-100)
  */
 export function getHPPercent(character: Character): number {
+  // Guard against division by zero
+  if (character.maxHp <= 0) return 0;
   return (character.hp / character.maxHp) * 100;
 }
 

@@ -9,6 +9,9 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "lint": "eslint src --ext .ts,.tsx",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "package": "npm run build && pkg . --targets node18-win-x64,node18-linux-x64,node18-macos-x64 --output dist/beggars-sect-v$npm_package_version --compress GZip"
   },
   "pkg": {
@@ -49,12 +52,15 @@
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
     "@vercel/ncc": "^0.38.4",
+    "@vitest/coverage-v8": "^4.0.16",
     "esbuild": "^0.27.1",
     "eslint": "^8.56.0",
+    "eslint-plugin-react-hooks": "7.0.1",
     "pkg": "^5.8.1",
     "react-devtools-core": "^4.28.5",
     "tsx": "^4.7.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^4.0.16"
   },
   "engines": {
     "node": ">=18.0.0"

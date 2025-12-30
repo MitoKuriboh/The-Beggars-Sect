@@ -28,6 +28,12 @@ import { ExplorationMenu } from "./ExplorationMenu";
 import { StatusMenu } from "../status/StatusMenu";
 import { CenteredScreen } from "../components/PolishedBox";
 import { SEMANTIC_DIVIDERS } from "../theme/dividers";
+import {
+  STORY_DECORATIONS,
+  SYMBOLS,
+  getRandomQuote,
+} from "../theme/decorations";
+import { atmosphericColors } from "../theme/colors";
 import { UI_CONFIG } from "../config/constants";
 
 // =============================================================================
@@ -189,6 +195,7 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
       const result = engine.startStory();
       handleResult(result);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- initialization effect, intentionally runs once on mount
   }, []);
 
   // Forward declaration for handleResult (defined below)
@@ -275,7 +282,7 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
             setAreas(result.areas || []);
             break;
 
-          case "combat":
+          case "combat": {
             setPhase("combat");
             // Auto-save before combat
             GameStore.autoSave();
@@ -288,6 +295,7 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
             });
             onCombatStart(enemies, result.canLose !== false);
             break;
+          }
 
           case "chapter-end":
             setPhase("chapter-end");
@@ -312,6 +320,7 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
         }
       });
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- setters are stable from useCallback wrappers
     [onCombatStart, onGameEnd],
   );
 
@@ -320,8 +329,8 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
     handleResultRef.current = handleResult;
   }, [handleResult]);
 
-  // Handle content advancement
-  const advanceContent = useCallback(() => {
+  // Handle content advancement (reserved for future typewriter integration)
+  const _advanceContent = useCallback(() => {
     if (isPaused) return;
 
     // Safety check: Empty content or invalid index
@@ -367,6 +376,7 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
       const result = engineRef.current?.advance();
       if (result) handleResult(result);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- setters are stable, using refs for current values
   }, [content, contentIndex, isPaused, handleResult]);
 
   // Auto-skip effect lines when content changes
@@ -613,20 +623,32 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
         paddingY={0}
         width={84}
       >
+        {/* Atmospheric Header Flourish */}
+        <Box justifyContent="center" marginTop={1}>
+          <Text color={atmosphericColors.menuAccent} dimColor>
+            {STORY_DECORATIONS.sceneHeaderWithYinYang}
+          </Text>
+        </Box>
+
         {/* Header */}
         <Box marginY={1} justifyContent="center">
           <Text bold color="cyan">
-            📖 {sceneTitle.toUpperCase()}
+            {SYMBOLS.star} {sceneTitle.toUpperCase()} {SYMBOLS.star}
           </Text>
         </Box>
 
         {/* Location & Progress */}
         <Box justifyContent="space-between" marginBottom={1}>
           <Box>
-            {location.length > 0 && <Text dimColor>📍 {location}</Text>}
+            {location.length > 0 && (
+              <Text dimColor>
+                {STORY_DECORATIONS.locationMarker} {location}
+              </Text>
+            )}
           </Box>
           <Text dimColor>
-            Scene {sceneProgress.current}/{sceneProgress.total}
+            {SYMBOLS.diamond} Scene {sceneProgress.current}/
+            {sceneProgress.total}
           </Text>
         </Box>
 
@@ -708,9 +730,41 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
           )}
 
           {phase === "chapter-end" && (
-            <>
-              <ContentBlock lines={content} showAll />
-            </>
+            <Box
+              flexDirection="column"
+              alignItems="center"
+              justifyContent="center"
+              minHeight={20}
+            >
+              {/* Chapter End Banner */}
+              <Text color="cyan">{STORY_DECORATIONS.chapterEnd.top}</Text>
+              <Text bold color="cyanBright">
+                {STORY_DECORATIONS.chapterEnd.title}
+              </Text>
+              <Text color="cyan">{STORY_DECORATIONS.chapterEnd.bottom}</Text>
+
+              {/* Decorative flourish */}
+              <Box marginY={2}>
+                <Text color={atmosphericColors.menuAccent} dimColor>
+                  ═══════════════ {SYMBOLS.yinYang} ═══════════════
+                </Text>
+              </Box>
+
+              {/* Cultivation wisdom */}
+              <Box marginBottom={2}>
+                <Text dimColor italic>
+                  "{getRandomQuote()}"
+                </Text>
+              </Box>
+
+              {/* Continue prompt */}
+              <Box>
+                <Text color="cyan">
+                  {SYMBOLS.bullet} Press SPACE to continue{" "}
+                  {SYMBOLS.bulletHollow}
+                </Text>
+              </Box>
+            </Box>
           )}
 
           {phase === "game-end" && (
@@ -720,24 +774,34 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
               justifyContent="center"
               minHeight={25}
             >
-              <Box marginBottom={2}>
-                <Text bold color="green">
-                  ═══════════════════════════════════════
-                </Text>
-              </Box>
-              <Box marginBottom={1}>
-                <Text bold color="green">
-                  ✓ THE END ✓
-                </Text>
-              </Box>
-              <Box marginBottom={2}>
-                <Text bold color="green">
-                  ═══════════════════════════════════════
-                </Text>
-              </Box>
-              <Text dimColor italic>
-                Thank you for playing.
+              {/* Game End Banner */}
+              <Text color="green">{STORY_DECORATIONS.gameEnd.top}</Text>
+              <Text bold color="greenBright">
+                {STORY_DECORATIONS.gameEnd.title}
               </Text>
+              <Text color="green">{STORY_DECORATIONS.gameEnd.subtitle}</Text>
+              <Text color="green">{STORY_DECORATIONS.gameEnd.bottom}</Text>
+
+              {/* Decorative flourish */}
+              <Box marginY={2}>
+                <Text color={atmosphericColors.menuAccent} dimColor>
+                  ═══════════════ {SYMBOLS.yinYang} ═══════════════
+                </Text>
+              </Box>
+
+              {/* Cultivation wisdom */}
+              <Box marginBottom={1}>
+                <Text dimColor italic>
+                  "{getRandomQuote()}"
+                </Text>
+              </Box>
+
+              {/* Credits hint */}
+              <Box marginTop={2}>
+                <Text color="cyan">
+                  {SYMBOLS.bullet} The path continues... {SYMBOLS.bulletHollow}
+                </Text>
+              </Box>
             </Box>
           )}
 
@@ -748,17 +812,30 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
               justifyContent="center"
               minHeight={25}
             >
-              <Text color="red" bold>
-                ⚔ Entering Combat...
+              <Text color={atmosphericColors.menuAccent} dimColor>
+                ═══════════════ {SYMBOLS.sword} ═══════════════
               </Text>
+              <Box marginY={1}>
+                <Text color="red" bold>
+                  {SYMBOLS.sword} ENTERING COMBAT {SYMBOLS.sword}
+                </Text>
+              </Box>
+              <Text dimColor italic>
+                "Steel yourself for battle..."
+              </Text>
+              <Box marginTop={1}>
+                <Text color={atmosphericColors.menuAccent} dimColor>
+                  ═══════════════ {SYMBOLS.sword} ═══════════════
+                </Text>
+              </Box>
             </Box>
           )}
         </Box>
 
-        {/* Divider */}
+        {/* Bottom Flourish */}
         <Box justifyContent="center">
-          <Text color="cyan" dimColor>
-            {SEMANTIC_DIVIDERS.story}
+          <Text color={atmosphericColors.menuAccent} dimColor>
+            {STORY_DECORATIONS.sceneHeaderWithYinYang}
           </Text>
         </Box>
 

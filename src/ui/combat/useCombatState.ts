@@ -13,29 +13,34 @@
  * - Clean transitions between states
  */
 
-import { useState, useCallback } from 'react';
-import type { CombatState } from '../../types/index';
+import { useState, useCallback } from "react";
+import type { CombatState } from "../../types/index";
 
 export type CombatPhase =
-  | 'initial-stance-select'
-  | 'action-select'
-  | 'technique-select'
-  | 'stance-select'
-  | 'target-select'
-  | 'enemy-turn'
-  | 'animating'
-  | 'victory'
-  | 'defeat'
-  | 'fled';
+  | "initial-stance-select"
+  | "action-select"
+  | "technique-select"
+  | "stance-select"
+  | "target-select"
+  | "enemy-turn"
+  | "animating"
+  | "victory"
+  | "defeat"
+  | "fled";
 
-export type PendingActionType = 'attack' | 'technique' | 'stance' | 'flee' | null;
+export type PendingActionType =
+  | "attack"
+  | "technique"
+  | "stance"
+  | "flee"
+  | null;
 
 export interface CombatUIState {
   phase: CombatPhase;
   pendingAction: PendingActionType;
   selectedTechniqueId: string | null;
   message: string;
-  messageType: 'normal' | 'damage' | 'heal' | 'status';
+  messageType: "normal" | "damage" | "heal" | "status";
 }
 
 export interface UseCombatStateReturn {
@@ -43,17 +48,17 @@ export interface UseCombatStateReturn {
   setPhase: (phase: CombatPhase) => void;
   setPendingAction: (action: PendingActionType) => void;
   setSelectedTechnique: (id: string | null) => void;
-  showMessage: (message: string, type?: CombatUIState['messageType']) => void;
+  showMessage: (message: string, type?: CombatUIState["messageType"]) => void;
   clearMessage: () => void;
   resetUI: () => void;
 }
 
 const INITIAL_STATE: CombatUIState = {
-  phase: 'initial-stance-select',
+  phase: "initial-stance-select",
   pendingAction: null,
   selectedTechniqueId: null,
-  message: '',
-  messageType: 'normal',
+  message: "",
+  messageType: "normal",
 };
 
 /**
@@ -76,7 +81,9 @@ const INITIAL_STATE: CombatUIState = {
  * showMessage('You dealt 45 damage!', 'damage');
  * ```
  */
-export function useCombatState(combatState: CombatState): UseCombatStateReturn {
+export function useCombatState(
+  _combatState: CombatState,
+): UseCombatStateReturn {
   const [uiState, setUIState] = useState<CombatUIState>(INITIAL_STATE);
 
   /**
@@ -87,7 +94,7 @@ export function useCombatState(combatState: CombatState): UseCombatStateReturn {
       ...prev,
       phase,
       // Clear transient state on phase change
-      message: '',
+      message: "",
     }));
   }, []);
 
@@ -115,14 +122,14 @@ export function useCombatState(combatState: CombatState): UseCombatStateReturn {
    * Display a message to the player
    */
   const showMessage = useCallback(
-    (message: string, type: CombatUIState['messageType'] = 'normal') => {
+    (message: string, type: CombatUIState["messageType"] = "normal") => {
       setUIState((prev) => ({
         ...prev,
         message,
         messageType: type,
       }));
     },
-    []
+    [],
   );
 
   /**
@@ -131,7 +138,7 @@ export function useCombatState(combatState: CombatState): UseCombatStateReturn {
   const clearMessage = useCallback(() => {
     setUIState((prev) => ({
       ...prev,
-      message: '',
+      message: "",
     }));
   }, []);
 
