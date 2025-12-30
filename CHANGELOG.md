@@ -5,6 +5,38 @@ All notable changes to The Beggars Sect will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.8] - 2025-12-30
+
+### Added
+- **Training Challenge System**: 11 structured challenges with unique objectives
+  - Combat fundamentals (basics, stance switching, technique combos)
+  - Path-specific trials for Blade, Stream, and Shadow
+  - Boss rush and endurance challenges
+  - Rewards: 10-75 mastery points per challenge
+- **Sparring Result Feedback**: Detailed mastery breakdown after every sparring match
+  - Shows base mastery + each bonus earned (no damage, combos, stances, speed)
+  - Victory/completion banner with mastery earned
+  - Best performance tracking (fastest win, most damage, longest combo)
+- **Challenge Result UI**: Full feedback screen showing challenge completion
+  - Objective met display
+  - Mastery rewards breakdown
+  - Return to training menu flow
+- **Combat Performance Tracking**: New CombatPerformance interface
+  - Tracks turns, damage dealt/taken, combos, stance switches
+  - Persists best records in save file
+- **148 Tests**: Comprehensive test coverage across 5 test files
+
+### Changed
+- **Training Menu**: Added sparring-result ViewMode for post-match feedback
+- **App.tsx**: Centralized sparring mastery calculation using getMasteryBreakdown
+- **GameStore**: Extended trainingProgress with performance tracking fields
+
+### Fixed
+- **Combo Tracking Bug**: CombatEngine now correctly tracks combo count during combat
+- **Mastery Calculation**: Fixed getMasteryBreakdown to accept CombatPerformance object
+
+---
+
 ## [0.3.7] - 2025-12-07
 
 ### Added
@@ -83,6 +115,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 ## Release Notes
+
+### v0.3.8 - "Training Complete"
+This release finalizes the training system with comprehensive challenge progression, sparring feedback, and performance tracking. The game now has a complete post-prologue gameplay loop.
+
+**Key Highlights:**
+- 🎯 11 training challenges with scaled difficulty and rewards
+- 📊 Mastery breakdown UI showing exactly how points are earned
+- 🏆 Performance records tracking best times, damage, and combos
+- ✅ 148 tests ensuring stability across all systems
+- 🎮 Complete training → combat → feedback → repeat loop
+
+---
 
 ### v0.3.7 - "Polished Navigation"
 This release focuses on accessibility and visual polish, making the game fully playable with just directional controls. The entire UI has been redesigned to use the full terminal window with centered, decorated screens. All keyboard navigation now uses arrow keys and enter/spacebar, eliminating the need for letter key shortcuts.

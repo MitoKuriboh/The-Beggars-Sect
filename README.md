@@ -54,7 +54,7 @@ Follow Li Wei's journey from a confused stranger spawned into an unknown world, 
 |---|---|
 | **Genre** | Wuxia Turn-Based RPG |
 | **Platform** | CLI (Terminal) |
-| **Version** | 0.3.7 (Production Demo) |
+| **Version** | 0.3.8 (Production Demo) |
 | **Status** | Prologue Complete - Enterprise-Grade Architecture |
 | **Playtime** | ~25 min (demo) / ~5-6 hours (full game) |
 | **Code Quality** | Production-ready with AAA architecture |
@@ -444,7 +444,7 @@ export const UI_CONFIG = {
 
 ## Features
 
-### Implemented (v0.3.7 Demo)
+### Implemented (v0.3.8 Demo)
 
 **Combat Systems:**
 - **ATB Combat System** - DEX-based turn order, 7-turn preview
@@ -461,7 +461,10 @@ export const UI_CONFIG = {
 - **Zero-Sum Path System** - 100% total distributed across Blade/Stream/Shadow
 - **Aspect Loadout System** - 8 chi aspects, LoL-style rune system (1 primary + 3 secondary)
 - **Training Grounds** - Post-prologue sparring matches with training dummy
-- **Training Mastery** - Earn 5-10 points per sparring win, scales with difficulty
+- **Training Mastery** - Earn 5-15 points per sparring win with bonus breakdown
+- **11 Training Challenges** - Structured challenges with unique objectives and rewards
+- **Performance Tracking** - Best time, most damage, longest combo records
+- **Mastery Feedback UI** - Detailed breakdown showing each bonus earned
 - **Path-Specific Techniques** - 6 starter techniques gated by path/aspect/mastery
 - **Unified Unlock Requirements** - Techniques require path%, aspects, and mastery points
 - **Technique Unlock Display** - Preview available/locked techniques with exact requirements
@@ -617,7 +620,7 @@ npm run package  # Build standalone executables
 | **Utility Modules** | 8 |
 | **Techniques** | 55+ |
 | **Enemies** | 12 |
-| **Test Coverage** | TBD |
+| **Test Coverage** | 148 tests |
 
 ---
 
@@ -634,6 +637,7 @@ npm run package  # Build standalone executables
 | **Phase 2.5: AAA UI** | ✅ Complete | Custom hooks, design system, components (v0.3.7) |
 | **Phase 2.75: AAA Logic** | ✅ Complete | Game balance config, utilities, refactoring (v0.3.7) |
 | **Phase 2.9: AI Polish** | ✅ Complete | Enterprise-grade AI system, 5-10% performance gain (v0.3.7) |
+| **Phase 2.95: Training** | ✅ Complete | 11 challenges, sparring feedback, mastery UI, 148 tests (v0.3.8) |
 | **Phase 3: Content** | Planned | Chapters 1-3, items, locations |
 | **Phase 4: AI Integration** | Planned | Claude API content generation |
 

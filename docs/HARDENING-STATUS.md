@@ -1,6 +1,6 @@
 # Beggars Sect - Hardening Status
 
-**Last Check:** 2025-12-30 | **Status:** ✅ Healthy
+**Last Check:** 2025-12-30 | **Status:** ✅ Healthy | **Version:** 0.3.8
 
 ---
 
@@ -13,6 +13,7 @@
 | Tests | ✅ Pass | 148 tests, 5 files |
 | Memory Leaks | ✅ Fixed | All setTimeout refs tracked |
 | Type Safety | ✅ Good | KeyEvent interface, no-case-declarations fixed |
+| Training System | ✅ Complete | 11 challenges, sparring feedback, mastery UI |
 
 ---
 

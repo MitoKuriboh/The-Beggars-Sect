@@ -1,12 +1,12 @@
 # CODE-DNA: The Beggars Sect Game
 
-**Version:** 1.0 | **Updated:** 2025-12-30 | **Architecture:** AAA-Grade
+**Version:** 1.1 | **Updated:** 2025-12-30 | **Architecture:** AAA-Grade
 
 ---
 
 ## TL;DR
 
-CLI RPG built with React/Ink. AAA architecture patterns: centralized config (`GameBalance.ts`), reusable hooks (`useMenuNavigation`), design system (`SEMANTIC_DIVIDERS`). Types in `src/types/`. Path aliases: `@game/*`, `@ui/*`, `@types/*`.
+CLI RPG built with React/Ink. AAA architecture patterns: centralized config (`GameBalance.ts`), reusable hooks (`useMenuNavigation`), design system (`SEMANTIC_DIVIDERS`). Training system with 11 challenges, sparring matches, mastery breakdown. 148 tests. Types in `src/types/`. Path aliases: `@game/*`, `@ui/*`, `@types/*`.
 
 ---
 
@@ -333,6 +333,83 @@ docs/
 
 ---
 
+## Training System Patterns
+
+### ViewMode State Pattern
+
+**Menu navigation using discriminated union:**
+
+```typescript
+// src/ui/training/TrainingMenu.tsx
+type ViewMode = "main" | "challenges" | "techniques" | "result" | "sparring-result";
+
+const [viewMode, setViewMode] = useState<ViewMode>("main");
+```
+
+| ViewMode | Purpose |
+|----------|---------|
+| `main` | Training menu home |
+| `challenges` | Challenge list |
+| `techniques` | Unlockable techniques |
+| `result` | Challenge completion feedback |
+| `sparring-result` | Sparring match results |
+
+### CombatPerformance Tracking
+
+**Performance metrics interface:**
+
+```typescript
+// src/types/game.ts
+interface CombatPerformance {
+  won: boolean;
+  turns: number;
+  damageTaken: number;
+  damageDealt: number;
+  combosExecuted: number;
+  stanceSwitches: number;
+  techniquesUsed: number;
+}
+```
+
+### Mastery Breakdown Pattern
+
+**Calculating mastery with bonus breakdown:**
+
+```typescript
+// src/game/combat/MasterySystem.ts
+const breakdown = getMasteryBreakdown(performance);
+// Returns: { base: 5, bonuses: [{ reason, amount }], total: number }
+
+// Filtering non-zero bonuses for display:
+const nonZeroBonuses = breakdown.bonuses.filter(b => b.amount > 0);
+```
+
+| Bonus Type | Condition | Amount |
+|------------|-----------|--------|
+| Base | Win | 5 |
+| No damage | damageTaken === 0 | +5 |
+| Combos | combosExecuted > 0 | +3 |
+| Stance switches | stanceSwitches > 0 | +2 |
+| Speed | turns ≤ 5 | +5 |
+
+### Training Progress State
+
+**Best performance tracking in GameStore:**
+
+```typescript
+// src/game/state/GameStore.ts
+trainingProgress: {
+  mastery: number;
+  completedChallenges: string[];
+  unlockedTechniques: string[];
+  fastestWin: number | null;
+  mostDamage: number | null;
+  longestCombo: number | null;
+}
+```
+
+---
+
 ## Anti-Patterns (AVOID)
 
 | Don't | Do Instead |
@@ -357,4 +434,4 @@ docs/
 
 ---
 
-**Version:** 1.0 | **Status:** Active | **Maintainer:** Jarvis
+**Version:** 1.1 | **Status:** Active | **Maintainer:** Jarvis
