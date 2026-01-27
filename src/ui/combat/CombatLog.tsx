@@ -1,28 +1,49 @@
 /**
  * Combat Log Display
  * Shows recent combat messages with colored damage/heal numbers
+ * Supports colour-blind accessibility with effect symbols
  */
 
 import React, { memo } from 'react';
 import { Box, Text } from 'ink';
 import type { LogEntry } from '../../types/index';
+import { EFFECT_SYMBOLS } from '../theme/colors';
+import { UI_CONFIG } from '../config/constants';
 
 interface CombatLogProps {
   entries: LogEntry[];
   maxEntries?: number;
 }
 
+// Get accessibility symbol prefix for entry type
+const getAccessibilitySymbol = (type: LogEntry['type']): string => {
+  if (!UI_CONFIG.accessibility.highContrastMode) return '';
+
+  switch (type) {
+    case 'damage':
+      return EFFECT_SYMBOLS.damage + ' ';
+    case 'heal':
+      return EFFECT_SYMBOLS.heal + ' ';
+    case 'status':
+      return EFFECT_SYMBOLS.buff + ' ';
+    default:
+      return '';
+  }
+};
+
 // Parse message and highlight numbers based on entry type
 const renderMessage = (message: string, type: LogEntry['type']): React.ReactNode => {
+  const accessibilityPrefix = getAccessibilitySymbol(type);
+
   // Match numbers in the message
   const parts = message.split(/(\d+)/);
 
   if (parts.length === 1) {
-    // No numbers, return plain text (already wrapped by parent Text)
-    return message;
+    // No numbers, return plain text with accessibility prefix
+    return accessibilityPrefix + message;
   }
 
-  return parts.map((part, i) => {
+  const elements = parts.map((part, i) => {
     // Skip empty strings (can happen with split on capturing groups)
     if (part === '') return null;
 
@@ -48,6 +69,18 @@ const renderMessage = (message: string, type: LogEntry['type']): React.ReactNode
     // Text parts - return as-is (parent Text wraps them)
     return <React.Fragment key={i}>{part}</React.Fragment>;
   });
+
+  // Prepend accessibility symbol if enabled
+  if (accessibilityPrefix) {
+    return (
+      <>
+        <Text dimColor>{accessibilityPrefix}</Text>
+        {elements}
+      </>
+    );
+  }
+
+  return elements;
 };
 
 export const CombatLog = memo<CombatLogProps>(({ entries, maxEntries = 5 }) => {

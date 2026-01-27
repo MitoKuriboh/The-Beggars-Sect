@@ -5,6 +5,7 @@
 
 import React from "react";
 import { Box, Text } from "ink";
+import type { InkColor } from "../theme/colors";
 
 interface RelationshipsDisplayProps {
   relationships: Record<string, number>;
@@ -12,7 +13,7 @@ interface RelationshipsDisplayProps {
 
 interface RelationshipLevel {
   label: string;
-  color: string;
+  color: InkColor;
   min: number;
 }
 
@@ -97,12 +98,10 @@ export const RelationshipsDisplay: React.FC<RelationshipsDisplayProps> = ({
               <Box>
                 <Text bold>{name}</Text>
                 <Text dimColor> — </Text>
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any -- ink color type is stricter than our dynamic colors */}
-                <Text color={level.color as any}>{level.label}</Text>
+                <Text color={level.color}>{level.label}</Text>
               </Box>
               <Box marginLeft={2}>
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any -- ink color type is stricter than our dynamic colors */}
-                <Text color={level.color as any}>
+                <Text color={level.color}>
                   {renderRelationshipBar(value)} {value > 0 ? "+" : ""}
                   {value}
                 </Text>

@@ -5,10 +5,7 @@
 
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { Box, Text } from "ink";
-import SelectInput from "ink-select-input";
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const SelectInputComponent = (SelectInput as any).default || SelectInput;
-
+import { SelectInputComponent } from "../components/SelectInputWrapper";
 import { GameStore } from "../../game/state/GameStore";
 
 interface SaveLoadTabProps {

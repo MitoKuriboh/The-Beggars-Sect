@@ -6,6 +6,7 @@
 import React, { memo } from "react";
 import { Box, Text } from "ink";
 import type { Character } from "../../types/index";
+import { UI_CONFIG } from "../config/constants";
 
 interface TurnQueueProps {
   turnOrder: Character[];
@@ -14,12 +15,15 @@ interface TurnQueueProps {
 
 export const TurnQueue = memo<TurnQueueProps>(
   ({ turnOrder, currentActorId: _currentActorId }) => {
+    const previewLength = UI_CONFIG.combat.turnQueuePreviewLength;
+    const displayed = turnOrder.slice(0, previewLength);
+
     return (
       <Box flexDirection="row" justifyContent="center" alignItems="center">
         <Text dimColor italic>
           Turn Order:{" "}
         </Text>
-        {turnOrder.slice(0, 5).map((char, index) => {
+        {displayed.map((char, index) => {
           const isCurrent = index === 0;
           const isPlayer = char.isPlayer;
 
@@ -32,7 +36,7 @@ export const TurnQueue = memo<TurnQueueProps>(
               >
                 {isPlayer ? "YOU" : char.name.substring(0, 3).toUpperCase()}
               </Text>
-              {index < turnOrder.slice(0, 5).length - 1 && (
+              {index < displayed.length - 1 && (
                 <Text dimColor> • </Text>
               )}
             </Box>

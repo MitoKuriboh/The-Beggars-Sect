@@ -34,6 +34,34 @@ const DEFAULT_CONFIG: SaveManagerConfig = {
   saveDir: path.join(os.homedir(), '.beggars-sect', 'saves'),
 };
 
+const ERROR_LOG_PATH = path.join(os.homedir(), '.beggars-sect', 'error.log');
+
+// =============================================================================
+// ERROR LOGGING
+// =============================================================================
+
+/**
+ * Log an error to the error log file
+ */
+function logError(context: string, error: unknown): void {
+  try {
+    const errorDir = path.dirname(ERROR_LOG_PATH);
+    if (!fs.existsSync(errorDir)) {
+      fs.mkdirSync(errorDir, { recursive: true });
+    }
+
+    const timestamp = new Date().toISOString();
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const stackTrace = error instanceof Error ? error.stack : '';
+
+    const logEntry = `[${timestamp}] ${context}: ${errorMessage}\n${stackTrace ? stackTrace + '\n' : ''}---\n`;
+
+    fs.appendFileSync(ERROR_LOG_PATH, logEntry, 'utf-8');
+  } catch {
+    // If we can't log, we can't log. Don't crash.
+  }
+}
+
 // =============================================================================
 // SAVE MANAGER
 // =============================================================================
@@ -59,7 +87,7 @@ class SaveManagerClass {
         fs.mkdirSync(this.config.saveDir, { recursive: true });
       }
     } catch (error) {
-      // Silent fail - will handle errors on actual save/load
+      logError('SaveManager.ensureSaveDir', error);
     }
   }
 

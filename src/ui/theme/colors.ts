@@ -155,6 +155,41 @@ export const effectColors = {
 };
 
 // =============================================================================
+// ACCESSIBILITY - COLOUR-BLIND SYMBOLS
+// =============================================================================
+
+/**
+ * Symbol prefixes for status effects to aid colour-blind players
+ * Used in combat messages when high contrast mode is enabled
+ */
+export const EFFECT_SYMBOLS = {
+  damage: "[!]",
+  criticalDamage: "[!!]",
+  heal: "[+]",
+  chiRestore: "[*]",
+  chiCost: "[-]",
+  buff: "[^]",
+  debuff: "[v]",
+  stun: "[#]",
+  armorBreak: "[/]",
+  counter: "[<]",
+} as const;
+
+export type EffectSymbolType = keyof typeof EFFECT_SYMBOLS;
+
+/**
+ * Get effect symbol for accessibility
+ * Returns empty string if high contrast mode is disabled
+ */
+export function getEffectSymbol(
+  effectType: EffectSymbolType,
+  highContrastEnabled: boolean = false,
+): string {
+  if (!highContrastEnabled) return "";
+  return EFFECT_SYMBOLS[effectType] + " ";
+}
+
+// =============================================================================
 // ATMOSPHERIC / TITLE SEQUENCE
 // =============================================================================
 

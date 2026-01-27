@@ -96,8 +96,33 @@ export const TechniqueMenu: React.FC<TechniqueMenuProps> = React.memo(({
       </Box>
 
       {/* Selected Technique Details */}
-      <Box borderStyle="single" borderColor="cyan" paddingX={1} width={60} minHeight={5}>
-        <Text dimColor italic wrap="wrap">{selectedTech?.description || 'No description available'}</Text>
+      <Box borderStyle="single" borderColor="cyan" paddingX={1} width={60} minHeight={5} flexDirection="column">
+        {selectedTech ? (
+          <>
+            {/* Power & Chi */}
+            <Box>
+              <Text color="red" bold>PWR: {selectedTech.power || 0}</Text>
+              <Text dimColor> | </Text>
+              <Text color="yellow">CHI: {selectedTech.chiCost > 0 ? `-${selectedTech.chiCost}` : '+2'}</Text>
+              <Text dimColor> | </Text>
+              <Text color="cyan">SPD: {selectedTech.speed > 0 ? `+${selectedTech.speed}` : selectedTech.speed}</Text>
+            </Box>
+            {/* Effects */}
+            {selectedTech.effects.length > 0 && (
+              <Box marginTop={1}>
+                <Text color="magenta">
+                  {selectedTech.effects.map(e => e.description).join(', ')}
+                </Text>
+              </Box>
+            )}
+            {/* Description */}
+            <Box marginTop={1}>
+              <Text dimColor italic wrap="wrap">{selectedTech.description}</Text>
+            </Box>
+          </>
+        ) : (
+          <Text dimColor italic>No technique selected</Text>
+        )}
       </Box>
 
       <Box marginTop={1} height={1}>

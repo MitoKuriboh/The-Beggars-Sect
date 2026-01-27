@@ -5,14 +5,8 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { Box, Text } from "ink";
-import SelectInput from "ink-select-input";
+import { SelectInputComponent } from "./SelectInputWrapper";
 import { atmosphericColors, animationTiming } from "../theme/colors";
-
-// Module interop: ink-select-input may export as .default depending on bundler
-// Using 'any' is necessary here because the library's Item type uses 'unknown'
-// which conflicts with our stricter MenuItem type (value: string vs value: unknown)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const SelectInputComponent = (SelectInput as any).default || SelectInput;
 
 // =============================================================================
 // TYPES

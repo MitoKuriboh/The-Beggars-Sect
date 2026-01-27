@@ -27,6 +27,7 @@ import { ChoiceMenu } from "./ChoiceMenu";
 import { ExplorationMenu } from "./ExplorationMenu";
 import { StatusMenu } from "../status/StatusMenu";
 import { CenteredScreen } from "../components/PolishedBox";
+import { SaveIndicator } from "../components/SaveIndicator";
 import { SEMANTIC_DIVIDERS } from "../theme/dividers";
 import {
   STORY_DECORATIONS,
@@ -847,11 +848,13 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
           </Text>
         </Box>
 
-        {/* Action Bar */}
-        <Box marginY={1} justifyContent="center">
+        {/* Action Bar with Save Indicator */}
+        <Box marginY={1} justifyContent="space-between" paddingX={2}>
+          <SaveIndicator />
           <Text dimColor italic>
             {getActionHint()}
           </Text>
+          <Box width={8} /> {/* Spacer for balance */}
         </Box>
 
         {/* Status Menu Overlay with Backdrop */}

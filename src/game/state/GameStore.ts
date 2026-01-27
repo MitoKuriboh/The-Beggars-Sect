@@ -31,6 +31,34 @@ import { createInventory } from "../../types/item";
 import { SaveManager, SaveSlot } from "./SaveManager";
 
 // =============================================================================
+// ERROR LOGGING
+// =============================================================================
+
+const ERROR_LOG_PATH = path.join(os.homedir(), ".beggars-sect", "error.log");
+
+/**
+ * Log an error to the error log file
+ */
+function logError(context: string, error: unknown): void {
+  try {
+    const errorDir = path.dirname(ERROR_LOG_PATH);
+    if (!fs.existsSync(errorDir)) {
+      fs.mkdirSync(errorDir, { recursive: true });
+    }
+
+    const timestamp = new Date().toISOString();
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const stackTrace = error instanceof Error ? error.stack : "";
+
+    const logEntry = `[${timestamp}] ${context}: ${errorMessage}\n${stackTrace ? stackTrace + "\n" : ""}---\n`;
+
+    fs.appendFileSync(ERROR_LOG_PATH, logEntry, "utf-8");
+  } catch {
+    // If we can't log, we can't log. Don't crash.
+  }
+}
+
+// =============================================================================
 // GAME STORE
 // =============================================================================
 
@@ -38,6 +66,12 @@ import { SaveManager, SaveSlot } from "./SaveManager";
  * Singleton game state store
  * Manages all persistent game data
  */
+export interface SaveStatus {
+  lastSaveTime: number | null;
+  lastSaveSuccess: boolean;
+  lastSaveError: string | null;
+}
+
 class GameStoreClass {
   private static readonly SETTINGS_PATH = path.join(
     os.homedir(),
@@ -48,6 +82,11 @@ class GameStoreClass {
   private state: GameState | null = null;
   private settings: GameSettings = { ...DEFAULT_SETTINGS };
   private listeners: Set<() => void> = new Set();
+  private saveStatus: SaveStatus = {
+    lastSaveTime: null,
+    lastSaveSuccess: true,
+    lastSaveError: null,
+  };
 
   constructor() {
     this.loadSettings();
@@ -68,7 +107,8 @@ class GameStoreClass {
         this.settings = { ...DEFAULT_SETTINGS, ...loadedSettings };
       }
     } catch (error) {
-      // Silent fail - use default settings
+      logError("GameStore.loadSettings", error);
+      // Use default settings on error
     }
   }
 
@@ -87,7 +127,7 @@ class GameStoreClass {
         "utf-8",
       );
     } catch (error) {
-      // Silent fail
+      logError("GameStore.saveSettings", error);
     }
   }
 
@@ -597,7 +637,9 @@ class GameStoreClass {
    */
   autoSave(): { success: boolean; error?: string } {
     if (!this.state) {
-      return { success: false, error: "No game in progress" };
+      const result = { success: false, error: "No game in progress" };
+      this.updateSaveStatus(result);
+      return result;
     }
 
     const data = this.save();
@@ -608,7 +650,28 @@ class GameStoreClass {
       savedAt: Date.now(),
     };
 
-    return SaveManager.autoSave(data, meta);
+    const result = SaveManager.autoSave(data, meta);
+    this.updateSaveStatus(result);
+    return result;
+  }
+
+  /**
+   * Update save status and notify listeners
+   */
+  private updateSaveStatus(result: { success: boolean; error?: string }): void {
+    this.saveStatus = {
+      lastSaveTime: Date.now(),
+      lastSaveSuccess: result.success,
+      lastSaveError: result.error || null,
+    };
+    this.notifyListeners();
+  }
+
+  /**
+   * Get current save status
+   */
+  getSaveStatus(): SaveStatus {
+    return { ...this.saveStatus };
   }
 
   /**

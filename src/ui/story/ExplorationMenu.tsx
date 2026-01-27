@@ -5,14 +5,11 @@
 
 import React, { useState, useCallback } from "react";
 import { Box, Text, useInput } from "ink";
-import SelectInput from "ink-select-input";
 import type { ExplorationArea } from "../../types/index";
+import { SelectInputComponent } from "../components/SelectInputWrapper";
 import { ContentBlock } from "./ContentRenderer";
 import { STORY_DECORATIONS, SYMBOLS } from "../theme/decorations";
 import { atmosphericColors } from "../theme/colors";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ink-select-input has conflicting CJS/ESM exports
-const SelectInputComponent = (SelectInput as any).default || SelectInput;
 
 interface ExplorationMenuItem {
   label: string;

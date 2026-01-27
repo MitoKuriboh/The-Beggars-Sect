@@ -5,6 +5,7 @@
 
 import React from "react";
 import { Box, Text } from "ink";
+import type { InkColor } from "../theme/colors";
 
 interface PathDisplayProps {
   pathScores: {
@@ -17,7 +18,7 @@ interface PathDisplayProps {
 interface PathInfo {
   name: string;
   description: string;
-  color: string;
+  color: InkColor;
   symbol: string;
 }
 
@@ -89,8 +90,7 @@ export const PathDisplay: React.FC<PathDisplayProps> = ({ pathScores }) => {
             return (
               <Box key={pathKey} marginBottom={1} flexDirection="column">
                 <Box>
-                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any -- ink color type is stricter than our dynamic colors */}
-                  <Text bold color={path.color as any}>
+                  <Text bold color={path.color}>
                     {path.symbol} {path.name.toUpperCase()}
                     {isDominant ? " ★" : ""}
                   </Text>
@@ -99,8 +99,7 @@ export const PathDisplay: React.FC<PathDisplayProps> = ({ pathScores }) => {
                   <Text dimColor>{path.description}</Text>
                 </Box>
                 <Box marginLeft={2}>
-                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any -- ink color type is stricter than our dynamic colors */}
-                  <Text color={path.color as any}>
+                  <Text color={path.color}>
                     {renderProgressBar(score)} {score}
                   </Text>
                 </Box>

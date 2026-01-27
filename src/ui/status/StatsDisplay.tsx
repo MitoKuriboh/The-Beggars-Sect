@@ -6,6 +6,7 @@
 import React from "react";
 import { Box, Text } from "ink";
 import type { Character } from "../../types/index";
+import type { InkColor } from "../theme/colors";
 
 interface StatsDisplayProps {
   player: Character;
@@ -13,7 +14,7 @@ interface StatsDisplayProps {
 
 interface StatInfo {
   label: string;
-  color: string;
+  color: InkColor;
 }
 
 const STAT_INFO: Record<string, StatInfo> = {
@@ -81,8 +82,7 @@ export const StatsDisplay: React.FC<StatsDisplayProps> = ({ player }) => {
 
             return (
               <Box key={key}>
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any -- ink color type is stricter than our dynamic colors */}
-                <Text color={stat.color as any} dimColor>
+                <Text color={stat.color} dimColor>
                   {stat.label.padEnd(12)}
                 </Text>
                 <Text bold>{value}</Text>
