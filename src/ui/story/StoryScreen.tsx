@@ -15,7 +15,7 @@ import type {
   StoryResult,
   ExplorationArea,
 } from "../../types/index";
-import { StoryEngine, PROLOGUE } from "../../game/story";
+import { StoryEngine, PROLOGUE, CHAPTER_1, CHAPTER_2, CHAPTER_3 } from "../../game/story";
 import { GameStore } from "../../game/state/GameStore";
 import {
   createEnemy,
@@ -104,6 +104,7 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
   );
   const isTypingRef = useRef(isTyping);
   const typewriterCompleteRef = useRef(typewriterComplete);
+  const pendingNextChapterRef = useRef<string | null>(null);
 
   // Sync state setters - update ref immediately, then state
   const setPhase = useCallback((value: StoryPhase) => {
@@ -164,6 +165,9 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
       GameStore.setStoryState(newState);
     });
     engine.registerChapter(PROLOGUE);
+    engine.registerChapter(CHAPTER_1);
+    engine.registerChapter(CHAPTER_2);
+    engine.registerChapter(CHAPTER_3);
     engineRef.current = engine;
 
     // Check for saved story state
@@ -299,6 +303,7 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
 
           case "chapter-end":
             setPhase("chapter-end");
+            pendingNextChapterRef.current = result.nextChapter || null;
             setContent([
               { type: "system", text: "Chapter Complete" },
               {
@@ -426,9 +431,12 @@ export const StoryScreen: React.FC<StoryScreenProps> = ({
 
   // Handle chapter transition
   const handleChapterContinue = useCallback(() => {
-    // For now, just advance - would load next chapter
-    const result = engineRef.current?.advance();
-    if (result) handleResult(result);
+    const nextChapterId = pendingNextChapterRef.current;
+    if (nextChapterId && engineRef.current) {
+      pendingNextChapterRef.current = null;
+      const result = engineRef.current.startChapter(nextChapterId);
+      if (result) handleResult(result);
+    }
   }, [handleResult]);
 
   // Handle save/load completion

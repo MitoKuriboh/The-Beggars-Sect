@@ -139,6 +139,26 @@ export class StoryEngine {
   }
 
   /**
+   * Start a specific chapter from its beginning
+   */
+  startChapter(chapterId: string): StoryResult {
+    const chapter = this.chapters.get(chapterId);
+    if (!chapter) {
+      throw new Error(`Chapter not found: ${chapterId}`);
+    }
+
+    this.state.currentChapter = chapterId;
+    this.state.currentScene = chapter.startScene;
+    this.state.contentIndex = 0;
+    this.notifyStateChange();
+
+    // Auto-save at chapter start
+    GameStore.autoSave();
+
+    return this.processCurrentPosition();
+  }
+
+  /**
    * Jump to a specific scene
    */
   jumpToScene(sceneId: string): StoryResult {
