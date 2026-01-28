@@ -853,6 +853,7 @@ export const CHAPTER_1: Chapter = {
                 },
               ],
               effects: [{ type: "path", path: "blade", delta: 1 }],
+              nextScene: "1-3a-proving-ground",
             },
             {
               id: "service",
@@ -873,6 +874,7 @@ export const CHAPTER_1: Chapter = {
                 },
               ],
               effects: [{ type: "path", path: "stream", delta: 1 }],
+              nextScene: "1-3b-service",
             },
             {
               id: "gather-intel",
@@ -892,11 +894,13 @@ export const CHAPTER_1: Chapter = {
                 },
               ],
               effects: [{ type: "path", path: "shadow", delta: 1 }],
+              nextScene: "1-3c-secrets",
             },
           ],
         },
       ],
-      nextScene: "1-3a-proving-ground", // Will be overridden by choice conditions
+      // nextScene on choices handles branching - this is fallback only
+      nextScene: "1-3a-proving-ground",
     },
 
     // =========================================================================
@@ -1878,6 +1882,7 @@ export const CHAPTER_1: Chapter = {
                 },
               ],
               effects: [{ type: "path", path: "blade", delta: 2 }],
+              nextScene: "1-6a-direct-challenge",
             },
             {
               id: "alliance",
@@ -1907,6 +1912,7 @@ export const CHAPTER_1: Chapter = {
                 },
               ],
               effects: [{ type: "path", path: "stream", delta: 2 }],
+              nextScene: "1-6b-alliance",
             },
             {
               id: "blackmail",
@@ -1932,6 +1938,7 @@ export const CHAPTER_1: Chapter = {
                 },
               ],
               effects: [{ type: "path", path: "shadow", delta: 2 }],
+              nextScene: "1-6c-shadow",
             },
           ],
         },
@@ -1953,7 +1960,8 @@ export const CHAPTER_1: Chapter = {
           ],
         },
       ],
-      nextScene: "1-6a-direct-challenge", // Will be overridden by choice
+      // nextScene on choices handles branching - this is fallback only
+      nextScene: "1-6a-direct-challenge",
     },
 
     // =========================================================================

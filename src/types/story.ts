@@ -3,6 +3,8 @@
  * Defines scenes, dialogue, choices, and narrative flow
  */
 
+import type { LocationId } from './navigation';
+
 // =============================================================================
 // CONTENT TYPES
 // =============================================================================
@@ -101,7 +103,8 @@ export type SceneBlock =
   | { type: 'choice'; prompt?: string; choices: Choice[] }
   | { type: 'combat'; enemies: string[]; canLose?: boolean; loseScene?: string }
   | { type: 'exploration'; areas: ExplorationArea[] }
-  | { type: 'montage'; days: MontageDay[] };
+  | { type: 'montage'; days: MontageDay[] }
+  | { type: 'navigation'; locationId?: LocationId; allowTravel: boolean; returnSceneId?: string };
 
 /**
  * An area that can be explored
@@ -286,7 +289,7 @@ export function getDominantPath(
  */
 export interface StoryResult {
   /** What happened */
-  action: 'continue' | 'choice' | 'combat' | 'exploration' | 'chapter-end' | 'game-end';
+  action: 'continue' | 'choice' | 'combat' | 'exploration' | 'navigation' | 'chapter-end' | 'game-end';
   /** Updated state */
   state: StoryState;
   /** Content to display (if any) */
@@ -301,4 +304,10 @@ export interface StoryResult {
   areas?: ExplorationArea[];
   /** Next chapter ID (if action is 'chapter-end') */
   nextChapter?: string;
+  /** Navigation location (if action is 'navigation') */
+  navigationLocationId?: LocationId;
+  /** Can player travel to other locations? */
+  navigationAllowTravel?: boolean;
+  /** Scene to return to after navigation */
+  navigationReturnSceneId?: string;
 }

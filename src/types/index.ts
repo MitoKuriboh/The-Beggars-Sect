@@ -21,5 +21,8 @@ export * from "./game";
 // Story types
 export * from "./story";
 
+// Navigation types
+export * from "./navigation";
+
 // UI types
 export * from "./ui";

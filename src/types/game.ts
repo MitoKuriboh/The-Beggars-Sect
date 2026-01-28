@@ -6,6 +6,7 @@
 import type { Character } from './character';
 import type { Inventory } from './item';
 import type { StoryState } from './story';
+import type { NavigationState } from './navigation';
 import type { DifficultyLevel } from '../game/config/GameBalance';
 
 // =============================================================================
@@ -178,6 +179,7 @@ export interface GameState {
   // Progression
   storyProgress: StoryProgress;
   storyState?: StoryState;    // Full story engine state (for save/load)
+  navigationState?: NavigationState;  // Navigation engine state (for save/load)
   currentLocation: string;    // Location ID
 
   // Unlocks

@@ -305,6 +305,15 @@ export class StoryEngine {
     return this.processCurrentPosition();
   }
 
+  /**
+   * Complete navigation and continue story
+   */
+  completeNavigation(): StoryResult {
+    this.state.contentIndex++;
+    this.notifyStateChange();
+    return this.processCurrentPosition();
+  }
+
   // ---------------------------------------------------------------------------
   // INTERNAL PROCESSING
   // ---------------------------------------------------------------------------
@@ -395,6 +404,15 @@ export class StoryEngine {
           content: montageContent,
         };
       }
+
+      case "navigation":
+        return {
+          action: "navigation",
+          state: this.getState(),
+          navigationLocationId: block.locationId,
+          navigationAllowTravel: block.allowTravel,
+          navigationReturnSceneId: block.returnSceneId,
+        };
 
       default:
         throw new Error(

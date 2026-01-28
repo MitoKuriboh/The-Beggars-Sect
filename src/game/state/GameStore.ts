@@ -545,6 +545,27 @@ class GameStoreClass {
     this.notifyListeners();
   }
 
+  /**
+   * Get navigation state (for NavigationEngine)
+   */
+  getNavigationState(): import("../../types/navigation").NavigationState | undefined {
+    return this.state?.navigationState;
+  }
+
+  /**
+   * Set navigation state (from NavigationEngine)
+   */
+  setNavigationState(navigationState: import("../../types/navigation").NavigationState): void {
+    const state = this.getState();
+    state.navigationState = navigationState;
+
+    // Also update currentLocation for consistency
+    state.currentLocation = navigationState.currentLocation;
+
+    state.updatedAt = Date.now();
+    this.notifyListeners();
+  }
+
   // ---------------------------------------------------------------------------
   // PERSISTENCE (In-Memory)
   // ---------------------------------------------------------------------------
